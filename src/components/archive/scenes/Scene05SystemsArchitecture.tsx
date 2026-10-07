@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ARCHIVE_DATA, ArchiveSkillLayer } from '@/data/portfolioData';
-import { Cloud, Layers, Cpu, Terminal, ArrowRight, CheckCircle2, ShieldCheck, Activity, GitFork } from 'lucide-react';
+import { Cloud, Layers, Cpu, Terminal, ArrowRight, CheckCircle2, ShieldCheck, Activity, GitFork, Globe } from 'lucide-react';
 
 export default function Scene05SystemsArchitecture() {
   const { skillsLayers } = ARCHIVE_DATA;
@@ -29,20 +30,78 @@ export default function Scene05SystemsArchitecture() {
         </div>
 
         {/* Narrative Title */}
-        <div className="max-w-3xl text-center mb-12">
+        <div className="max-w-3xl text-center mb-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono uppercase mb-4">
             <GitFork className="w-3.5 h-3.5 text-amber-400" />
             <span>Infrastructure Stack Blueprint</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[#f4f1ea] tracking-wide mb-4">
-            Architected Layers & Flows
+            Architected Layers & Global Scale
           </h2>
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-serif">
-            Distributed infrastructure is not a list of disconnected logos. It is a synchronized stack where
-            declarative Terraform builds the cloud fabric, Kubernetes orchestrates self-healing container fleets,
-            and automated Jenkins pipelines ensure continuous delivery.
+            Distributed infrastructure is not a list of disconnected tools. It is a synchronized planetary mesh where
+            declarative Terraform builds the cloud fabric across multiple availability zones, Kubernetes orchestrates self-healing container fleets,
+            and automated pipelines ensure uninterrupted continuity.
           </p>
         </div>
+
+        {/* =========================================================================
+            05 — EARTH: SINGULAR VISUAL ANCHOR (OBSERVATION → SCALE → SYSTEMS)
+            Retro astronomical illustration communicating planetary distributed scale
+           ========================================================================= */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="w-full mb-10 p-5 sm:p-6 rounded-3xl bg-[#080913]/90 border border-amber-400/25 shadow-xl backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          {/* Earth Editorial Plate */}
+          <div className="relative w-32 h-32 sm:w-40 sm:h-40 shrink-0 flex items-center justify-center p-2 rounded-2xl bg-black/50 border border-white/10">
+            <Image
+              src="/archive/illustration_earth_clean.webp"
+              alt="Archival Earth Illustration — Planetary Substrate & Multi-Region Topology"
+              width={150}
+              height={150}
+              className="object-contain filter contrast-105 opacity-90 hover:opacity-100 transition-opacity"
+            />
+          </div>
+
+          {/* Narrative Callout */}
+          <div className="flex-1 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-mono text-amber-400 uppercase tracking-widest mb-1.5">
+              <Globe className="w-3.5 h-3.5 text-amber-400" />
+              <span>FIGURE V // PLANETARY SUBSTRATE · SCALE & RESILIENCE</span>
+            </div>
+            <h4 className="text-lg sm:text-xl font-serif font-bold text-[#f4f1ea]">
+              Observation → Scale → Systems
+            </h4>
+            <p className="text-xs text-slate-300 mt-1 max-w-2xl font-serif leading-relaxed">
+              When software serves users globally, geographical boundaries dissolve into latency matrices,
+              edge-caching nodes, and multi-region failover zones. Terraform scripts define cloud topology,
+              making an entire planetary deployment reproducible from a single terminal execution.
+            </p>
+          </div>
+
+          {/* Telemetry Points */}
+          <div className="shrink-0 flex flex-col gap-1 text-[10px] font-mono text-amber-300/90 border-t md:border-t-0 md:border-l border-white/10 pt-3 md:pt-0 md:pl-5 text-left">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span>ap-south-1 (Mumbai / Primary)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              <span>us-east-1 (N. Virginia / Edge)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+              <span>eu-central-1 (Frankfurt / Sync)</span>
+            </div>
+            <span className="text-[9px] text-slate-500 mt-1 uppercase">
+              STATE: DETERMINISTIC REPLICATION
+            </span>
+          </div>
+        </motion.div>
 
         {/* Systems Pipeline Flow Indicator */}
         <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8 font-mono text-xs">
@@ -147,3 +206,4 @@ export default function Scene05SystemsArchitecture() {
     </section>
   );
 }
+

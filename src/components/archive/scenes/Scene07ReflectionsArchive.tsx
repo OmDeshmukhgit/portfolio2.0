@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Film, Music2, Compass, Award, Heart, Sparkles, BookOpen } from 'lucide-react';
+import { Film, Music2, Compass, Award, Heart, Sparkles, BookOpen, Moon as MoonIcon } from 'lucide-react';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
 
 export default function Scene07ReflectionsArchive() {
@@ -25,20 +26,47 @@ export default function Scene07ReflectionsArchive() {
           </div>
         </div>
 
-        {/* Narrative Title */}
-        <div className="max-w-3xl text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono uppercase mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Harmonic Synthesis</span>
+        {/* Narrative Title & 04 — MOON Marginalia */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-6 items-center mb-14">
+          <div className="md:col-span-9 flex flex-col items-center md:items-start text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono uppercase mb-4">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Harmonic Synthesis</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[#f4f1ea] tracking-wide mb-4">
+              Cinema, Sound & The Engineer&apos;s Mind
+            </h2>
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-serif max-w-2xl">
+              Engineering without artistry is sterile. Artistry without engineering lacks structure.
+              The archive gathers the cinematic narratives, musical compositions, and intellectual disciplines
+              that inspire daily architectural exploration.
+            </p>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[#f4f1ea] tracking-wide mb-4">
-            Cinema, Sound & The Engineer&apos;s Mind
-          </h2>
-          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-serif">
-            Engineering without artistry is sterile. Artistry without engineering lacks structure.
-            The archive gathers the cinematic narratives, musical compositions, and intellectual disciplines
-            that inspire daily architectural exploration.
-          </p>
+
+          {/* 04 — MOON: Atmospheric Marginalia in the Field Journal Margin */}
+          <div className="md:col-span-3 flex flex-col items-center justify-center">
+            <div className="p-3.5 rounded-2xl bg-[#080912]/80 border border-white/10 backdrop-blur-md shadow-lg flex flex-col items-center group">
+              <div className="flex items-center justify-between w-full text-[8px] font-mono text-amber-400/70 border-b border-white/10 pb-1 mb-1">
+                <span>MARGINALIA // EPHEMERIS</span>
+                <span>FIG. 04</span>
+              </div>
+
+              {/* Delicate Margin Moon Sketch */}
+              <div className="relative w-24 h-24 flex items-center justify-center my-1">
+                <Image
+                  src="/archive/illustration_moon_clean.webp"
+                  alt="Archival Moon Sketch — Astronomical Field Journal Marginalia"
+                  width={96}
+                  height={96}
+                  className="object-contain filter contrast-105 opacity-80 group-hover:opacity-100 transition-opacity"
+                />
+              </div>
+
+              <div className="text-[8px] font-mono text-slate-400 text-center pt-1 border-t border-white/5 uppercase">
+                LUNAR PHASE // NIGHT SKY FLOW
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* 3 Reflection Vaults */}
@@ -116,3 +144,4 @@ export default function Scene07ReflectionsArchive() {
     </section>
   );
 }
+

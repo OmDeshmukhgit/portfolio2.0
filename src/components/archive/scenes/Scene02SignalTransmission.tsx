@@ -1,12 +1,20 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
-import { Radio, Wifi, Activity, Terminal, Waves, Globe, Cpu } from 'lucide-react';
+import { Radio, Wifi, Activity, Terminal, Waves, Globe, Cpu, ArrowDown } from 'lucide-react';
 
 export default function Scene02SignalTransmission() {
   const { pillars, curator } = ARCHIVE_DATA;
+
+  const engineeringStack = [
+    { name: 'AWS', role: 'Cloud Substrate', color: 'text-amber-400' },
+    { name: 'Terraform', role: 'Declarative IaC', color: 'text-purple-400' },
+    { name: 'Kubernetes', role: 'Cluster Orchestration', color: 'text-cyan-400' },
+    { name: 'CI/CD', role: 'Automated Deployment', color: 'text-emerald-400' },
+  ];
 
   return (
     <section
@@ -29,12 +37,86 @@ export default function Scene02SignalTransmission() {
             <span>SCENE 02 // FREQUENCY DISPATCH & RECEPTOR</span>
           </div>
           <div className="text-slate-400">
-            LENS: 200mm · f/2.8 · 1/125s
+            LENS: 200mm · f/2.8 · 1/125s · RECEPTOR CALIBRATED
           </div>
         </div>
 
+        {/* =========================================================================
+            03 — SATELLITE: DISTANT ORBITAL METAPHOR
+            SATELLITE ··· TRANSMISSION ··· ENGINEERING STACK
+           ========================================================================= */}
+        <div className="w-full flex flex-col items-center mb-10">
+          {/* Distant Archival Satellite Plate */}
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="flex flex-col items-center"
+          >
+            <div className="relative p-3 rounded-2xl bg-[#07080f]/90 border border-cyan-500/25 shadow-xl backdrop-blur-md group">
+              <div className="flex items-center justify-between text-[8px] font-mono text-cyan-400/80 border-b border-white/10 pb-1 mb-1 gap-6">
+                <span>FIG. 02 // ORBITAL RELAY</span>
+                <span>TELEMETRY BEACON</span>
+              </div>
+
+              {/* Small, Distant Satellite Illustration (No continuous spinning) */}
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center">
+                <Image
+                  src="/archive/illustration_satellite_clean.webp"
+                  alt="Archival Satellite Relay Illustration — Signal Telemetry Metaphor"
+                  width={128}
+                  height={128}
+                  className="object-contain filter contrast-110 opacity-85 group-hover:opacity-100 transition-opacity"
+                />
+              </div>
+
+              <div className="text-[8px] font-mono text-slate-400 text-center pt-1 border-t border-white/5">
+                ALTITUDE: 35,786 KM · GEO-SYNC
+              </div>
+            </div>
+
+            {/* Dotted Signal Stream */}
+            <div className="flex flex-col items-center my-3 text-cyan-400/60 font-mono text-xs tracking-widest">
+              <span className="w-1 h-1 rounded-full bg-cyan-400 mb-1 animate-ping" />
+              <span>·</span>
+              <span>·</span>
+              <span>·</span>
+              <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-widest mt-1">
+                TRANSMISSION
+              </span>
+              <span>·</span>
+              <span>·</span>
+            </div>
+          </motion.div>
+
+          {/* Connected Engineering Stack Pipeline */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="w-full max-w-3xl flex flex-wrap items-center justify-center gap-2 sm:gap-3 p-3 rounded-2xl bg-[#070810]/80 border border-cyan-400/20 backdrop-blur-md font-mono text-xs"
+          >
+            <span className="text-[10px] text-slate-400 uppercase tracking-wider mr-1">
+              ENGINEERING STACK:
+            </span>
+            {engineeringStack.map((item, idx) => (
+              <React.Fragment key={item.name}>
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/5 border border-white/10">
+                  <span className={`font-bold ${item.color}`}>{item.name}</span>
+                  <span className="text-[9px] text-slate-500">({item.role})</span>
+                </div>
+                {idx < engineeringStack.length - 1 && (
+                  <span className="text-cyan-400/70 font-bold">→</span>
+                )}
+              </React.Fragment>
+            ))}
+          </motion.div>
+        </div>
+
         {/* Narrative Title */}
-        <div className="max-w-3xl text-center mb-16">
+        <div className="max-w-3xl text-center mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/40 border border-cyan-400/30 text-cyan-300 text-xs font-mono uppercase mb-4">
             <Waves className="w-3.5 h-3.5 text-cyan-400" />
             <span>Telemetry & The 5 Pillars</span>
@@ -105,3 +187,4 @@ export default function Scene02SignalTransmission() {
     </section>
   );
 }
+

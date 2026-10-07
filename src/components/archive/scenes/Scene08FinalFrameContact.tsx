@@ -44,20 +44,40 @@ export default function Scene08FinalFrameContact() {
           </div>
         </div>
 
-        {/* Narrative Title */}
+        {/* =========================================================================
+            CINEMATIC FINAL FRAME SEQUENCE
+            ARCHIVE ↓ SYSTEMS ↓ TRANSMISSION ↓ THE ARCHIVE REMAINS OPEN.
+            Looking for the next system to build.
+           ========================================================================= */}
         <div className="max-w-3xl text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono uppercase mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>The Final Frame</span>
+          {/* Quiet Sequence Breadcrumb */}
+          <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-amber-400/80 uppercase tracking-widest mb-6">
+            <span>ARCHIVE</span>
+            <span className="text-slate-600">↓</span>
+            <span>SYSTEMS</span>
+            <span className="text-slate-600">↓</span>
+            <span>TRANSMISSION</span>
+            <span className="text-slate-600">↓</span>
+            <span className="text-amber-300 font-bold">THE ARCHIVE REMAINS OPEN</span>
           </div>
+
           <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[#f4f1ea] tracking-wide mb-4">
-            The Archive Remains Open
+            Looking For The Next System To Build
           </h2>
-          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-serif">
-            Whether you need a dedicated engineer to architect multi-environment cloud infrastructure,
-            automate complex Kubernetes deployment pipelines, or construct scalable real-time systems —
-            the transmission terminal is receptive. Let us build the next architecture together.
+
+          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-serif max-w-2xl mx-auto">
+            The journal entries pause here, but the infrastructure continues running.
+            Whether you are designing a high-throughput microservices mesh, provisioning multi-region cloud topology,
+            or structuring automated deployment pipelines — the terminal is receptive. Let us build together.
           </p>
+
+          {/* Quiet Archival Colophon Seal */}
+          <div className="mt-6 inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#080912] border border-amber-400/30 text-[10px] font-mono text-amber-300">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+            <span>CHANNEL STATUS: STANDBY & RECEPTIVE</span>
+            <span className="text-slate-500">·</span>
+            <span>DISPATCH FREQUENCY: 20.70° N, 77.00° E</span>
+          </div>
         </div>
 
         {/* Two-Column Transmission Console */}
