@@ -1,7 +1,6 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
-import { MotionConfig } from 'framer-motion';
+import { MotionConfig, AnimatePresence } from 'framer-motion';
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
 import ArchiveHeader from '@/components/archive/ArchiveHeader';
 import ArchiveSoundtrack from '@/components/archive/ArchiveSoundtrack';
@@ -76,15 +75,18 @@ export default function Home() {
 
   return (
     <SmoothScrollProvider>
-      <MotionConfig reducedMotion="user">
+      <MotionConfig reducedMotion="never">
         <main className="relative w-full min-h-screen bg-[#030305] text-[#f4f1ea] overflow-x-hidden selection:bg-[#d4af37] selection:text-[#030305]">
           {/* Pre-Entry Cinematic Camera Opening Experience */}
-          {isOpeningVisible && (
-            <ArchiveOpening
-              onTrigger={handleOpeningTrigger}
-              onEnter={handleOpeningEnter}
-            />
-          )}
+          <AnimatePresence>
+            {isOpeningVisible && (
+              <ArchiveOpening
+                key="archive-opening"
+                onTrigger={handleOpeningTrigger}
+                onEnter={handleOpeningEnter}
+              />
+            )}
+          </AnimatePresence>
 
           {/* Persistent Cinematic Archive Navigation & Telemetry HUD */}
           <ArchiveHeader

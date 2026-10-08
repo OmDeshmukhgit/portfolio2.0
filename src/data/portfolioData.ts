@@ -187,7 +187,7 @@ export const ARCHIVE_DATA = {
       "My path commenced with web development and organically gravitated toward the foundational bedrock of computing: Linux internals, networking topologies, container orchestration, and immutable cloud infrastructure as code. I take pride in guiding an application from its very first commit into a hardened, highly available production cluster.",
     education: {
       degree: "Bachelor of Technology in Computer Engineering",
-      institution: "MIT ADT University",
+      institution: "Government College Of Engineering Yavatmal",
       focus: "Cloud Computing, Operating Systems, Computer Networks & Software Architecture",
       status: "Graduated",
     },

@@ -3,39 +3,83 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, useSpring, useMotionValue } from 'framer-motion';
-import { Aperture, Crosshair } from 'lucide-react';
 
 interface ArchiveOpeningProps {
   onTrigger?: () => void;
   onEnter: () => void;
 }
 
-type OpeningPhase = 'idle' | 'approaching' | 'viewfinder' | 'diving' | 'done';
+type OpeningPhase =
+  | 'idle'
+  | 'silence'
+  | 'pulse'
+  | 'travel'
+  | 'response'
+  | 'converge'
+  | 'bloom'
+  | 'revealed';
+
+// Starlight Responders positioned naturally across the cosmic expanse
+interface StarResponder {
+  id: string;
+  top: number; // percentage of viewport height
+  left: number; // percentage of viewport width
+  delay: number; // in seconds relative to response phase
+  size: number; // in pixels
+}
+
+const RESPONDING_STARS: StarResponder[] = [
+  { id: 'node-1', left: 28, top: 26, delay: 0.0, size: 4.0 }, // Origin Beacon
+  { id: 'node-2', left: 40, top: 33, delay: 0.25, size: 4.5 }, // Upper-mid cluster
+  { id: 'node-3', left: 55, top: 23, delay: 0.55, size: 4.2 }, // Top deep sky
+  { id: 'node-4', left: 68, top: 38, delay: 0.85, size: 4.8 }, // Right nebula rim
+  { id: 'node-5', left: 74, top: 54, delay: 1.15, size: 4.0 }, // Far right expanse
+  { id: 'node-6', left: 58, top: 64, delay: 1.4, size: 4.6 }, // Lower-mid cluster
+  { id: 'node-7', left: 42, top: 58, delay: 1.65, size: 4.2 }, // Return filament
+];
+
+// Constellation network paths connecting responding stars
+const NETWORK_CONNECTIONS: [number, number][] = [
+  [0, 1], // Node 1 -> Node 2
+  [1, 2], // Node 2 -> Node 3
+  [1, 5], // Node 2 -> Node 6 (Diagonal balance)
+  [2, 3], // Node 3 -> Node 4
+  [3, 4], // Node 4 -> Node 5
+  [3, 5], // Node 4 -> Node 6
+  [5, 6], // Node 6 -> Node 7
+  [6, 0], // Node 7 -> Node 1 (Loop discovery)
+];
+
+// Natural ambient stars for the dormant space state
+const AMBIENT_STARS = [
+  { top: 12, left: 18, size: 1.8, delay: 0 },
+  { top: 22, left: 82, size: 2.2, delay: 1.4 },
+  { top: 48, left: 88, size: 1.6, delay: 2.2 },
+  { top: 70, left: 78, size: 2.0, delay: 0.8 },
+  { top: 82, left: 62, size: 1.5, delay: 3.1 },
+  { top: 86, left: 24, size: 1.8, delay: 1.9 },
+  { top: 34, left: 68, size: 2.0, delay: 2.7 },
+  { top: 14, left: 48, size: 1.5, delay: 0.5 },
+  { top: 62, left: 16, size: 2.2, delay: 3.5 },
+  { top: 8, left: 86, size: 1.8, delay: 1.1 },
+  { top: 92, left: 80, size: 1.5, delay: 2.4 },
+  { top: 38, left: 14, size: 2.0, delay: 0.9 },
+  { top: 52, left: 84, size: 1.7, delay: 1.6 },
+  { top: 76, left: 34, size: 1.5, delay: 2.9 },
+  { top: 24, left: 30, size: 1.8, delay: 0.3 },
+];
 
 export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningProps) {
   const [phase, setPhase] = useState<OpeningPhase>('idle');
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Inertial mouse tracking for realistic physical mass & parallax during idle
+  // Inertial mouse tracking for realistic physical parallax during idle
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Heavy spring damping gives the feeling of physical weight suspended in vacuum
-  const smoothMouseX = useSpring(mouseX, { stiffness: 16, damping: 32 });
-  const smoothMouseY = useSpring(mouseY, { stiffness: 16, damping: 32 });
-
-  // Check reduced motion preference
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    const handleChange = (e: MediaQueryListEvent) => {
-      setPrefersReducedMotion(e.matches);
-    };
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
+  // Heavy spring damping gives physical weight suspended in deep space
+  const smoothMouseX = useSpring(mouseX, { stiffness: 12, damping: 38 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 12, damping: 38 });
 
   // Lock body scroll while opening experience is active
   useEffect(() => {
@@ -46,49 +90,88 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
     };
   }, []);
 
-  // Track subtle mouse movement across viewport for multi-plane parallax
+  // Track subtle mouse movement across viewport for multi-plane parallax in idle
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
       if (phase !== 'idle' || typeof window === 'undefined') return;
       const { innerWidth, innerHeight } = window;
-      const normX = (e.clientX / innerWidth - 0.5) * 20; // max +-10px
-      const normY = (e.clientY / innerHeight - 0.5) * 16; // max +-8px
+      const normX = (e.clientX / innerWidth - 0.5) * 12;
+      const normY = (e.clientY / innerHeight - 0.5) * 8;
       mouseX.set(normX);
       mouseY.set(normY);
     },
     [phase, mouseX, mouseY]
   );
 
-  // Cinematic Camera Approach & Through-The-Lens Viewfinder Sequence:
-  // 1. Approaching (850ms): Camera glides from offset to center and surges close to screen
-  // 2. Viewfinder (900ms): Optical lens opens — see the portfolio through the camera lens aperture!
-  // 3. Diving (750ms): Dive directly into the camera lens, expanding the view to full screen
+  // =========================================================================
+  // THE SIGNAL CHOREOGRAPHY TIMELINE:
+  //
+  // 1. DORMANT SPACE (idle):
+  //    Still, quiet cosmic expanse using the new signal-space-bg.
+  // 2. CLICK -> SILENCE (0 - 650ms):
+  //    UI fades away. Motion halts. Anticipation builds.
+  // 3. FIRST SIGNAL (650 - 1850ms):
+  //    At (28%, 26%), tiny distant point pulses 3 times:
+  //    deep blue -> electric blue -> luminous cyan.
+  // 4. SIGNAL TRAVEL & WAVEFRONTS (1850 - 2750ms):
+  //    Concentric optical light wavefronts propagate outward.
+  //    Luminous transmission point glides across the cosmos with a particle trail.
+  // 5. STAR RESPONSE & NETWORK (2750 - 4100ms):
+  //    Stars awaken in sequence (cause and effect) as signal passes.
+  //    Faint constellation filaments connect responding nodes.
+  // 6. CONVERGENCE (4100 - 4750ms):
+  //    Signal and cosmic energy converge toward center (50%, 50%).
+  //    Network lines fade; background collapses toward darkness.
+  // 7. ATMOSPHERIC BLOOM & VOID (4750 - 5200ms):
+  //    Soft optical bloom contracts into deep blue-black (#030305).
+  // 8. ARCHIVE EMERGES (5200ms):
+  //    Existing Archive reveals cleanly. Music starts.
+  // =========================================================================
   const handleTrigger = useCallback(() => {
     if (phase !== 'idle') return;
 
     mouseX.set(0);
     mouseY.set(0);
 
-    // Notify parent directly in click gesture to prime audio
+    // Prime the audio system synchronously within user click gesture
     if (onTrigger) {
       onTrigger();
     }
 
-    setPhase('approaching');
+    // Step 1: Click -> Silence (0 - 650ms)
+    setPhase('silence');
 
+    // Step 2: First Signal Pulses (650ms - 1850ms)
     setTimeout(() => {
-      setPhase('viewfinder');
+      setPhase('pulse');
 
+      // Step 3: Signal Travels through Space & Wavefront (1850ms - 2750ms)
       setTimeout(() => {
-        setPhase('diving');
+        setPhase('travel');
 
+        // Step 4: Star Chain Reaction & Hidden Cosmic Network (2750ms - 4100ms)
         setTimeout(() => {
-          setPhase('done');
-          onEnter();
-        }, prefersReducedMotion ? 350 : 750);
-      }, prefersReducedMotion ? 400 : 900);
-    }, prefersReducedMotion ? 400 : 850);
-  }, [phase, prefersReducedMotion, onTrigger, onEnter, mouseX, mouseY]);
+          setPhase('response');
+
+          // Step 5: Convergence to Center (4100ms - 4750ms)
+          setTimeout(() => {
+            setPhase('converge');
+
+            // Step 6: Soft Atmospheric Bloom & Void (4750ms - 5200ms)
+            setTimeout(() => {
+              setPhase('bloom');
+
+              // Step 7: Reveal the Archive (5200ms)
+              setTimeout(() => {
+                setPhase('revealed');
+                onEnter();
+              }, 450);
+            }, 650);
+          }, 1350);
+        }, 900);
+      }, 1200);
+    }, 650);
+  }, [phase, onTrigger, onEnter, mouseX, mouseY]);
 
   // Keyboard accessibility (Enter / Space)
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -98,437 +181,506 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
     }
   };
 
-  // Colorful stellar field (starlight colored according to stellar temperature)
-  const stars = [
-    { top: 12, left: 18, color: 'bg-cyan-200 shadow-[0_0_8px_rgba(34,211,238,0.9)]', size: 2 },
-    { top: 22, left: 35, color: 'bg-amber-200 shadow-[0_0_8px_rgba(251,191,36,0.9)]', size: 2 },
-    { top: 18, left: 78, color: 'bg-rose-200 shadow-[0_0_6px_rgba(244,63,94,0.8)]', size: 1.5 },
-    { top: 45, left: 85, color: 'bg-cyan-100 shadow-[0_0_10px_rgba(56,189,248,1)]', size: 2.5 },
-    { top: 68, left: 72, color: 'bg-amber-100 shadow-[0_0_9px_rgba(252,211,77,0.9)]', size: 2 },
-    { top: 82, left: 60, color: 'bg-violet-200 shadow-[0_0_8px_rgba(167,139,250,0.8)]', size: 2 },
-    { top: 75, left: 25, color: 'bg-cyan-300 shadow-[0_0_7px_rgba(6,182,212,0.9)]', size: 1.5 },
-    { top: 88, left: 40, color: 'bg-amber-200 shadow-[0_0_6px_rgba(245,158,11,0.8)]', size: 2 },
-    { top: 32, left: 62, color: 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]', size: 2 },
-    { top: 15, left: 52, color: 'bg-rose-100 shadow-[0_0_6px_rgba(251,113,133,0.7)]', size: 1.5 },
-    { top: 58, left: 42, color: 'bg-cyan-200 shadow-[0_0_6px_rgba(34,211,238,0.7)]', size: 1.5 },
-    { top: 6, left: 88, color: 'bg-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.9)]', size: 2 },
-    { top: 92, left: 82, color: 'bg-white shadow-[0_0_6px_rgba(255,255,255,0.8)]', size: 1.5 },
-    { top: 38, left: 14, color: 'bg-violet-300 shadow-[0_0_7px_rgba(139,92,246,0.8)]', size: 1.5 },
-    { top: 62, left: 92, color: 'bg-cyan-100 shadow-[0_0_8px_rgba(34,211,238,0.8)]', size: 2 },
-    { top: 28, left: 96, color: 'bg-amber-100 shadow-[0_0_7px_rgba(252,211,77,0.8)]', size: 1.5 },
-    { top: 84, left: 12, color: 'bg-rose-200 shadow-[0_0_6px_rgba(244,63,94,0.7)]', size: 1.5 },
-    { top: 48, left: 28, color: 'bg-white shadow-[0_0_6px_rgba(255,255,255,0.8)]', size: 1 },
-  ];
+  // State derivations
+  const isSignalActive =
+    phase === 'pulse' ||
+    phase === 'travel' ||
+    phase === 'response' ||
+    phase === 'converge';
+
+  const isWavesActive =
+    phase === 'travel' ||
+    phase === 'response';
+
+  const isNetworkActive =
+    phase === 'response' ||
+    phase === 'converge';
+
+  const isDarkVoid = phase === 'bloom' || phase === 'revealed';
 
   return (
     <motion.div
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      animate={{
-        opacity: phase === 'done' ? 0 : 1,
-      }}
-      transition={{
-        duration: phase === 'diving' ? 0.4 : 0.2,
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      exit={{
+        opacity: 0,
+        transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
       }}
       className="fixed inset-0 z-[100] overflow-hidden bg-[#03040a] text-[#f4f1ea] select-none flex flex-col justify-between items-center will-change-transform"
       style={{
-        pointerEvents: phase === 'done' ? 'none' : 'auto',
+        pointerEvents: phase === 'revealed' ? 'none' : 'auto',
       }}
     >
       {/* =========================================================================
-          BACKGROUND LAYER 1: BASE DEEP COSMIC VOID & SPACE IMAGE
-          Restored opening space background image with organic celestial depth
+          BACKGROUND LAYER: NEW CINEMATIC DEEP-SPACE ENVIRONMENT
+          Uses public/archive/opening/signal-space-bg.webp as primary background.
+          No artificial large nebulas overlaid on top.
+          Atmosphere reacts subtly: wakes up slightly with the signal, collapses at convergence.
          ========================================================================= */}
       <motion.div
         animate={{
-          scale:
-            phase === 'idle'
-              ? 1
-              : phase === 'approaching'
-              ? 1.05
-              : 1.08,
+          scale: phase === 'idle' ? 1 : isDarkVoid ? 1.04 : 1.015,
           opacity:
             phase === 'idle'
+              ? 0.95
+              : phase === 'silence'
               ? 0.9
-              : phase === 'approaching'
-              ? 0.75
-              : phase === 'viewfinder'
-              ? 0.5
-              : 0,
+              : phase === 'pulse'
+              ? 0.95
+              : phase === 'travel' || phase === 'response'
+              ? 1.05
+              : phase === 'converge'
+              ? 0.45
+              : 0.15,
+          filter:
+            phase === 'travel' || phase === 'response'
+              ? 'brightness(1.08) contrast(1.12)'
+              : phase === 'converge'
+              ? 'brightness(0.65) contrast(1.05)'
+              : 'brightness(0.92) contrast(1.1)',
         }}
         transition={{
-          duration: phase === 'approaching' ? 0.85 : 0.6,
+          duration: isDarkVoid ? 0.6 : 1.2,
           ease: 'easeInOut',
         }}
         className="absolute inset-0 pointer-events-none z-0 will-change-transform"
       >
         <Image
-          src="/archive/opening/opening-space-bg.webp"
-          alt="Cosmic Environment Base Texture"
+          src="/archive/opening/signal-space-bg.webp"
+          alt="Cinematic Deep Space Signal Environment"
           fill
           priority
-          className="object-cover object-center filter contrast-125 brightness-85"
+          className="object-cover object-center"
           sizes="100vw"
         />
 
-        {/* Deep Optical Radial Mask for seamless cosmic edge blending */}
-        <div className="absolute inset-0 bg-radial-[circle_at_40%_45%,transparent_20%,rgba(3,4,10,0.8)_65%,#03040a_100%]" />
+        {/* Soft edge vignette: seamlessly transitions into #030305 & cleanly hides bottom watermark */}
+        <div className="absolute inset-0 bg-radial-[circle_at_50%_48%,transparent_35%,rgba(3,4,10,0.6)_70%,#030305_96%]" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#030305] via-[#030305]/80 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#030305] via-[#030305]/80 to-transparent" />
       </motion.div>
 
       {/* =========================================================================
-          BACKGROUND LAYER 2: COLORFUL COSMIC NEBULA ILLUMINATION
-         ========================================================================= */}
-      <motion.div
-        animate={{
-          opacity: phase === 'idle' ? 1 : phase === 'approaching' ? 0.7 : 0.3,
-        }}
-        transition={{ duration: 0.8 }}
-        className="absolute inset-0 pointer-events-none z-[1] overflow-hidden"
-      >
-        {/* Upper-Left Celestial Nursery: Deep Indigo & Luminous Cyan */}
-        <div className="absolute -top-[10%] -left-[10%] w-[65vw] h-[65vw] max-w-[850px] max-h-[850px] rounded-full bg-gradient-to-br from-indigo-600/25 via-cyan-500/18 to-violet-600/15 blur-[120px]" />
-
-        {/* Lower-Right Solar Horizon: Warm Amber, Gold & Soft Rose Dispersion */}
-        <div className="absolute -bottom-[12%] -right-[8%] w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] rounded-full bg-gradient-to-tl from-amber-500/25 via-orange-400/18 to-rose-500/14 blur-[130px]" />
-
-        {/* Center-Left Planetary Corona: Radiant Celestial Cyan-Teal Sheen */}
-        <div className="absolute top-[20%] left-[8%] w-[45vw] h-[45vw] max-w-[600px] max-h-[600px] rounded-full bg-cyan-400/12 blur-[100px]" />
-
-        {/* Center-Right Camera Ambient Warmth */}
-        <div className="absolute top-[38%] right-[12%] w-[35vw] h-[35vw] max-w-[450px] max-h-[450px] rounded-full bg-amber-400/10 blur-[90px]" />
-      </motion.div>
-
-      {/* =========================================================================
-          BACKGROUND LAYER 3: MULTI-CHROMATIC STARFIELD
+          NATURAL AMBIENT STARS & GENTLE TWINKLE (DORMANT STATE)
+          Subtle parallax during idle, becomes completely still during silence.
          ========================================================================= */}
       <motion.div
         style={{
-          x: smoothMouseX,
-          y: smoothMouseY,
+          x: phase === 'idle' ? smoothMouseX : 0,
+          y: phase === 'idle' ? smoothMouseY : 0,
         }}
         animate={{
-          opacity: phase === 'idle' ? 0.85 : phase === 'approaching' ? 0.6 : 0.2,
+          opacity: isDarkVoid ? 0.15 : phase === 'silence' ? 0.75 : 0.85,
         }}
         transition={{ duration: 0.6 }}
         className="absolute inset-0 pointer-events-none z-[2] will-change-transform"
       >
-        {stars.map((star, idx) => (
+        {AMBIENT_STARS.map((star, idx) => (
           <div
             key={idx}
-            className={`absolute rounded-full ${star.color} animate-pulse`}
+            className="absolute rounded-full bg-cyan-100/80 shadow-[0_0_6px_rgba(56,189,248,0.7)]"
             style={{
               top: `${star.top}%`,
               left: `${star.left}%`,
               width: `${star.size}px`,
               height: `${star.size}px`,
-              animationDuration: `${3.5 + (idx % 5) * 0.7}s`,
-            }}
-          />
-        ))}
-
-        {/* Subtle background micro-stars */}
-        {[...Array(24)].map((_, i) => (
-          <div
-            key={`micro-${i}`}
-            className="absolute rounded-full bg-white/70"
-            style={{
-              top: `${(i * 23 + 11) % 100}%`,
-              left: `${(i * 37 + 17) % 100}%`,
-              width: '1px',
-              height: '1px',
-              opacity: i % 2 === 0 ? 0.6 : 0.3,
+              opacity: phase === 'idle' ? 0.7 : 0.4,
+              transition: 'opacity 1s ease',
             }}
           />
         ))}
       </motion.div>
 
       {/* =========================================================================
+          THE SIGNAL VISUAL SEQUENCE:
+          1. DISTANT BEACON (Origin: 28% left, 26% top)
+          2. THREE MEASURED PULSES: Deep Blue -> Electric Blue -> Luminous Cyan
+          3. SIGNAL TRAVELLING THROUGH SPACE with Luminous Trajectory & Trail
+          4. SPHERICAL LIGHT WAVEFRONTS
+          5. SEQUENTIAL STAR RESPONDERS (Cause and Effect)
+          6. HIDDEN COSMIC NETWORK (Constellation Filaments)
+          7. CONVERGENCE TO CENTER & ATMOSPHERIC BLOOM
+         ========================================================================= */}
+      <div className="absolute inset-0 pointer-events-none z-[15] overflow-hidden">
+        {/* =====================================================================
+            1. THE FIRST SIGNAL: DISTANT POINT OF LIGHT (Origin: 28% left, 26% top)
+            Pulses 3 times with clear emotional progression:
+            weak (deep blue) -> stronger (electric blue) -> strongest (luminous cyan)
+           ===================================================================== */}
+        {isSignalActive && (
+          <div
+            style={{ top: '26%', left: '28%' }}
+            className="absolute -translate-x-1/2 -translate-y-1/2 will-change-transform z-[18]"
+          >
+            {/* Core Starlight Spark */}
+            <motion.div
+              animate={{
+                scale:
+                  phase === 'pulse'
+                    ? [1, 2.2, 1, 3.0, 1.2, 4.2, 1.5]
+                    : phase === 'converge'
+                    ? [1.2, 0]
+                    : 1.3,
+                opacity:
+                  phase === 'pulse'
+                    ? [0.2, 0.75, 0.3, 0.9, 0.45, 1, 0.85]
+                    : phase === 'converge'
+                    ? [0.85, 0]
+                    : 0.85,
+                backgroundColor:
+                  phase === 'pulse'
+                    ? ['#1e40af', '#3b82f6', '#0284c7', '#0ea5e9', '#06b6d4', '#22d3ee', '#ffffff']
+                    : '#ffffff',
+                boxShadow:
+                  phase === 'pulse'
+                    ? [
+                        '0 0 10px rgba(30,64,175,0.8)',
+                        '0 0 20px rgba(59,130,246,0.9)',
+                        '0 0 15px rgba(2,132,199,0.85)',
+                        '0 0 25px rgba(14,165,233,1)',
+                        '0 0 20px rgba(6,182,212,0.9)',
+                        '0 0 35px rgba(34,211,238,1), 0 0 50px rgba(255,255,255,0.9)',
+                        '0 0 24px rgba(34,211,238,0.9)',
+                      ]
+                    : '0 0 20px rgba(34,211,238,0.85)',
+              }}
+              transition={{
+                duration: phase === 'pulse' ? 1.2 : 0.8,
+                ease: 'easeInOut',
+              }}
+              className="w-2.5 h-2.5 rounded-full"
+            />
+
+            {/* Delicate Starlight Diffraction Cross Spikes on Pulse 3 */}
+            <motion.div
+              animate={{
+                opacity: phase === 'pulse' ? [0, 0.4, 0.1, 0.7, 0.2, 0.95, 0.4] : 0.2,
+                scale: phase === 'pulse' ? [0.5, 1.2, 0.7, 1.8, 0.9, 2.4, 1.1] : 1.0,
+              }}
+              transition={{ duration: 1.2, ease: 'easeInOut' }}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            >
+              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-cyan-200 to-transparent" />
+              <div className="h-12 w-[1px] bg-gradient-to-b from-transparent via-cyan-200 to-transparent absolute" />
+            </motion.div>
+          </div>
+        )}
+
+        {/* =====================================================================
+            2. SPHERICAL LIGHT WAVEFRONTS
+            Concentric optical transmission ripples propagate outward across space.
+           ===================================================================== */}
+        {isWavesActive && (
+          <div
+            style={{ top: '26%', left: '28%' }}
+            className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none will-change-transform"
+          >
+            {/* Wave 1: Deep Electric Blue Front */}
+            <motion.div
+              initial={{ scale: 0.1, opacity: 0 }}
+              animate={{
+                scale: [0.1, 14],
+                opacity: [0, 0.75, 0.35, 0],
+              }}
+              transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+              className="w-20 h-20 rounded-full border border-sky-500/50 shadow-[0_0_24px_rgba(14,165,233,0.35)]"
+            />
+
+            {/* Wave 2: Subtle Luminous Cyan Front (Delayed) */}
+            <motion.div
+              initial={{ scale: 0.1, opacity: 0 }}
+              animate={{
+                scale: [0.1, 17],
+                opacity: [0, 0.65, 0.28, 0],
+              }}
+              transition={{ duration: 2.0, ease: [0.16, 1, 0.3, 1], delay: 0.28 }}
+              className="absolute inset-0 w-20 h-20 rounded-full border border-cyan-400/40 shadow-[0_0_24px_rgba(34,211,238,0.3)]"
+            />
+
+            {/* Wave 3: Radiant Starlight Cyan Front (Delayed) */}
+            <motion.div
+              initial={{ scale: 0.1, opacity: 0 }}
+              animate={{
+                scale: [0.1, 20],
+                opacity: [0, 0.5, 0.18, 0],
+              }}
+              transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
+              className="absolute inset-0 w-20 h-20 rounded-full border border-cyan-200/30"
+            />
+          </div>
+        )}
+
+        {/* =====================================================================
+            3. SIGNAL TRAVELLING THROUGH SPACE: LUMINOUS MOVING TRANSMISSION
+            A small optical starlight spark glides through space along a cosmic trajectory,
+            leaving a faint particle trail and light wake behind it.
+           ===================================================================== */}
+        {(phase === 'travel' || phase === 'response') && (
+          <motion.div
+            initial={{ left: '28%', top: '26%', opacity: 0 }}
+            animate={{
+              left: ['28%', '40%', '55%', '68%', '74%', '58%', '50%'],
+              top: ['26%', '33%', '23%', '38%', '54%', '64%', '50%'],
+              opacity: [0, 1, 1, 1, 1, 1, 0.9],
+            }}
+            transition={{
+              duration: 2.2,
+              ease: [0.25, 0.1, 0.25, 1],
+            }}
+            className="absolute -translate-x-1/2 -translate-y-1/2 will-change-transform z-[22] pointer-events-none"
+          >
+            {/* Travelling Signal Core */}
+            <div className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_16px_rgba(255,255,255,1),0_0_32px_rgba(34,211,238,0.95)] relative">
+              {/* Luminous corona trailing the head */}
+              <div className="absolute -inset-1 rounded-full bg-cyan-400/40 blur-[2px] animate-pulse" />
+            </div>
+
+            {/* Faint Micro-Particle Wake Trail */}
+            <motion.div
+              animate={{
+                scale: [1, 2.2, 0.5],
+                opacity: [0.8, 0.2, 0],
+              }}
+              transition={{
+                duration: 0.6,
+                repeat: Infinity,
+                ease: 'easeOut',
+              }}
+              className="absolute -inset-1.5 rounded-full border border-cyan-300/60"
+            />
+          </motion.div>
+        )}
+
+        {/* =====================================================================
+            4. HIDDEN COSMIC NETWORK (SVG CONSTELLATION FILAMENTS)
+            Extremely thin, delicate, slightly luminous vector lines trace between
+            nodes as the Signal awakens them.
+           ===================================================================== */}
+        {isNetworkActive && (
+          <svg
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            className="absolute inset-0 w-full h-full pointer-events-none z-[16]"
+          >
+            <defs>
+              <linearGradient
+                id="starlightFilamentGrad"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop offset="0%" stopColor="#0284c7" stopOpacity="0.45" />
+                <stop offset="50%" stopColor="#06b6d4" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.45" />
+              </linearGradient>
+            </defs>
+
+            {NETWORK_CONNECTIONS.map(([iA, iB], idx) => {
+              const nodeA = RESPONDING_STARS[iA];
+              const nodeB = RESPONDING_STARS[iB];
+
+              return (
+                <motion.line
+                  key={`network-line-${idx}`}
+                  x1={nodeA.left}
+                  y1={nodeA.top}
+                  x2={nodeB.left}
+                  y2={nodeB.top}
+                  stroke="url(#starlightFilamentGrad)"
+                  strokeWidth="0.12"
+                  strokeDasharray={idx % 2 === 0 ? '0.6 0.4' : undefined}
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{
+                    pathLength: 1,
+                    opacity: phase === 'converge' ? [0.55, 0.12] : 0.55,
+                  }}
+                  transition={{
+                    pathLength: {
+                      duration: 0.85,
+                      ease: 'easeOut',
+                      delay: nodeA.delay + 0.1,
+                    },
+                    opacity: { duration: 0.65 },
+                  }}
+                />
+              );
+            })}
+          </svg>
+        )}
+
+        {/* =====================================================================
+            5. SEQUENTIAL STAR RESPONDERS (CAUSE AND EFFECT)
+            As the Signal traverses space, stars awaken sequentially:
+            brightness increases, subtle halo emits, then settles into active resonance.
+           ===================================================================== */}
+        {RESPONDING_STARS.map((star) => {
+          const isTriggered =
+            phase === 'travel' ||
+            phase === 'response' ||
+            phase === 'converge';
+
+          return (
+            <div
+              key={star.id}
+              style={{
+                top: `${star.top}%`,
+                left: `${star.left}%`,
+              }}
+              className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none will-change-transform z-[18]"
+            >
+              <motion.div
+                animate={{
+                  scale: isTriggered
+                    ? phase === 'converge'
+                    ? [1.2, 0.75]
+                    : [1, 2.4, 1.25]
+                    : 1,
+                  opacity: isTriggered
+                    ? phase === 'converge'
+                    ? [0.85, 0.2]
+                    : [0.5, 1, 0.85]
+                    : 0.45,
+                }}
+                transition={{
+                  scale: {
+                    duration: 0.8,
+                    ease: 'easeOut',
+                    delay: star.delay,
+                  },
+                  opacity: {
+                    duration: 0.75,
+                    delay: star.delay,
+                  },
+                }}
+                className="rounded-full bg-cyan-100 shadow-[0_0_12px_rgba(34,211,238,0.95),0_0_22px_rgba(14,165,233,0.7)] relative flex items-center justify-center"
+                style={{
+                  width: `${star.size}px`,
+                  height: `${star.size}px`,
+                }}
+              >
+                {/* Luminous Awakening Halo */}
+                {isTriggered && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.6 }}
+                    animate={{
+                      opacity: [0, 0.85, 0],
+                      scale: [0.6, 2.5, 1.3],
+                    }}
+                    transition={{
+                      duration: 0.85,
+                      ease: 'easeOut',
+                      delay: star.delay,
+                    }}
+                    className="absolute -inset-1.5 rounded-full border border-cyan-300/50 pointer-events-none"
+                  />
+                )}
+              </motion.div>
+            </div>
+          );
+        })}
+
+        {/* =====================================================================
+            6. CONVERGENCE TOWARD THE CENTER (50%, 50%)
+            The awakened cosmic energy and the Signal glide into the center.
+            Controlled, intelligent, starlight blue/cyan approaching brilliant white.
+           ===================================================================== */}
+        {phase === 'converge' && (
+          <motion.div
+            initial={{
+              top: '58%',
+              left: '52%',
+              scale: 1,
+              opacity: 0.7,
+            }}
+            animate={{
+              top: '50%',
+              left: '50%',
+              scale: [1, 2.0, 1.5],
+              opacity: [0.7, 1, 0.95],
+            }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none will-change-transform z-20"
+          >
+            <div className="w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_24px_rgba(255,255,255,1),0_0_45px_rgba(34,211,238,0.95),0_0_70px_rgba(14,165,233,0.8)]" />
+          </motion.div>
+        )}
+
+        {/* =====================================================================
+            7. SOFT ATMOSPHERIC BLOOM (NO WHITE FLASH, NO CAMERA FLASH)
+            A gentle celestial bloom expands softly, then contracts into the deep void.
+           ===================================================================== */}
+        {phase === 'bloom' && (
+          <motion.div
+            initial={{ scale: 0.3, opacity: 0 }}
+            animate={{
+              scale: [0.3, 2.2, 0.1],
+              opacity: [0, 0.85, 0],
+            }}
+            transition={{ duration: 0.55, ease: 'easeInOut' }}
+            style={{ top: '50%', left: '50%' }}
+            className="absolute -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-radial-[circle_at_center,rgba(56,189,248,0.45)_0%,rgba(14,165,233,0.25)_35%,rgba(3,10,25,0.6)_60%,transparent_80%] pointer-events-none"
+          />
+        )}
+      </div>
+
+      {/* =========================================================================
           TOP ARCHIVAL HUD HEADER
+          Scientific expedition / Deep-space observation metadata.
+          Fades smoothly away upon interaction.
          ========================================================================= */}
       <motion.header
         animate={{
           opacity: phase === 'idle' ? 1 : 0,
-          y: phase === 'idle' ? 0 : -16,
+          y: phase === 'idle' ? 0 : -14,
         }}
-        transition={{ duration: 0.18 }}
-        className="relative z-20 w-full max-w-7xl mx-auto px-6 pt-8 flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-amber-300/80 border-b border-white/5 pb-4 pointer-events-none"
+        transition={{ duration: 0.25, ease: 'easeOut' }}
+        className="relative z-20 w-full max-w-7xl mx-auto px-6 pt-8 flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-cyan-200/80 border-b border-white/5 pb-4 pointer-events-none"
       >
         <div className="flex items-center gap-3">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-          <span className="tracking-widest">EXPEDITION 00 // FIELD INITIATION</span>
+          <span className="tracking-widest">SECTOR 00 // DEEP SPACE OBSERVATION</span>
         </div>
         <div className="hidden sm:flex items-center gap-4 text-slate-300 tracking-wider">
-          <span>COSMIC ILLUMINATION</span>
+          <span>COSMIC RECEPTOR</span>
           <span>·</span>
-          <span>OPTICAL FIELD CAMERA</span>
+          <span>STELLAR TRANSMISSION</span>
         </div>
-        <div className="text-amber-300 font-bold tracking-wider">
-          [ ARMED · STANDBY ]
+        <div className="text-cyan-300 font-bold tracking-wider">
+          [ STANDBY · LISTENING ]
         </div>
       </motion.header>
 
       {/* =========================================================================
-          FOREGROUND: THE CAMERA & THROUGH-THE-LENS APERTURE PORTAL
+          CENTER / BOTTOM INTERACTION PROMPT: "ENTER THE ARCHIVE"
+          Minimal, restrained, elegant.
          ========================================================================= */}
-      <div className="relative z-20 flex-1 flex flex-col items-center justify-center w-full px-4">
-        {/* Container moving smoothly from offset to screen center */}
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-end w-full px-4 pb-12 sm:pb-16">
         <motion.div
           animate={{
-            x: phase === 'idle' ? undefined : 0,
-            y: phase === 'idle' ? undefined : 0,
+            opacity: phase === 'idle' ? 1 : 0,
+            y: phase === 'idle' ? 0 : 14,
           }}
-          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            x: phase === 'idle' ? smoothMouseX : 0,
-            y: phase === 'idle' ? smoothMouseY : 0,
-          }}
-          className={`relative flex flex-col items-center will-change-transform ${
-            phase === 'idle'
-              ? 'sm:translate-x-[12vw] md:translate-x-[16vw] lg:translate-x-[18vw]'
-              : 'translate-x-0'
-          }`}
+          transition={{ duration: 0.22, ease: 'easeOut' }}
+          className="flex flex-col items-center gap-3"
         >
-          {/* =====================================================================
-              THE CAMERA INSTRUMENT (Approaches and surges into the lens)
-              transformOrigin: 57.6% 51.5% (The physical center of camera lens barrel)
-             ===================================================================== */}
-          <motion.div
-            animate={
-              phase === 'idle'
-                ? {
-                    x: [-6, 8, -4, 9, -6],
-                    y: [7, -9, 5, -8, 7],
-                    rotate: [-0.8, 1.1, -0.4, 0.8, -0.8],
-                    scale: [1, 1.008, 0.996, 1.004, 1],
-                  }
-                : phase === 'approaching'
-                ? {
-                    x: 0,
-                    y: 0,
-                    rotate: 0,
-                    scale: prefersReducedMotion ? 1.6 : 3.0,
-                  }
-                : phase === 'viewfinder'
-                ? {
-                    x: 0,
-                    y: 0,
-                    rotate: 0,
-                    scale: prefersReducedMotion ? 1.7 : 3.3,
-                  }
-                : phase === 'diving'
-                ? {
-                    scale: prefersReducedMotion ? 2.4 : 28,
-                    opacity: [1, 0.9, 0],
-                  }
-                : {
-                    scale: 30,
-                    opacity: 0,
-                  }
-            }
-            transition={
-              phase === 'idle'
-                ? {
-                    duration: 24,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }
-                : phase === 'approaching'
-                ? {
-                    duration: 0.85,
-                    ease: [0.16, 1, 0.3, 1],
-                  }
-                : phase === 'viewfinder'
-                ? {
-                    duration: 0.9,
-                    ease: 'easeOut',
-                  }
-                : phase === 'diving'
-                ? {
-                    duration: 0.75,
-                    ease: [0.7, 0, 0.2, 1],
-                  }
-                : {
-                    duration: 0.2,
-                  }
-            }
-            style={{
-              transformOrigin: '57.6% 51.5%', // Precise optical center of lens barrel
-            }}
+          <button
+            type="button"
             onClick={handleTrigger}
             onKeyDown={handleKeyDown}
-            tabIndex={0}
-            role="button"
-            aria-label="Enter the Archive by activating camera"
-            className="relative cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/80 rounded-3xl will-change-transform"
+            className="group relative px-7 sm:px-8 py-2.5 rounded-full bg-[#030614]/80 hover:bg-[#071028]/90 border border-cyan-400/35 hover:border-cyan-400/80 text-cyan-100 hover:text-white font-mono text-[11px] sm:text-xs tracking-[0.3em] uppercase transition-all duration-300 backdrop-blur-md cursor-pointer flex items-center gap-3 shadow-[0_6px_25px_rgba(0,0,0,0.85)] hover:shadow-[0_0_30px_rgba(34,211,238,0.25)]"
+            aria-label="Enter the Archive"
           >
-            {/* Luminous Ambient Light Scattering around Camera */}
-            <div className="absolute top-[48%] left-[45%] -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-44 sm:h-44 rounded-full bg-cyan-400/15 blur-2xl pointer-events-none" />
-            <div className="absolute top-[55%] left-[55%] -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-44 sm:h-44 rounded-full bg-amber-400/18 blur-2xl group-hover:bg-amber-400/30 transition-all duration-700 pointer-events-none" />
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 group-hover:bg-cyan-200 transition-colors animate-pulse" />
+            <span>ENTER THE ARCHIVE</span>
+            <span className="text-cyan-400/80 group-hover:translate-y-0.5 transition-transform">↓</span>
+          </button>
 
-            {/* Vintage Field Camera Asset */}
-            <div className="relative w-56 h-56 sm:w-68 sm:h-68 md:w-80 md:h-80 lg:w-92 lg:h-92 transition-transform duration-500 group-hover:scale-103">
-              <Image
-                src="/archive/illustration_camera_clean.webp"
-                alt="Vintage Field Camera — Zero-Gravity Instrument"
-                fill
-                priority
-                className="object-contain filter contrast-110 drop-shadow-[0_20px_50px_rgba(0,0,0,0.95)] group-hover:drop-shadow-[0_25px_65px_rgba(245,158,11,0.28)] transition-all"
-                sizes="(max-width: 640px) 224px, (max-width: 768px) 272px, (max-width: 1024px) 320px, 368px"
-              />
-
-              {/* =================================================================
-                  THE VIEWFINDER LENS APERTURE PORTAL
-                  Positioned exactly over the camera's circular lens pupil (57.6%, 51.5%)
-                  Allows the user to see the portfolio right THROUGH the camera lens!
-                 ================================================================= */}
-              <div
-                style={{
-                  top: '51.5%',
-                  left: '57.6%',
-                }}
-                className="absolute -translate-x-1/2 -translate-y-1/2 w-[43%] h-[43%] rounded-full overflow-hidden pointer-events-none z-10"
-              >
-                {/* 1. Viewfinder Portal Window (Activates as camera approaches) */}
-                <motion.div
-                  animate={{
-                    opacity:
-                      phase === 'idle'
-                        ? 0
-                        : phase === 'approaching'
-                        ? 0.7
-                        : 1,
-                  }}
-                  transition={{ duration: 0.4 }}
-                  className="absolute inset-0 bg-[#030305] flex items-center justify-center overflow-hidden"
-                >
-                  {/* Space Starlight & Cosmic Dust seen inside the lens */}
-                  <div className="absolute inset-0 bg-radial-[circle_at_center,#0e1022_0%,#030305_75%]" />
-                  
-                  {/* Distant Nebulae seen through the lens glass */}
-                  <div className="absolute -top-4 -left-4 w-28 h-28 rounded-full bg-cyan-500/25 blur-xl" />
-                  <div className="absolute -bottom-4 -right-4 w-28 h-28 rounded-full bg-amber-500/25 blur-xl" />
-
-                  {/* Tiny glittering stars inside lens */}
-                  <div className="absolute top-3 left-4 w-1 h-1 rounded-full bg-cyan-200 animate-pulse shadow-[0_0_4px_cyan]" />
-                  <div className="absolute top-8 right-5 w-1 h-1 rounded-full bg-amber-200 shadow-[0_0_4px_orange]" />
-                  <div className="absolute bottom-6 left-6 w-1 h-1 rounded-full bg-white shadow-[0_0_4px_white]" />
-                  <div className="absolute bottom-4 right-8 w-1 h-1 rounded-full bg-violet-300" />
-
-                  {/* The Luminous Moon visible inside the lens */}
-                  <div className="absolute top-2 right-2 w-16 h-16 sm:w-20 sm:h-20 opacity-90 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
-                    <Image
-                      src="/archive/illustration_moon_clean.webp"
-                      alt="Moon visible through camera lens"
-                      fill
-                      className="object-contain"
-                      sizes="80px"
-                    />
-                  </div>
-
-                  {/* Portfolio Scene Title seen through the lens */}
-                  <div className="relative z-10 flex flex-col items-center text-center px-2">
-                    <span className="text-[6px] font-mono tracking-[0.25em] text-cyan-300 uppercase drop-shadow">
-                      SCENE 01 // COSMIC LENS
-                    </span>
-                    <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-amber-200 uppercase mt-0.5 drop-shadow">
-                      THE ARCHIVE
-                    </span>
-                    <span className="text-[5px] font-mono tracking-widest text-slate-300 uppercase mt-0.5">
-                      OM DESHMUKH
-                    </span>
-                  </div>
-
-                  {/* High-Tech Viewfinder Reticle Crosshair */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-12 h-px bg-amber-400/40" />
-                    <div className="h-12 w-px bg-amber-400/40 absolute" />
-                    <div className="w-2 h-2 rounded-full border border-cyan-400/80 absolute animate-ping" />
-                  </div>
-
-                  {/* Cylindrical Anamorphic Cyan Flare across the glass */}
-                  <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent blur-[0.5px] shadow-[0_0_8px_rgba(34,211,238,0.9)]" />
-
-                  {/* Convex Spherical Glass Glare Highlight */}
-                  <div className="absolute inset-0 bg-radial-[circle_at_35%_25%,rgba(255,255,255,0.3)_0%,transparent_50%] pointer-events-none" />
-
-                  {/* Dark Radial Glass Vignette */}
-                  <div className="absolute inset-0 bg-radial-[circle_at_center,transparent_40%,rgba(0,0,0,0.8)_85%,#000_100%] pointer-events-none" />
-                </motion.div>
-
-                {/* 2. Outer Knurled Brass Aperture Bezel */}
-                <div className="absolute inset-0 rounded-full border-2 border-amber-400/80 shadow-[0_0_15px_rgba(245,158,11,0.6),inset_0_0_8px_rgba(0,0,0,0.9)] pointer-events-none" />
-                <div className="absolute inset-1 rounded-full border border-dashed border-amber-300/40 pointer-events-none" />
-              </div>
-
-              {/* Viewfinder Telemetry Overlay (Active during Viewfinder & Diving) */}
-              {(phase === 'viewfinder' || phase === 'approaching') && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                  style={{
-                    top: '51.5%',
-                    left: '57.6%',
-                  }}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 w-[54%] h-[54%] pointer-events-none z-20 flex items-center justify-center"
-                >
-                  {/* Calibrated Aperture Ring Markings */}
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#080914]/90 border border-amber-400/40 text-[6px] font-mono tracking-widest text-amber-300 uppercase whitespace-nowrap shadow-md">
-                    85MM F/1.4 · OPTICAL GLASS
-                  </div>
-
-                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#080914]/90 border border-amber-400/40 text-[6px] font-mono tracking-widest text-cyan-300 uppercase whitespace-nowrap shadow-md">
-                    SIGHTLINE LOCKED // [ 1:1 ]
-                  </div>
-
-                  {/* Corner Viewfinder Brackets */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-amber-400" />
-                    <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-amber-400" />
-                    <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-amber-400" />
-                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-amber-400" />
-                  </div>
-                </motion.div>
-              )}
-            </div>
-
-            {/* Subtle Viewfinder Crosshair Brackets on Hover during Idle */}
-            {phase === 'idle' && (
-              <div className="absolute -inset-4 sm:-inset-6 border border-amber-400/0 group-hover:border-amber-400/30 rounded-3xl transition-all duration-500 pointer-events-none">
-                <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-amber-400/60 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-amber-400/60 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-amber-400/60 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-amber-400/60 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-            )}
-          </motion.div>
-
-          {/* =====================================================================
-              CINEMATIC INTERACTION PROMPT: "ENTER THE ARCHIVE ↓"
-             ===================================================================== */}
-          <motion.div
-            animate={{
-              opacity: phase === 'idle' ? 1 : 0,
-              y: phase === 'idle' ? 0 : 16,
-            }}
-            transition={{ duration: 0.16 }}
-            className="mt-6 sm:mt-7 flex flex-col items-center gap-2"
-          >
-            <button
-              type="button"
-              onClick={handleTrigger}
-              className="group relative px-6 sm:px-7 py-2.5 rounded-full bg-[#080a14]/85 hover:bg-[#0e1224]/95 border border-amber-400/35 hover:border-amber-400/80 text-amber-200/90 hover:text-amber-100 font-mono text-[11px] sm:text-xs tracking-[0.28em] uppercase transition-all duration-300 backdrop-blur-md cursor-pointer flex items-center gap-2.5 shadow-[0_6px_25px_rgba(0,0,0,0.7)] hover:shadow-[0_0_30px_rgba(245,158,11,0.25)]"
-              aria-label="Enter the Archive"
-            >
-              <Aperture className="w-3.5 h-3.5 text-amber-400 group-hover:rotate-45 transition-transform duration-500" />
-              <span>ENTER THE ARCHIVE</span>
-              <span className="text-amber-400/80 group-hover:translate-y-0.5 transition-transform">↓</span>
-            </button>
-
-            <span className="text-[8px] sm:text-[9px] font-mono tracking-widest text-slate-300 uppercase">
-              CLICK CAMERA OR PROMPT TO PROCEED
-            </span>
-          </motion.div>
+          <span className="text-[8px] sm:text-[9px] font-mono tracking-widest text-slate-400 uppercase">
+            TRANSMISSION STANDBY · AWAITING INPUT
+          </span>
         </motion.div>
       </div>
 
@@ -538,36 +690,36 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
       <motion.footer
         animate={{
           opacity: phase === 'idle' ? 1 : 0,
-          y: phase === 'idle' ? 0 : 16,
+          y: phase === 'idle' ? 0 : 14,
         }}
-        transition={{ duration: 0.16 }}
-        className="relative z-20 w-full max-w-7xl mx-auto px-6 pb-8 flex items-center justify-between text-[9px] sm:text-[10px] font-mono text-slate-300/80 border-t border-white/5 pt-4 pointer-events-none"
+        transition={{ duration: 0.22, ease: 'easeOut' }}
+        className="relative z-20 w-full max-w-7xl mx-auto px-6 pb-8 flex items-center justify-between text-[9px] sm:text-[10px] font-mono text-slate-400 border-t border-white/5 pt-4 pointer-events-none"
       >
         <div className="flex items-center gap-2">
           <span>CURATOR: OM DESHMUKH</span>
           <span>·</span>
-          <span>ENGINEERING + PHOTOGRAPHY</span>
+          <span>SYSTEMS & VISUAL ARCHIVE</span>
         </div>
-        <div className="flex items-center gap-2 text-amber-300/70">
-          <span>MEDIUM FORMAT 6×7</span>
+        <div className="flex items-center gap-2 text-cyan-300/70">
+          <span>COSMIC FIELD SURVEY</span>
           <span>·</span>
-          <span>OPTICAL EXPOSURE</span>
+          <span>THE ARCHIVE</span>
         </div>
       </motion.footer>
 
       {/* =========================================================================
-          SEAMLESS OPTICAL DIVE CURTAIN
-          As the camera zooms past scale 15, smooth vignette blades dissolve
-          flawlessly directly into the approved Chapter One portfolio beneath!
+          DEEP SPACE VELVET BLUE-BLACK VOID OVERLAY (#030305)
+          Holds the screen in darkness immediately prior to Archive reveal.
          ========================================================================= */}
-      {phase === 'diving' && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.4, 0] }}
-          transition={{ duration: 0.75, ease: 'easeInOut' }}
-          className="absolute inset-0 pointer-events-none z-[120] bg-radial-[circle_at_center,transparent_30%,#030305_90%]"
-        />
-      )}
+      <motion.div
+        animate={{
+          opacity: isDarkVoid ? 1 : 0,
+        }}
+        transition={{ duration: 0.45, ease: 'easeInOut' }}
+        className="absolute inset-0 pointer-events-none z-[25] bg-[#030305]"
+      >
+        <div className="absolute inset-0 bg-radial-[circle_at_50%_50%,rgba(10,20,38,0.35)_0%,rgba(3,4,8,0.85)_50%,#030305_85%]" />
+      </motion.div>
     </motion.div>
   );
 }
