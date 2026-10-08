@@ -32,8 +32,12 @@ export default function Scene08FinalFrameContact() {
     e.preventDefault();
     if (!form.email || !form.message) return;
     const subject = encodeURIComponent(`Transmission from ${form.name || 'Archive Traveler'}`);
-    const body = encodeURIComponent(`${form.message}\n\nSender: ${form.name} (${form.email})`);
-    window.location.href = `mailto:${curator.email}?subject=${subject}&body=${body}`;
+    const body = encodeURIComponent(
+      `From: ${form.name || 'Anonymous'}\nSender Email: ${form.email}\n\nDispatch Message:\n${form.message}`
+    );
+    // Direct Gmail Web Compose (opens directly in browser without launching desktop Outlook)
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(curator.email)}&su=${subject}&body=${body}`;
+    window.open(gmailUrl, '_blank', 'noopener,noreferrer');
     setIsTransmitted(true);
   };
 
@@ -103,11 +107,31 @@ export default function Scene08FinalFrameContact() {
               <div className="p-8 rounded-2xl bg-emerald-950/60 border border-emerald-500/50 text-center animate-in fade-in duration-300">
                 <Check className="w-8 h-8 text-emerald-400 mx-auto mb-3" />
                 <h4 className="text-base font-bold text-emerald-200 font-serif">
-                  Transmission Channel Opened
+                  Gmail Transmission Window Opened
                 </h4>
                 <p className="text-xs text-emerald-300/80 mt-1 font-mono">
-                  Your mail client has been dispatched to reach Om Deshmukh directly.
+                  Your dispatch has been routed to Gmail to reach <span className="text-emerald-200 font-semibold">{curator.email}</span>.
                 </p>
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                  <a
+                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(curator.email)}&su=${encodeURIComponent(`Transmission from ${form.name || 'Archive Traveler'}`)}&body=${encodeURIComponent(`From: ${form.name || 'Anonymous'}\nSender Email: ${form.email}\n\nDispatch Message:\n${form.message}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 rounded-lg bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/40 text-[11px] font-mono transition-colors"
+                  >
+                    Open in Gmail Again
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsTransmitted(false);
+                      setForm({ name: '', email: '', message: '' });
+                    }}
+                    className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-slate-300 text-[11px] font-mono transition-colors"
+                  >
+                    Send Another Dispatch
+                  </button>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4 font-mono text-xs">
@@ -180,7 +204,13 @@ export default function Scene08FinalFrameContact() {
                     </div>
                     <div>
                       <span className="text-[10px] text-slate-500 uppercase block">Direct Signal</span>
-                      <a href={`mailto:${curator.email}`} className="text-amber-200 hover:underline font-semibold">
+                      <a
+                        href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(curator.email)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-amber-200 hover:underline font-semibold"
+                        title="Compose via Gmail"
+                      >
                         {curator.email}
                       </a>
                     </div>
