@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
 import { Camera, Aperture, GraduationCap, Quote, RefreshCw, Eye } from 'lucide-react';
 
@@ -13,6 +13,7 @@ export default function Scene03TheObserver() {
   const sectionRef = useRef<HTMLElement>(null);
   const [focusState, setFocusState] = useState<FocusState>('locked');
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
+  const isManualRef = useRef(false);
 
   // Scroll progress for Telescope mechanical entry, optical alignment, and exit
   const { scrollYProgress } = useScroll({
@@ -21,17 +22,76 @@ export default function Scene03TheObserver() {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 70,
+    stiffness: 65,
     damping: 24,
     restDelta: 0.001,
   });
 
-  // Telescope: enters from right edge -> precision aligns sightline -> exits right
-  const telescopeX = useTransform(smoothProgress, [0.1, 0.4, 0.75, 0.95], ['90px', '0px', '0px', '130px']);
-  const telescopeOpacity = useTransform(smoothProgress, [0.1, 0.3, 0.75, 0.95], [0, 0.85, 0.85, 0]);
+  // Automatically drive focus sequence with scroll progress unless user manually toggles
+  useMotionValueEvent(smoothProgress, 'change', (latest) => {
+    if (latest < 0.15 || latest > 0.90) {
+      isManualRef.current = false;
+    }
+    if (isManualRef.current) return;
+    if (latest < 0.36) {
+      if (focusState !== 'soft') setFocusState('soft');
+    } else if (latest < 0.46) {
+      if (focusState !== 'focusing') setFocusState('focusing');
+    } else {
+      if (focusState !== 'locked') setFocusState('locked');
+    }
+  });
 
-  // Camera subtle shift on scroll entry
-  const cameraScale = useTransform(smoothProgress, [0.2, 0.45, 0.7], [0.94, 1.03, 0.96]);
+  // TELESCOPE MULTI-PHASE CHOREOGRAPHY:
+  // Phase 1 (0.18–0.36): Enter from right with upward inclination (16deg)
+  // Phase 2 (0.36–0.40): Brief mechanical settle
+  // Phase 3 (0.40–0.46): AIM barrel downward toward photograph (16deg -> -8deg)
+  // Phase 4 (0.46–0.68): OPTICAL LOCK & HERO HOLD (Sightline active, photo locked sharp)
+  // Phase 5 (0.68–0.88): Retract toward edge and exit
+  const telescopeX = useTransform(
+    smoothProgress,
+    [0.18, 0.36, 0.40, 0.46, 0.68, 0.88],
+    ['180px', '15px', '0px', '0px', '0px', '190px']
+  );
+  const telescopeY = useTransform(
+    smoothProgress,
+    [0.18, 0.36, 0.40, 0.46, 0.68, 0.88],
+    ['20px', '4px', '0px', '0px', '0px', '16px']
+  );
+  const telescopeRotate = useTransform(
+    smoothProgress,
+    [0.18, 0.36, 0.40, 0.46, 0.68, 0.88],
+    ['16deg', '16deg', '16deg', '-8deg', '-8deg', '4deg']
+  );
+  const telescopeScale = useTransform(
+    smoothProgress,
+    [0.18, 0.36, 0.46, 0.68, 0.88],
+    [0.92, 1.0, 1.0, 1.0, 0.9]
+  );
+  const telescopeOpacity = useTransform(
+    smoothProgress,
+    [0.15, 0.30, 0.68, 0.88],
+    [0, 0.9, 0.9, 0]
+  );
+
+  // Optical sightline lock-on during Hero Hold (0.46–0.68)
+  const sightlineOpacity = useTransform(
+    smoothProgress,
+    [0.42, 0.47, 0.68, 0.74],
+    [0, 1, 1, 0]
+  );
+
+  // Camera calibration nudge toward photograph
+  const cameraY = useTransform(
+    smoothProgress,
+    [0.22, 0.36, 0.46, 0.68],
+    ['-8px', '-2px', '0px', '0px']
+  );
+  const cameraScale = useTransform(
+    smoothProgress,
+    [0.22, 0.36, 0.46, 0.68],
+    [0.94, 1.02, 1.0, 1.0]
+  );
 
   // Photographer's Contact Sheet Frames
   const contactFrames = [
@@ -84,6 +144,7 @@ export default function Scene03TheObserver() {
   const currentFrame = contactFrames[activeFrameIndex];
 
   const cycleFocus = () => {
+    isManualRef.current = true;
     if (focusState === 'soft') {
       setFocusState('focusing');
       setTimeout(() => setFocusState('locked'), 450);
@@ -101,33 +162,48 @@ export default function Scene03TheObserver() {
       className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-white/5 bg-[#030306]"
     >
       {/* =========================================================================
-          01 — TELESCOPE: OBSERVATIONAL METAPHOR (EDGE -> SIGHTLINE -> EXIT)
-          Mechanical, slow, precise observational instrument at the viewport boundary
+          01 — TELESCOPE: OBSERVATIONAL INSTRUMENT (18–30vw SCALE)
+          Enters tilted -> Settles -> Aims tube at photograph -> Locks Sightline -> Holds -> Exits
          ========================================================================= */}
       <motion.div
         style={{
           x: telescopeX,
+          y: telescopeY,
+          rotate: telescopeRotate,
+          scale: telescopeScale,
           opacity: telescopeOpacity,
         }}
-        className="absolute top-28 right-0 pointer-events-none z-[4] will-change-transform hidden xl:flex items-center gap-2"
+        className="absolute top-20 right-0 pointer-events-none z-[6] will-change-transform hidden xl:flex flex-col items-end pr-2"
       >
         {/* Subtle Optical Sightline pointing toward the photography frame */}
-        <div className="w-24 border-t border-dashed border-amber-400/35 relative">
-          <span className="absolute -top-3 right-2 text-[7px] font-mono text-amber-400/60 uppercase">
-            OPTICAL SIGHTLINE
-          </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 absolute -top-[3px] left-0 animate-ping" />
-        </div>
+        <motion.div
+          style={{ opacity: sightlineOpacity }}
+          className="flex items-center gap-2 mb-1 pr-14"
+        >
+          <div className="w-28 xl:w-44 2xl:w-60 border-t border-dashed border-amber-400/50 relative">
+            <span className="absolute -top-3.5 right-0 text-[8px] font-mono text-amber-300 tracking-widest uppercase">
+              OPTICAL SIGHTLINE // AIM TARGET
+            </span>
+            <span className="w-2 h-2 rounded-full bg-amber-400 absolute -top-[4px] left-0 animate-ping" />
+          </div>
+          <div className="px-2 py-0.5 rounded bg-black/85 border border-amber-400/40 text-[7px] font-mono text-amber-300 uppercase whitespace-nowrap">
+            FOCUS TARGET LOCKED
+          </div>
+        </motion.div>
 
-        {/* Refracting Telescope Illustration */}
-        <div className="relative w-40 h-40 2xl:w-48 2xl:h-48 pr-4">
+        {/* Refracting Telescope Illustration (Target: 18–30vw) */}
+        <div className="relative w-56 h-56 xl:w-72 xl:h-72 2xl:w-84 2xl:h-84 scale-x-[-1]">
           <Image
             src="/archive/illustration_telescope_clean.webp"
-            alt="Telescope Observation Instrument"
+            alt="Refracting Telescope — Visual Observation Instrument"
             fill
-            className="object-contain filter contrast-105 opacity-85"
-            sizes="192px"
+            className="object-contain filter contrast-105 drop-shadow-[0_0_35px_rgba(255,255,255,0.08)]"
+            sizes="(max-width: 1536px) 288px, 336px"
           />
+        </div>
+
+        <div className="mt-1 mr-4 px-3 py-1 rounded-full bg-[#080911]/85 border border-amber-400/20 text-[8px] font-mono tracking-widest text-amber-300/80 uppercase backdrop-blur-sm">
+          EQUATORIAL REFRACTOR // SIGHTLINE COLLIMATION
         </div>
       </motion.div>
 
@@ -166,27 +242,44 @@ export default function Scene03TheObserver() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-start mb-16">
           {/* Left Column: Camera Rangefinder directly above Photograph Viewfinder */}
           <div className="lg:col-span-7 flex flex-col items-center">
-            {/* Conceptual Camera Rangefinder (Relatively small, lens aligned downward) */}
+            {/* Conceptual Camera Rangefinder (Visually connected directly above Photograph) */}
             <motion.div
-              style={{ scale: cameraScale }}
-              className="flex items-center gap-3 mb-2 px-4 py-2 rounded-2xl bg-[#090a14] border border-amber-400/25 shadow-md"
+              style={{
+                y: cameraY,
+                scale: cameraScale,
+              }}
+              className="flex items-center gap-3 mb-2 px-4 py-2.5 rounded-2xl bg-[#090a14] border border-amber-400/30 shadow-lg relative"
             >
-              <div className="relative w-12 h-12 shrink-0">
+              <div className="relative w-14 h-14 shrink-0">
                 <Image
                   src="/archive/illustration_camera_clean.webp"
                   alt="Mechanical Rangefinder Instrument"
                   fill
                   className="object-contain filter contrast-105 opacity-90"
-                  sizes="48px"
+                  sizes="56px"
                 />
               </div>
               <div className="text-left font-mono">
                 <div className="text-[9px] text-amber-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                  <span>RANGEFINDER ALIGNED ↓ VIEWING FRAME</span>
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      focusState === 'locked'
+                        ? 'bg-emerald-400 animate-ping'
+                        : focusState === 'focusing'
+                        ? 'bg-cyan-400 animate-pulse'
+                        : 'bg-amber-400'
+                    }`}
+                  />
+                  <span>
+                    {focusState === 'locked'
+                      ? 'RANGEFINDER ALIGNED ↓ SIGHTLINE FOCUS LOCKED (1:1)'
+                      : focusState === 'focusing'
+                      ? 'RANGEFINDER: CALIBRATING HELICOID ↓ COLLIMATING'
+                      : 'RANGEFINDER: APERTURE WIDE OPEN · SOFT APERTURE'}
+                  </span>
                 </div>
                 <div className="text-[8px] text-slate-400 mt-0.5">
-                  CALIBRATED: 85MM MEDIUM FORMAT · MANUAL HELICOID
+                  INSTRUMENT: 85MM MEDIUM FORMAT · COUPLED TO PHOTOGRAPHIC HERO
                 </div>
               </div>
             </motion.div>
@@ -290,7 +383,10 @@ export default function Scene03TheObserver() {
 
                   <button
                     type="button"
-                    onClick={() => setFocusState('locked')}
+                    onClick={() => {
+                      isManualRef.current = true;
+                      setFocusState('locked');
+                    }}
                     className={`px-3 py-2 rounded-full text-xs transition-all border ${
                       focusState === 'locked'
                         ? 'bg-emerald-950/60 border-emerald-500/50 text-emerald-300'

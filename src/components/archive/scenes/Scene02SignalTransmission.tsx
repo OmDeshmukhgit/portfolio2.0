@@ -22,10 +22,60 @@ export default function Scene02SignalTransmission() {
     restDelta: 0.001,
   });
 
-  // Satellite crosses from RIGHT to LEFT across the upper background
-  const satelliteX = useTransform(smoothProgress, [0.1, 0.85], ['102vw', '-12vw']);
-  const satelliteY = useTransform(smoothProgress, [0.1, 0.85], ['14vh', '22vh']);
-  const satelliteOpacity = useTransform(smoothProgress, [0.1, 0.25, 0.7, 0.85], [0, 0.65, 0.65, 0]);
+  // ORBITAL CURVED CHOREOGRAPHY:
+  // Phase 1 (0.15–0.35): Distant appearance & high-altitude arc entry from upper-right
+  // Phase 2 (0.35–0.45): Curves into telemetry transmission coordinates
+  // Phase 3 & 4 & 5 (0.45–0.62): HERO HOLD, TRANSMISSION DOWNLINK & PIPELINE RESPONSE
+  // Phase 6 (0.62–0.88): Shallow orbital exit curve toward lower-left
+  const satelliteX = useTransform(
+    smoothProgress,
+    [0.15, 0.35, 0.45, 0.62, 0.88],
+    ['85vw', '62vw', '50vw', '48vw', '-16vw']
+  );
+  const satelliteY = useTransform(
+    smoothProgress,
+    [0.15, 0.35, 0.45, 0.62, 0.88],
+    ['8vh', '15vh', '18vh', '18vh', '28vh']
+  );
+  const satelliteRotate = useTransform(
+    smoothProgress,
+    [0.15, 0.35, 0.45, 0.62, 0.88],
+    ['-14deg', '-4deg', '6deg', '6deg', '22deg']
+  );
+  const satelliteScale = useTransform(
+    smoothProgress,
+    [0.15, 0.35, 0.45, 0.62, 0.88],
+    [0.85, 0.98, 1.0, 1.0, 0.88]
+  );
+  const satelliteOpacity = useTransform(
+    smoothProgress,
+    [0.12, 0.25, 0.62, 0.80, 0.88],
+    [0, 0.85, 0.85, 0.35, 0]
+  );
+
+  // Transmission line & data pulse toward deployment pipeline (Hero Hold: 0.45–0.62)
+  const transmissionOpacity = useTransform(
+    smoothProgress,
+    [0.44, 0.48, 0.60, 0.64],
+    [0, 1, 1, 0]
+  );
+  const dataPulseY = useTransform(
+    smoothProgress,
+    [0.48, 0.58],
+    ['0%', '100%']
+  );
+
+  // Subtle pipeline response glow during transmission
+  const pipelineBorderColor = useTransform(
+    smoothProgress,
+    [0.48, 0.54, 0.60, 0.64],
+    [
+      'rgba(34, 211, 238, 0.2)',
+      'rgba(34, 211, 238, 0.55)',
+      'rgba(34, 211, 238, 0.55)',
+      'rgba(34, 211, 238, 0.2)',
+    ]
+  );
 
   const engineeringStack = [
     { name: 'AWS', role: 'Cloud Substrate', color: 'text-amber-400' },
@@ -49,33 +99,54 @@ export default function Scene02SignalTransmission() {
       </div>
 
       {/* =========================================================================
-          03 — SATELLITE: SUBTLE BACKGROUND MOVING INSTRUMENT (RIGHT -> LEFT)
-          Represents Data, Signal, Network, Deployment flowing in the background
+          03 — SATELLITE: ORBITAL TRANSMISSION RELAY (90–140px SCALE)
+          Follows curved orbital trajectory -> HOLDS & TRANSMITS to pipeline -> EXITS
          ========================================================================= */}
       <motion.div
         style={{
           x: satelliteX,
           y: satelliteY,
           opacity: satelliteOpacity,
+          scale: satelliteScale,
+          rotate: satelliteRotate,
         }}
-        className="absolute top-0 left-0 pointer-events-none z-[4] will-change-transform hidden md:flex items-center gap-3"
+        className="absolute top-0 left-0 pointer-events-none z-[6] will-change-transform hidden md:flex flex-col items-center"
       >
-        <div className="relative w-14 h-14">
-          <Image
-            src="/archive/illustration_satellite_clean.webp"
-            alt="Orbital Satellite — Data and Signal Metaphor"
-            fill
-            className="object-contain filter contrast-110 opacity-75"
-            sizes="56px"
-          />
-        </div>
-        <div className="flex flex-col text-[8px] font-mono text-cyan-400/60 uppercase tracking-widest whitespace-nowrap">
-          <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-            <span>ORBITAL TELEMETRY RELAY</span>
+        <div className="flex items-center gap-3">
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32">
+            <Image
+              src="/archive/illustration_satellite_clean.webp"
+              alt="Orbital Telemetry Relay — Data & Signal Transmission Metaphor"
+              fill
+              className="object-contain filter contrast-110 drop-shadow-[0_0_25px_rgba(34,211,238,0.2)]"
+              sizes="(max-width: 768px) 96px, 128px"
+            />
           </div>
-          <span className="text-slate-500 text-[7px]">ALT: 35,786 KM · SIGNAL LOCKED</span>
+          <div className="flex flex-col text-[8px] font-mono text-cyan-300 uppercase tracking-widest whitespace-nowrap bg-[#080911]/90 px-3 py-1.5 rounded-full border border-cyan-400/25 shadow-lg backdrop-blur-md">
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+              <span>ORBITAL TELEMETRY RELAY</span>
+            </div>
+            <span className="text-slate-400 text-[7px] mt-0.5">ALT: 35,786 KM · DOWNLINK ACTIVE</span>
+          </div>
         </div>
+
+        {/* Technical Transmission Ray connecting satellite down toward pipeline */}
+        <motion.div
+          style={{ opacity: transmissionOpacity }}
+          className="flex flex-col items-center mt-1 pointer-events-none"
+        >
+          <div className="h-20 sm:h-28 w-px border-l border-dashed border-cyan-400/40 relative">
+            {/* Traveling Data Pulse */}
+            <motion.div
+              style={{ top: dataPulseY }}
+              className="absolute -left-[3.5px] w-2 h-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.9)]"
+            />
+          </div>
+          <div className="px-2.5 py-0.5 rounded bg-[#060812]/90 border border-cyan-400/30 text-[7px] font-mono text-cyan-300 whitespace-nowrap mt-1">
+            DOWNLINK RAY // TELEMETRY PACKET DISPATCH ↓
+          </div>
+        </motion.div>
       </motion.div>
 
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
@@ -106,14 +177,26 @@ export default function Scene02SignalTransmission() {
           </p>
         </div>
 
+        {/* Telemetry Ingest Badge (Responds to Satellite Transmission) */}
+        <motion.div
+          style={{ opacity: transmissionOpacity }}
+          className="flex items-center gap-2 mb-2 px-3 py-1 rounded-full bg-cyan-950/50 border border-cyan-400/35 text-[9px] font-mono text-cyan-300 shadow-md"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+          <span>SATELLITE DOWNLINK SYNCHRONIZED · TELEMETRY INGEST ACTIVE</span>
+        </motion.div>
+
         {/* The Engineering Deployment Pipeline */}
-        <div className="w-full max-w-3xl flex flex-wrap items-center justify-center gap-2 sm:gap-3 p-3.5 rounded-2xl bg-[#070810]/90 border border-cyan-400/20 backdrop-blur-md font-mono text-xs mb-12 shadow-lg">
+        <motion.div
+          style={{ borderColor: pipelineBorderColor }}
+          className="w-full max-w-3xl flex flex-wrap items-center justify-center gap-2 sm:gap-3 p-3.5 rounded-2xl bg-[#070810]/90 border border-cyan-400/20 backdrop-blur-md font-mono text-xs mb-12 shadow-lg transition-colors"
+        >
           <span className="text-[10px] text-slate-400 uppercase tracking-wider mr-1">
             DEPLOYMENT PIPELINE:
           </span>
           {engineeringStack.map((item, idx) => (
             <React.Fragment key={item.name}>
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/5 border border-white/10">
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/5 border border-white/10 group">
                 <span className={`font-bold ${item.color}`}>{item.name}</span>
                 <span className="text-[9px] text-slate-400">({item.role})</span>
               </div>
@@ -122,7 +205,7 @@ export default function Scene02SignalTransmission() {
               )}
             </React.Fragment>
           ))}
-        </div>
+        </motion.div>
 
         {/* The 5 Interlocking Pillars Grid */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 w-full mb-12">

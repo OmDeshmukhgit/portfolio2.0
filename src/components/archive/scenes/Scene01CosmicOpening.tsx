@@ -15,23 +15,48 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
   const { curator, pillars } = ARCHIVE_DATA;
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Scroll progress for physical Moon transit across the viewport
+  // Local Scene 01 scroll progress for Moon choreography
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 65,
-    damping: 24,
+    stiffness: 60,
+    damping: 26,
     restDelta: 0.001,
   });
 
-  // Physical transit coordinates: LEFT -> CENTER (behind typography) -> RIGHT EXIT
-  const moonX = useTransform(smoothProgress, [0, 0.45, 0.92], ['-12vw', '46vw', '112vw']);
-  const moonY = useTransform(smoothProgress, [0, 0.45, 0.92], ['10vh', '24vh', '48vh']);
-  const moonOpacity = useTransform(smoothProgress, [0, 0.15, 0.65, 0.9], [0.4, 0.75, 0.6, 0]);
-  const moonScale = useTransform(smoothProgress, [0, 0.45, 0.9], [0.85, 1.08, 0.9]);
+  // CINEMATIC LOCAL BEATS:
+  // 0–15%: Moon partially visible on LEFT (-10vw), starts entering
+  // 15–40%: Enters behind identity typography -> CENTER (38vw)
+  // 40–60%: HERO HOLD — Stillness payoff! Sits in composition behind identity
+  // 60–90%: Exits toward right edge (110vw) and fades before Scene 02 begins
+  const moonX = useTransform(
+    smoothProgress,
+    [0, 0.15, 0.40, 0.60, 0.85],
+    ['-10vw', '-2vw', '38vw', '38vw', '110vw']
+  );
+  const moonY = useTransform(
+    smoothProgress,
+    [0, 0.15, 0.40, 0.60, 0.85],
+    ['12vh', '16vh', '24vh', '24vh', '36vh']
+  );
+  const moonScale = useTransform(
+    smoothProgress,
+    [0, 0.15, 0.40, 0.60, 0.85],
+    [0.92, 0.95, 1.02, 1.02, 1.05]
+  );
+  const moonRotate = useTransform(
+    smoothProgress,
+    [0, 0.40, 0.60, 0.85],
+    ['-4deg', '1deg', '1deg', '6deg']
+  );
+  const moonOpacity = useTransform(
+    smoothProgress,
+    [0, 0.10, 0.55, 0.70, 0.85],
+    [0.72, 0.85, 0.85, 0.45, 0]
+  );
 
   return (
     <section
@@ -70,8 +95,8 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
       </div>
 
       {/* =========================================================================
-          MIDGROUND INSTRUMENT: THE MOON IN PHYSICAL TRANSIT
-          Begins subtly on the LEFT -> passes behind typography -> exits RIGHT
+          MIDGROUND INSTRUMENT: THE MOON IN PHYSICAL TRANSIT (25–35vw SCALE)
+          Begins partially visible on the LEFT -> passes behind identity -> HOLDS -> exits RIGHT
          ========================================================================= */}
       <motion.div
         style={{
@@ -79,21 +104,22 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           y: moonY,
           opacity: moonOpacity,
           scale: moonScale,
+          rotate: moonRotate,
         }}
         className="absolute top-0 left-0 pointer-events-none z-[5] will-change-transform hidden sm:flex flex-col items-center"
       >
-        <div className="relative w-44 h-44 md:w-56 md:h-56">
+        <div className="relative w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] md:w-[420px] md:h-[420px] lg:w-[480px] lg:h-[480px]">
           <Image
             src="/archive/illustration_moon_clean.webp"
             alt="Astronomical Moon Transit — Visual Archive Instrument"
             fill
             priority
-            className="object-contain filter contrast-105 drop-shadow-[0_0_40px_rgba(255,255,255,0.1)]"
-            sizes="(max-width: 768px) 176px, 224px"
+            className="object-contain filter contrast-105 drop-shadow-[0_0_50px_rgba(255,255,255,0.12)]"
+            sizes="(max-width: 768px) 340px, (max-width: 1200px) 420px, 480px"
           />
         </div>
-        <div className="mt-1 text-[8px] font-mono tracking-widest text-amber-300/60 uppercase">
-          EPHEMERIS // MERIDIAN TRANSIT
+        <div className="mt-1 px-3 py-1 rounded-full bg-[#080911]/80 border border-white/10 text-[8px] font-mono tracking-widest text-amber-300/70 uppercase backdrop-blur-sm">
+          MERIDIAN TRANSIT // LUNAR EPHEMERIS
         </div>
       </motion.div>
 
