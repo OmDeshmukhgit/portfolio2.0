@@ -422,7 +422,7 @@ export const ARCHIVE_DATA = {
       title: "Brighter Days",
       artist: "Gabriel Albuquerque",
       theme: "Dawn Light & Horizon Exploration",
-      src: "/music/Brighter Days (Slowed + Reverb) - Gabriel Albuquerqe.mp3.mpeg",
+      src: "/music/Brighter Days (Slowed + Reverb) - Gabriel Albuquerque.mp3.mpeg",
     },
   ] as ArchiveTrack[],
 };

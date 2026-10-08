@@ -6,6 +6,7 @@ import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
 import ArchiveHeader from '@/components/archive/ArchiveHeader';
 import ArchiveSoundtrack from '@/components/archive/ArchiveSoundtrack';
 
+import ArchiveOpening from '@/components/archive/opening/ArchiveOpening';
 import Scene01CosmicOpening from '@/components/archive/scenes/Scene01CosmicOpening';
 import Scene02SignalTransmission from '@/components/archive/scenes/Scene02SignalTransmission';
 import Scene03TheObserver from '@/components/archive/scenes/Scene03TheObserver';
@@ -18,6 +19,7 @@ import Scene08FinalFrameContact from '@/components/archive/scenes/Scene08FinalFr
 import { ARCHIVE_DATA } from '@/data/portfolioData';
 
 export default function Home() {
+  const [isOpeningVisible, setIsOpeningVisible] = useState(true);
   const [activeSceneId, setActiveSceneId] = useState('deep-space');
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -57,10 +59,33 @@ export default function Home() {
 
   const currentTrackTitle = ARCHIVE_DATA.soundtracks[currentTrackIndex]?.title || 'Soundtrack';
 
+  const handleOpeningTrigger = () => {
+    // Prime the audio element directly within the user click gesture context
+    if (typeof window !== 'undefined') {
+      const audioEl = document.querySelector('audio');
+      if (audioEl) {
+        audioEl.load();
+      }
+    }
+  };
+
+  const handleOpeningEnter = () => {
+    setIsOpeningVisible(false);
+    setIsAudioPlaying(true);
+  };
+
   return (
     <SmoothScrollProvider>
       <MotionConfig reducedMotion="user">
         <main className="relative w-full min-h-screen bg-[#030305] text-[#f4f1ea] overflow-x-hidden selection:bg-[#d4af37] selection:text-[#030305]">
+          {/* Pre-Entry Cinematic Camera Opening Experience */}
+          {isOpeningVisible && (
+            <ArchiveOpening
+              onTrigger={handleOpeningTrigger}
+              onEnter={handleOpeningEnter}
+            />
+          )}
+
           {/* Persistent Cinematic Archive Navigation & Telemetry HUD */}
           <ArchiveHeader
             activeSceneId={activeSceneId}

@@ -177,6 +177,99 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
   },
 ];
 
+/**
+ * Draws an astronomical radiant star icon (✦) with cardinal diamond spikes,
+ * secondary diagonal flares, luminous golden aura, and an astrolabe precision core.
+ */
+function drawCelestialStarIcon(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  baseRadius: number,
+  pulse: number
+) {
+  const outerR = Math.max(7, (baseRadius + 4.5) * (0.88 + 0.22 * pulse));
+  const innerR = outerR * 0.28;
+  const diagR = outerR * 0.52;
+
+  ctx.save();
+
+  // 1. Soft radial stellar halo
+  const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, outerR * 1.8);
+  halo.addColorStop(0, 'rgba(212, 175, 55, 0.4)');
+  halo.addColorStop(0.5, 'rgba(212, 175, 55, 0.12)');
+  halo.addColorStop(1, 'rgba(212, 175, 55, 0)');
+  ctx.fillStyle = halo;
+  ctx.beginPath();
+  ctx.arc(cx, cy, outerR * 1.8, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 2. Secondary diagonal micro-flares (8-point celestial star icon)
+  ctx.save();
+  ctx.fillStyle = 'rgba(245, 215, 110, 0.65)';
+  ctx.beginPath();
+  for (let i = 0; i < 4; i++) {
+    const angle = (Math.PI / 4) + (i * Math.PI / 2);
+    const halfGap = Math.PI / 10;
+    const tipX = cx + Math.cos(angle) * diagR;
+    const tipY = cy + Math.sin(angle) * diagR;
+    const leftX = cx + Math.cos(angle - halfGap) * (innerR * 0.75);
+    const leftY = cy + Math.sin(angle - halfGap) * (innerR * 0.75);
+    const rightX = cx + Math.cos(angle + halfGap) * (innerR * 0.75);
+    const rightY = cy + Math.sin(angle + halfGap) * (innerR * 0.75);
+
+    if (i === 0) ctx.moveTo(leftX, leftY);
+    else ctx.lineTo(leftX, leftY);
+    ctx.lineTo(tipX, tipY);
+    ctx.lineTo(rightX, rightY);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // 3. Primary 4-Point Radiant Diamond Star Icon
+  ctx.save();
+  ctx.fillStyle = '#fffdf5';
+  ctx.strokeStyle = 'rgba(212, 175, 55, 0.95)';
+  ctx.lineWidth = 1;
+  ctx.shadowColor = 'rgba(212, 175, 55, 0.95)';
+  ctx.shadowBlur = 9;
+
+  ctx.beginPath();
+  for (let i = 0; i < 4; i++) {
+    const tipAngle = (i * Math.PI / 2) - (Math.PI / 2);
+    const innerAngle = tipAngle + (Math.PI / 4);
+    const tipX = cx + Math.cos(tipAngle) * outerR;
+    const tipY = cy + Math.sin(tipAngle) * outerR;
+    const inX = cx + Math.cos(innerAngle) * innerR;
+    const inY = cy + Math.sin(innerAngle) * innerR;
+
+    if (i === 0) ctx.moveTo(tipX, tipY);
+    else ctx.lineTo(tipX, tipY);
+    ctx.lineTo(inX, inY);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  // 4. Central Astrolabe Precision Reticle & Core Point
+  ctx.save();
+  ctx.strokeStyle = 'rgba(212, 175, 55, 0.8)';
+  ctx.lineWidth = 0.8;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 1.8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  ctx.restore();
+}
+
 interface ConstellationProps {
   onSelectConstellation?: (c: Constellation) => void;
 }
@@ -215,20 +308,33 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
 
     const render = () => {
       t += 0.02;
-      const width = canvas.width;
-      const height = canvas.height;
 
-      ctx.clearRect(0, 0, width, height);
+      const dpr = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2.5);
+      const rect = canvas.getBoundingClientRect();
+      const displayWidth = Math.round(rect.width || 540);
+      const displayHeight = Math.round(rect.height || 380);
+
+      const physicalWidth = Math.round(displayWidth * dpr);
+      const physicalHeight = Math.round(displayHeight * dpr);
+
+      if (canvas.width !== physicalWidth || canvas.height !== physicalHeight) {
+        canvas.width = physicalWidth;
+        canvas.height = physicalHeight;
+      }
+
+      ctx.save();
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, displayWidth, displayHeight);
 
       // 1. Astrolabe / Coordinate Grid Lines
       ctx.save();
-      ctx.strokeStyle = 'rgba(212, 175, 55, 0.06)';
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.08)';
       ctx.lineWidth = 1;
       ctx.setLineDash([3, 5]);
 
-      const centerX = width / 2;
-      const centerY = height / 2;
-      const maxR = Math.min(width, height) * 0.44;
+      const centerX = displayWidth / 2;
+      const centerY = displayHeight / 2;
+      const maxR = Math.min(displayWidth, displayHeight) * 0.44;
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, maxR * 0.45, 0, Math.PI * 2);
@@ -252,8 +358,8 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
 
       // 2. Background Stars
       backgroundStars.forEach((star, idx) => {
-        const sx = (star.x / 100) * width;
-        const sy = (star.y / 100) * height;
+        const sx = (star.x / 100) * displayWidth;
+        const sy = (star.y / 100) * displayHeight;
         const twinkle = Math.sin(t + idx * 0.8) * 0.2 + 0.8;
         ctx.fillStyle = `rgba(244, 241, 234, ${star.alpha * twinkle})`;
         ctx.beginPath();
@@ -262,14 +368,14 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
       });
 
       // 3. Constellation Vectors
-      const scaleX = width;
-      const scaleY = height;
+      const scaleX = displayWidth;
+      const scaleY = displayHeight;
 
       ctx.save();
-      ctx.strokeStyle = 'rgba(212, 175, 55, 0.7)';
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.75)';
       ctx.lineWidth = 1.5;
-      ctx.shadowColor = 'rgba(212, 175, 55, 0.35)';
-      ctx.shadowBlur = 5;
+      ctx.shadowColor = 'rgba(212, 175, 55, 0.4)';
+      ctx.shadowBlur = 6;
 
       activeConstellation.lines.forEach(([iA, iB]) => {
         const starA = activeConstellation.stars[iA];
@@ -288,34 +394,17 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
       });
       ctx.restore();
 
-      // 4. Star Nodes & Clean Monospace Labels
+      // 4. Star Nodes (High-DPI Celestial Star Icons)
       activeConstellation.stars.forEach((star, idx) => {
         const x = (star.x / 100) * scaleX;
         const y = (star.y / 100) * scaleY;
         const pulse = Math.sin(t * 1.5 + idx) * 0.5 + 1;
 
-        ctx.save();
-        ctx.fillStyle = 'rgba(212, 175, 55, 0.2)';
-        ctx.beginPath();
-        ctx.arc(x, y, (star.r + 3) * pulse, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = '#fefcf8';
-        ctx.shadowColor = 'rgba(212, 175, 55, 0.8)';
-        ctx.shadowBlur = 8;
-        ctx.beginPath();
-        ctx.arc(x, y, star.r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        if (star.label) {
-          ctx.save();
-          ctx.font = '9px "JetBrains Mono", monospace';
-          ctx.fillStyle = 'rgba(244, 241, 234, 0.85)';
-          ctx.fillText(star.label, x + 8, y + 3);
-          ctx.restore();
-        }
+        // Render radiant celestial star icon with pin-sharp subpixel vectors
+        drawCelestialStarIcon(ctx, x, y, star.r, pulse);
       });
+
+      ctx.restore();
 
       animFrame = requestAnimationFrame(render);
     };
@@ -377,16 +466,36 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
 
           <canvas
             ref={canvasRef}
-            width={540}
-            height={380}
-            className="w-full h-full object-contain"
+            className="w-full h-full block"
           />
 
-          <div className="absolute top-3 left-4 text-[9px] font-mono text-amber-400/60 uppercase">
+          {/* Crisp High-DPI Monospace Node Labels (Native DOM for 100% Portfolio Clarity) */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {activeConstellation.stars.map((star, idx) => {
+              if (!star.label) return null;
+              return (
+                <div
+                  key={`${activeConstellation.id}-${star.label}-${idx}`}
+                  className="absolute pointer-events-none select-none transition-all duration-300 flex items-center"
+                  style={{
+                    left: `${star.x}%`,
+                    top: `${star.y}%`,
+                    transform: 'translate(14px, -50%)',
+                  }}
+                >
+                  <span className="font-mono text-xs sm:text-[13px] font-semibold text-[#fefcf8] tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
+                    {star.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="absolute top-3 left-4 text-[11px] font-mono text-amber-400/80 uppercase font-semibold tracking-wide">
             VECTOR // {activeConstellation.classification}
           </div>
 
-          <div className="absolute bottom-3 right-4 text-[9px] font-mono text-slate-500 uppercase">
+          <div className="absolute bottom-3 right-4 text-[11px] font-mono text-slate-400 uppercase tracking-wide">
             CANVAS CELESTIAL PROJECTION
           </div>
         </div>

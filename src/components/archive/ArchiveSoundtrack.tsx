@@ -28,21 +28,70 @@ export default function ArchiveSoundtrack({
   const tracks = ARCHIVE_DATA.soundtracks;
   const currentTrack: ArchiveTrack = tracks[currentTrackIndex] || tracks[0];
 
-  useEffect(() => {
-    if (!audioRef.current) return;
-    audioRef.current.volume = isMuted ? 0 : volume;
-  }, [volume, isMuted]);
+  const clampVolume = (v: number): number => {
+    if (isNaN(v) || !Number.isFinite(v)) return 0;
+    return Math.max(0, Math.min(1, v));
+  };
 
   useEffect(() => {
     if (!audioRef.current) return;
+    audioRef.current.volume = isMuted ? 0 : clampVolume(volume);
+  }, [volume, isMuted]);
+
+  const prevTrackSrcRef = useRef(currentTrack.src);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    let rafId: number | null = null;
+    let isCancelled = false;
+
+    const trackChanged = prevTrackSrcRef.current !== currentTrack.src;
+    if (trackChanged) {
+      prevTrackSrcRef.current = currentTrack.src;
+      audio.load();
+    }
+
     if (isPlaying) {
-      audioRef.current.play().catch(() => {
-        setIsPlaying(false);
+      const targetVol = isMuted ? 0 : clampVolume(volume);
+      const wasPaused = audio.paused || trackChanged;
+      if (wasPaused) {
+        audio.volume = 0;
+      }
+      audio.play().then(() => {
+        if (isCancelled) return;
+        if (wasPaused && targetVol > 0) {
+          // Smooth cinematic volume fade-in over 1400ms
+          const startTime = performance.now();
+          const fadeDuration = 1400;
+          const step = (now: number) => {
+            if (isCancelled) return;
+            const progress = Math.max(0, Math.min(1, (now - startTime) / fadeDuration));
+            audio.volume = isMuted ? 0 : clampVolume(progress * targetVol);
+            if (progress < 1) {
+              rafId = requestAnimationFrame(step);
+            }
+          };
+          rafId = requestAnimationFrame(step);
+        } else {
+          audio.volume = clampVolume(targetVol);
+        }
+      }).catch(() => {
+        if (!isCancelled) {
+          setIsPlaying(false);
+        }
       });
     } else {
-      audioRef.current.pause();
+      audio.pause();
     }
-  }, [isPlaying, currentTrackIndex, setIsPlaying]);
+
+    return () => {
+      isCancelled = true;
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+    };
+  }, [isPlaying, currentTrackIndex, currentTrack.src, setIsPlaying]);
 
   const togglePlay = () => {
     setHasInteracted(true);
@@ -197,7 +246,7 @@ export default function ArchiveSoundtrack({
                   step="0.05"
                   value={isMuted ? 0 : volume}
                   onChange={(e) => {
-                    setVolume(parseFloat(e.target.value));
+                    setVolume(clampVolume(parseFloat(e.target.value)));
                     setIsMuted(false);
                   }}
                   className="w-16 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
