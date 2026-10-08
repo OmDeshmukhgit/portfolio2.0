@@ -62,18 +62,18 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
           opacity: astronautOpacity,
           scale: astronautScale,
         }}
-        className="absolute top-0 left-0 pointer-events-none z-[5] will-change-transform hidden md:flex flex-col items-center"
+        className="absolute top-0 left-0 pointer-events-none z-[5] will-change-transform flex flex-col items-center"
       >
-        <div className="relative w-48 h-48 lg:w-56 lg:h-56">
+        <div className="relative w-36 h-36 sm:w-48 sm:h-48 lg:w-56 lg:h-56">
           <Image
             src="/archive/illustration_astronaut_clean.webp"
             alt="The Extravehicular Explorer — Stepping Into Unknown Systems"
             fill
             className="object-contain filter contrast-105 opacity-85 drop-shadow-[0_0_30px_rgba(212,175,55,0.15)]"
-            sizes="(max-width: 1024px) 192px, 224px"
+            sizes="(max-width: 640px) 144px, (max-width: 1024px) 192px, 224px"
           />
         </div>
-        <div className="mt-1 text-[8px] font-mono tracking-widest text-amber-300/60 uppercase whitespace-nowrap">
+        <div className="mt-1 text-[7px] sm:text-[8px] font-mono tracking-widest text-amber-300/60 uppercase whitespace-nowrap">
           VENTURING INTO CLOUD TOPOLOGIES
         </div>
       </motion.div>

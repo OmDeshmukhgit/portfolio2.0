@@ -110,24 +110,24 @@ export default function Scene02SignalTransmission() {
           scale: satelliteScale,
           rotate: satelliteRotate,
         }}
-        className="absolute top-0 left-0 pointer-events-none z-[6] will-change-transform hidden md:flex flex-col items-center"
+        className="absolute top-0 left-0 pointer-events-none z-[6] will-change-transform flex flex-col items-center"
       >
-        <div className="flex items-center gap-3">
-          <div className="relative w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="relative w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32">
             <Image
               src="/archive/illustration_satellite_clean.webp"
               alt="Orbital Telemetry Relay — Data & Signal Transmission Metaphor"
               fill
               className="object-contain filter contrast-110 drop-shadow-[0_0_25px_rgba(34,211,238,0.2)]"
-              sizes="(max-width: 768px) 96px, 128px"
+              sizes="(max-width: 640px) 80px, (max-width: 768px) 112px, 128px"
             />
           </div>
-          <div className="flex flex-col text-[8px] font-mono text-cyan-300 uppercase tracking-widest whitespace-nowrap bg-[#080911]/90 px-3 py-1.5 rounded-full border border-cyan-400/25 shadow-lg backdrop-blur-md">
+          <div className="flex flex-col text-[7px] sm:text-[8px] font-mono text-cyan-300 uppercase tracking-widest whitespace-nowrap bg-[#080911]/90 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border border-cyan-400/25 shadow-lg backdrop-blur-md">
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
               <span>ORBITAL TELEMETRY RELAY</span>
             </div>
-            <span className="text-slate-400 text-[7px] mt-0.5">ALT: 35,786 KM · DOWNLINK ACTIVE</span>
+            <span className="text-slate-400 text-[6.5px] sm:text-[7px] mt-0.5">ALT: 35,786 KM · DOWNLINK ACTIVE</span>
           </div>
         </div>
 
@@ -136,7 +136,7 @@ export default function Scene02SignalTransmission() {
           style={{ opacity: transmissionOpacity }}
           className="flex flex-col items-center mt-1 pointer-events-none"
         >
-          <div className="h-20 sm:h-28 w-px border-l border-dashed border-cyan-400/40 relative">
+          <div className="h-14 sm:h-28 w-px border-l border-dashed border-cyan-400/40 relative">
             {/* Traveling Data Pulse */}
             <motion.div
               style={{ top: dataPulseY }}

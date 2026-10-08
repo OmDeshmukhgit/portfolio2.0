@@ -106,19 +106,19 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           scale: moonScale,
           rotate: moonRotate,
         }}
-        className="absolute top-0 left-0 pointer-events-none z-[5] will-change-transform hidden sm:flex flex-col items-center"
+        className="absolute top-0 left-0 pointer-events-none z-[5] will-change-transform flex flex-col items-center"
       >
-        <div className="relative w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] md:w-[420px] md:h-[420px] lg:w-[480px] lg:h-[480px]">
+        <div className="relative w-[220px] h-[220px] sm:w-[320px] sm:h-[320px] md:w-[420px] md:h-[420px] lg:w-[480px] lg:h-[480px]">
           <Image
             src="/archive/illustration_moon_clean.webp"
             alt="Astronomical Moon Transit — Visual Archive Instrument"
             fill
             priority
             className="object-contain filter contrast-105 drop-shadow-[0_0_50px_rgba(255,255,255,0.12)]"
-            sizes="(max-width: 768px) 340px, (max-width: 1200px) 420px, 480px"
+            sizes="(max-width: 640px) 220px, (max-width: 768px) 320px, (max-width: 1200px) 420px, 480px"
           />
         </div>
-        <div className="mt-1 px-3 py-1 rounded-full bg-[#080911]/80 border border-white/10 text-[8px] font-mono tracking-widest text-amber-300/70 uppercase backdrop-blur-sm">
+        <div className="mt-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-[#080911]/80 border border-white/10 text-[7px] sm:text-[8px] font-mono tracking-widest text-amber-300/70 uppercase backdrop-blur-sm">
           MERIDIAN TRANSIT // LUNAR EPHEMERIS
         </div>
       </motion.div>

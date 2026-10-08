@@ -173,12 +173,12 @@ export default function Scene03TheObserver() {
           scale: telescopeScale,
           opacity: telescopeOpacity,
         }}
-        className="absolute top-20 right-0 pointer-events-none z-[6] will-change-transform hidden xl:flex flex-col items-end pr-2"
+        className="absolute top-16 sm:top-20 right-0 pointer-events-none z-[6] will-change-transform flex flex-col items-end pr-2"
       >
         {/* Subtle Optical Sightline pointing toward the photography frame */}
         <motion.div
           style={{ opacity: sightlineOpacity }}
-          className="flex items-center gap-2 mb-1 pr-14"
+          className="hidden sm:flex items-center gap-2 mb-1 pr-14"
         >
           <div className="w-28 xl:w-44 2xl:w-60 border-t border-dashed border-amber-400/50 relative">
             <span className="absolute -top-3.5 right-0 text-[8px] font-mono text-amber-300 tracking-widest uppercase">
@@ -192,17 +192,17 @@ export default function Scene03TheObserver() {
         </motion.div>
 
         {/* Refracting Telescope Illustration (Target: 18–30vw) */}
-        <div className="relative w-56 h-56 xl:w-72 xl:h-72 2xl:w-84 2xl:h-84 scale-x-[-1]">
+        <div className="relative w-44 h-44 sm:w-60 sm:h-60 xl:w-72 xl:h-72 2xl:w-84 2xl:h-84 scale-x-[-1] opacity-75 sm:opacity-100">
           <Image
             src="/archive/illustration_telescope_clean.webp"
             alt="Refracting Telescope — Visual Observation Instrument"
             fill
             className="object-contain filter contrast-105 drop-shadow-[0_0_35px_rgba(255,255,255,0.08)]"
-            sizes="(max-width: 1536px) 288px, 336px"
+            sizes="(max-width: 640px) 176px, (max-width: 1536px) 288px, 336px"
           />
         </div>
 
-        <div className="mt-1 mr-4 px-3 py-1 rounded-full bg-[#080911]/85 border border-amber-400/20 text-[8px] font-mono tracking-widest text-amber-300/80 uppercase backdrop-blur-sm">
+        <div className="mt-1 mr-2 sm:mr-4 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-[#080911]/85 border border-amber-400/20 text-[7px] sm:text-[8px] font-mono tracking-widest text-amber-300/80 uppercase backdrop-blur-sm">
           EQUATORIAL REFRACTOR // SIGHTLINE COLLIMATION
         </div>
       </motion.div>
@@ -459,68 +459,6 @@ export default function Scene03TheObserver() {
                 B.TECH
               </span>
             </div>
-          </div>
-        </div>
-
-        {/* =========================================================================
-            ARCHIVE CONTACT SHEET: PHOTOGRAPHER'S WORKING PROOFS
-            FRAME 001 · FRAME 002 · FRAME 003 · FRAME 004
-           ========================================================================= */}
-        <div className="w-full flex flex-col items-center">
-          <div className="w-full flex items-center justify-between text-xs font-mono text-amber-400/80 border-b border-white/10 pb-3 mb-6">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-400" />
-              <span>DARKROOM PROOF SHEET // BATCH 2024-2025</span>
-            </div>
-            <div className="text-slate-400">
-              SELECT PROOF FRAME TO INSPECT IN VIEWFINDER
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
-            {contactFrames.map((frame, index) => {
-              const isSelected = activeFrameIndex === index;
-              return (
-                <button
-                  key={frame.id}
-                  type="button"
-                  onClick={() => {
-                    setActiveFrameIndex(index);
-                    setFocusState('locked');
-                  }}
-                  className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between ${
-                    isSelected
-                      ? 'bg-amber-400/15 border-amber-400 shadow-[0_0_20px_rgba(212,175,55,0.3)]'
-                      : 'bg-[#070810] border-white/10 hover:border-amber-400/40 hover:bg-[#0a0c16]'
-                  }`}
-                >
-                  <div className="flex items-center justify-between text-[8px] font-mono text-amber-400/70 mb-2">
-                    <span className="font-bold">{frame.frameNumber}</span>
-                    <span>{frame.lens}</span>
-                  </div>
-
-                  <div className="relative w-full h-28 rounded-lg overflow-hidden bg-black/60 mb-2 border border-white/5">
-                    <Image
-                      src={frame.src}
-                      alt={frame.title}
-                      fill
-                      className="object-cover filter contrast-110"
-                      sizes="(max-width: 768px) 50vw, 200px"
-                    />
-                    {isSelected && (
-                      <div className="absolute inset-0 border-2 border-amber-400 pointer-events-none" />
-                    )}
-                  </div>
-
-                  <span className="font-serif font-bold text-xs text-[#f4f1ea] line-clamp-1">
-                    {frame.title.split('//')[0]}
-                  </span>
-                  <span className="text-[9px] font-mono text-slate-400 mt-1">
-                    {frame.aperture} · {frame.shutter}
-                  </span>
-                </button>
-              );
-            })}
           </div>
         </div>
       </div>
