@@ -1,23 +1,42 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
-import { Radio, Wifi, Activity, Terminal, Waves, Globe, Cpu, ArrowDown } from 'lucide-react';
+import { Radio, Activity, Waves } from 'lucide-react';
 
 export default function Scene02SignalTransmission() {
-  const { pillars, curator } = ARCHIVE_DATA;
+  const { pillars } = ARCHIVE_DATA;
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Scroll progress for tiny background satellite orbital crossing
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 70,
+    damping: 25,
+    restDelta: 0.001,
+  });
+
+  // Satellite crosses from RIGHT to LEFT across the upper background
+  const satelliteX = useTransform(smoothProgress, [0.1, 0.85], ['102vw', '-12vw']);
+  const satelliteY = useTransform(smoothProgress, [0.1, 0.85], ['14vh', '22vh']);
+  const satelliteOpacity = useTransform(smoothProgress, [0.1, 0.25, 0.7, 0.85], [0, 0.65, 0.65, 0]);
 
   const engineeringStack = [
     { name: 'AWS', role: 'Cloud Substrate', color: 'text-amber-400' },
     { name: 'Terraform', role: 'Declarative IaC', color: 'text-purple-400' },
     { name: 'Kubernetes', role: 'Cluster Orchestration', color: 'text-cyan-400' },
-    { name: 'CI/CD', role: 'Automated Deployment', color: 'text-emerald-400' },
+    { name: 'CI/CD', role: 'Continuous Delivery', color: 'text-emerald-400' },
   ];
 
   return (
     <section
+      ref={sectionRef}
       id="scene-signal"
       className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-white/5"
     >
@@ -28,6 +47,36 @@ export default function Scene02SignalTransmission() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full border border-cyan-500/10 animate-beacon" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] rounded-full border border-indigo-500/5 animate-beacon" style={{ animationDelay: '1.2s' }} />
       </div>
+
+      {/* =========================================================================
+          03 — SATELLITE: SUBTLE BACKGROUND MOVING INSTRUMENT (RIGHT -> LEFT)
+          Represents Data, Signal, Network, Deployment flowing in the background
+         ========================================================================= */}
+      <motion.div
+        style={{
+          x: satelliteX,
+          y: satelliteY,
+          opacity: satelliteOpacity,
+        }}
+        className="absolute top-0 left-0 pointer-events-none z-[4] will-change-transform hidden md:flex items-center gap-3"
+      >
+        <div className="relative w-14 h-14">
+          <Image
+            src="/archive/illustration_satellite_clean.webp"
+            alt="Orbital Satellite — Data and Signal Metaphor"
+            fill
+            className="object-contain filter contrast-110 opacity-75"
+            sizes="56px"
+          />
+        </div>
+        <div className="flex flex-col text-[8px] font-mono text-cyan-400/60 uppercase tracking-widest whitespace-nowrap">
+          <div className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+            <span>ORBITAL TELEMETRY RELAY</span>
+          </div>
+          <span className="text-slate-500 text-[7px]">ALT: 35,786 KM · SIGNAL LOCKED</span>
+        </div>
+      </motion.div>
 
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
         {/* Scene Identification Header */}
@@ -41,82 +90,8 @@ export default function Scene02SignalTransmission() {
           </div>
         </div>
 
-        {/* =========================================================================
-            03 — SATELLITE: DISTANT ORBITAL METAPHOR
-            SATELLITE ··· TRANSMISSION ··· ENGINEERING STACK
-           ========================================================================= */}
-        <div className="w-full flex flex-col items-center mb-10">
-          {/* Distant Archival Satellite Plate */}
-          <motion.div
-            initial={{ opacity: 0, y: -15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="flex flex-col items-center"
-          >
-            <div className="relative p-3 rounded-2xl bg-[#07080f]/90 border border-cyan-500/25 shadow-xl backdrop-blur-md group">
-              <div className="flex items-center justify-between text-[8px] font-mono text-cyan-400/80 border-b border-white/10 pb-1 mb-1 gap-6">
-                <span>FIG. 02 // ORBITAL RELAY</span>
-                <span>TELEMETRY BEACON</span>
-              </div>
-
-              {/* Small, Distant Satellite Illustration (No continuous spinning) */}
-              <div className="relative w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center">
-                <Image
-                  src="/archive/illustration_satellite_clean.webp"
-                  alt="Archival Satellite Relay Illustration — Signal Telemetry Metaphor"
-                  width={128}
-                  height={128}
-                  className="object-contain filter contrast-110 opacity-85 group-hover:opacity-100 transition-opacity"
-                />
-              </div>
-
-              <div className="text-[8px] font-mono text-slate-400 text-center pt-1 border-t border-white/5">
-                ALTITUDE: 35,786 KM · GEO-SYNC
-              </div>
-            </div>
-
-            {/* Dotted Signal Stream */}
-            <div className="flex flex-col items-center my-3 text-cyan-400/60 font-mono text-xs tracking-widest">
-              <span className="w-1 h-1 rounded-full bg-cyan-400 mb-1 animate-ping" />
-              <span>·</span>
-              <span>·</span>
-              <span>·</span>
-              <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-widest mt-1">
-                TRANSMISSION
-              </span>
-              <span>·</span>
-              <span>·</span>
-            </div>
-          </motion.div>
-
-          {/* Connected Engineering Stack Pipeline */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="w-full max-w-3xl flex flex-wrap items-center justify-center gap-2 sm:gap-3 p-3 rounded-2xl bg-[#070810]/80 border border-cyan-400/20 backdrop-blur-md font-mono text-xs"
-          >
-            <span className="text-[10px] text-slate-400 uppercase tracking-wider mr-1">
-              ENGINEERING STACK:
-            </span>
-            {engineeringStack.map((item, idx) => (
-              <React.Fragment key={item.name}>
-                <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/5 border border-white/10">
-                  <span className={`font-bold ${item.color}`}>{item.name}</span>
-                  <span className="text-[9px] text-slate-500">({item.role})</span>
-                </div>
-                {idx < engineeringStack.length - 1 && (
-                  <span className="text-cyan-400/70 font-bold">→</span>
-                )}
-              </React.Fragment>
-            ))}
-          </motion.div>
-        </div>
-
         {/* Narrative Title */}
-        <div className="max-w-3xl text-center mb-14">
+        <div className="max-w-3xl text-center mb-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/40 border border-cyan-400/30 text-cyan-300 text-xs font-mono uppercase mb-4">
             <Waves className="w-3.5 h-3.5 text-cyan-400" />
             <span>Telemetry & The 5 Pillars</span>
@@ -129,6 +104,24 @@ export default function Scene02SignalTransmission() {
             Space, photography, cinema, and music are not diversions — they are the perceptual foundation
             that teaches an architect how complex systems hold together.
           </p>
+        </div>
+
+        {/* The Engineering Deployment Pipeline */}
+        <div className="w-full max-w-3xl flex flex-wrap items-center justify-center gap-2 sm:gap-3 p-3.5 rounded-2xl bg-[#070810]/90 border border-cyan-400/20 backdrop-blur-md font-mono text-xs mb-12 shadow-lg">
+          <span className="text-[10px] text-slate-400 uppercase tracking-wider mr-1">
+            DEPLOYMENT PIPELINE:
+          </span>
+          {engineeringStack.map((item, idx) => (
+            <React.Fragment key={item.name}>
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/5 border border-white/10">
+                <span className={`font-bold ${item.color}`}>{item.name}</span>
+                <span className="text-[9px] text-slate-400">({item.role})</span>
+              </div>
+              {idx < engineeringStack.length - 1 && (
+                <span className="text-cyan-400/70 font-bold">→</span>
+              )}
+            </React.Fragment>
+          ))}
         </div>
 
         {/* The 5 Interlocking Pillars Grid */}
@@ -187,4 +180,5 @@ export default function Scene02SignalTransmission() {
     </section>
   );
 }
+
 

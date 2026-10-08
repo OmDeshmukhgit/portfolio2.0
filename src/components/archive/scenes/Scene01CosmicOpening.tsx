@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
-import { Compass, ArrowDown, Eye, Radio, Sparkles, BookOpen } from 'lucide-react';
+import { ArrowDown, Sparkles } from 'lucide-react';
 import EngineeringConstellations from '@/components/archive/EngineeringConstellations';
 
 interface SceneProps {
@@ -13,17 +13,36 @@ interface SceneProps {
 
 export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
   const { curator, pillars } = ARCHIVE_DATA;
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Scroll progress for physical Moon transit across the viewport
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 65,
+    damping: 24,
+    restDelta: 0.001,
+  });
+
+  // Physical transit coordinates: LEFT -> CENTER (behind typography) -> RIGHT EXIT
+  const moonX = useTransform(smoothProgress, [0, 0.45, 0.92], ['-12vw', '46vw', '112vw']);
+  const moonY = useTransform(smoothProgress, [0, 0.45, 0.92], ['10vh', '24vh', '48vh']);
+  const moonOpacity = useTransform(smoothProgress, [0, 0.15, 0.65, 0.9], [0.4, 0.75, 0.6, 0]);
+  const moonScale = useTransform(smoothProgress, [0, 0.45, 0.9], [0.85, 1.08, 0.9]);
 
   return (
     <section
+      ref={sectionRef}
       id="scene-deep-space"
       className="relative w-full min-h-screen flex flex-col justify-between items-center px-4 sm:px-8 py-20 overflow-hidden select-none"
     >
       {/* =========================================================================
-          COSMIC BACKGROUND: DEEP STARLIGHT, NEBULA DUST & APERTURE VIGNETTE
+          BACKGROUND LAYER: OBSIDIAN VOID, CANVAS STARLIGHT & VIGNETTE
          ========================================================================= */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        {/* Obsidian Space Void */}
         <div className="absolute inset-0 bg-[#030305]" />
 
         {/* Subtle Starlight Points (Pure CSS) */}
@@ -42,7 +61,7 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           ))}
         </div>
 
-        {/* Subtle Astronomical Nebula Glow */}
+        {/* Atmospheric Nebula Glow */}
         <div className="absolute w-[500px] h-[500px] rounded-full bg-indigo-950/20 blur-[120px] top-1/4 left-1/3 pointer-events-none" />
         <div className="absolute w-[400px] h-[400px] rounded-full bg-amber-950/15 blur-[100px] bottom-1/3 right-1/4 pointer-events-none" />
 
@@ -51,12 +70,40 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
       </div>
 
       {/* =========================================================================
-          CAMERA VIEWFINDER RETICLE & METADATA
+          MIDGROUND INSTRUMENT: THE MOON IN PHYSICAL TRANSIT
+          Begins subtly on the LEFT -> passes behind typography -> exits RIGHT
+         ========================================================================= */}
+      <motion.div
+        style={{
+          x: moonX,
+          y: moonY,
+          opacity: moonOpacity,
+          scale: moonScale,
+        }}
+        className="absolute top-0 left-0 pointer-events-none z-[5] will-change-transform hidden sm:flex flex-col items-center"
+      >
+        <div className="relative w-44 h-44 md:w-56 md:h-56">
+          <Image
+            src="/archive/illustration_moon_clean.webp"
+            alt="Astronomical Moon Transit — Visual Archive Instrument"
+            fill
+            priority
+            className="object-contain filter contrast-105 drop-shadow-[0_0_40px_rgba(255,255,255,0.1)]"
+            sizes="(max-width: 768px) 176px, 224px"
+          />
+        </div>
+        <div className="mt-1 text-[8px] font-mono tracking-widest text-amber-300/60 uppercase">
+          EPHEMERIS // MERIDIAN TRANSIT
+        </div>
+      </motion.div>
+
+      {/* =========================================================================
+          FOREGROUND: CAMERA RETICLE & ARCHIVE METADATA
          ========================================================================= */}
       <div className="relative z-10 w-full max-w-6xl mx-auto flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-amber-400/70 border-b border-white/5 pb-4">
         <div className="flex items-center gap-3">
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-          <span>EXPEDITION: 01 // COSMIC OBSERVATORY & ARCHIVE</span>
+          <span>EXPEDITION: 01 // DIGITAL ARCHIVE & OBSERVATORY</span>
         </div>
         <div className="hidden sm:flex items-center gap-4 text-slate-400">
           <span>COORDINATES: {curator.coordinates}</span>
@@ -69,123 +116,98 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
       </div>
 
       {/* =========================================================================
-          THE CINEMATIC REVEAL: CURATOR TITLE & RETRO TELESCOPE INTEGRATION
+          PRIMARY LEVEL 1 SUBJECT: CURATOR IDENTITY & PORTFOLIO LEAD
          ========================================================================= */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center my-auto py-8">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-12">
-          {/* Left Column: Curator Persona & Narrative */}
-          <div className="lg:col-span-8 flex flex-col items-center lg:items-start text-center lg:text-left">
-            {/* Minimal Lens Reticle Crosshair */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.2, ease: 'easeOut' }}
-              className="w-12 h-12 rounded-full border border-amber-400/40 flex items-center justify-center mb-6 relative"
+      <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center my-auto py-12">
+        {/* Minimal Lens Reticle Crosshair */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
+          className="w-12 h-12 rounded-full border border-amber-400/40 flex items-center justify-center mb-6 relative"
+        >
+          <div className="w-2 h-2 rounded-full bg-amber-400" />
+          <div className="absolute -top-1 w-2 h-0.5 bg-amber-400/80" />
+          <div className="absolute -bottom-1 w-2 h-0.5 bg-amber-400/80" />
+          <div className="absolute -left-1 h-2 w-0.5 bg-amber-400/80" />
+          <div className="absolute -right-1 h-2 w-0.5 bg-amber-400/80" />
+        </motion.div>
+
+        {/* Supertitle */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3 }}
+          className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-amber-300/80 mb-3"
+        >
+          PERSONAL ENGINEERING & PHOTOGRAPHIC ARCHIVE
+        </motion.div>
+
+        {/* Master Curator Name */}
+        <motion.h1
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, delay: 0.5 }}
+          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-extrabold tracking-wider text-[#f4f1ea] drop-shadow-[0_10px_35px_rgba(0,0,0,0.9)]"
+        >
+          {curator.name}
+        </motion.h1>
+
+        {/* Professional Role */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.7 }}
+          className="mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#0c0d14]/90 border border-amber-400/30 text-amber-300 text-xs sm:text-sm font-mono tracking-widest uppercase shadow-xl"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+          <span>{curator.title}</span>
+        </motion.div>
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, delay: 0.9 }}
+          className="mt-6 text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl font-serif italic leading-relaxed"
+        >
+          &ldquo;{curator.tagline}&rdquo;
+        </motion.p>
+
+        {/* The 5 Pillars Indicator */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, delay: 1.1 }}
+          className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-mono text-slate-300"
+        >
+          {pillars.map((p) => (
+            <span
+              key={p.name}
+              className="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 flex items-center gap-1.5"
             >
-              <div className="w-2 h-2 rounded-full bg-amber-400" />
-              <div className="absolute -top-1 w-2 h-0.5 bg-amber-400/80" />
-              <div className="absolute -bottom-1 w-2 h-0.5 bg-amber-400/80" />
-              <div className="absolute -left-1 h-2 w-0.5 bg-amber-400/80" />
-              <div className="absolute -right-1 h-2 w-0.5 bg-amber-400/80" />
-            </motion.div>
-
-            {/* Cinematic Archive Supertitle */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.3 }}
-              className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-amber-300/80 mb-3"
-            >
-              A DIGITAL OBSERVATORY & ARCHIVE
-            </motion.div>
-
-            {/* Master Curator Name */}
-            <motion.h1
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 0.5 }}
-              className="text-4xl sm:text-6xl md:text-7xl font-serif font-extrabold tracking-wider text-[#f4f1ea] drop-shadow-[0_10px_35px_rgba(0,0,0,0.9)]"
-            >
-              {curator.name}
-            </motion.h1>
-
-            {/* Architectural Role */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.7 }}
-              className="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0c0d14]/90 border border-amber-400/30 text-amber-300 text-xs font-mono tracking-widest uppercase shadow-xl"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>{curator.title}</span>
-            </motion.div>
-
-            {/* Central Directive */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 0.9 }}
-              className="mt-6 text-base sm:text-lg md:text-xl text-slate-300 max-w-xl font-serif italic leading-relaxed"
-            >
-              &ldquo;{curator.tagline}&rdquo;
-            </motion.p>
-          </div>
-
-          {/* Right Column: 01 — TELESCOPE ARTIFACT (Archival Field Journal Illustration) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.4, delay: 0.6 }}
-            className="lg:col-span-4 relative flex flex-col items-center justify-center"
-          >
-            {/* Archival Plate Frame */}
-            <div className="relative p-4 rounded-3xl bg-[#080911]/85 border border-amber-400/30 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-md group">
-              {/* Field Plate Top Label */}
-              <div className="flex items-center justify-between text-[9px] font-mono text-amber-400/70 border-b border-white/10 pb-2 mb-2">
-                <span>PLATE I // FIELD JOURNAL</span>
-                <span>FIG. 85 · REFRACTOR</span>
-              </div>
-
-              {/* Telescope Illustration: Archival Editorial Tone, Partially Cropped & Controlled */}
-              <div className="relative w-56 h-56 sm:w-64 sm:h-64 flex items-center justify-center overflow-hidden">
-                <Image
-                  src="/archive/illustration_telescope_clean.webp"
-                  alt="Vintage Refracting Telescope Illustration — Archival Observation Instrument"
-                  width={256}
-                  height={256}
-                  priority
-                  className="object-contain filter contrast-105 opacity-90 transition-opacity duration-700 hover:opacity-100"
-                />
-              </div>
-
-              {/* Archival Bottom Annotation */}
-              <div className="mt-2 pt-2 border-t border-white/5 text-center font-mono">
-                <span className="text-[10px] text-amber-300 tracking-wider font-bold block">
-                  OPTICAL INSTRUMENT NO. 85
-                </span>
-                <span className="text-[9px] text-slate-400 uppercase">
-                  AIM: THE CELESTIAL ENGINEERING SKY · OBSERVE → EXPLORE
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+              <span className="text-amber-400">{p.symbol}</span>
+              <span className="text-slate-200">{p.name}</span>
+              <span className="text-slate-500 text-[10px]">({p.role})</span>
+            </span>
+          ))}
+        </motion.div>
 
         {/* =========================================================================
-            INTERACTIVE OBSERVATORY: THE ENGINEERING SKY
+            THE CELESTIAL ENGINEERING SKY: ANNOTATED STAR CHART
             Constellations: AWS · DOCKER · KUBERNETES · TERRAFORM · CI/CD · LINUX · PYTHON
            ========================================================================= */}
-        <div className="w-full mt-6">
+        <div className="w-full mt-14">
           <EngineeringConstellations />
         </div>
       </div>
 
       {/* =========================================================================
-          CAMERA ADVANCE CONTROLS
+          BOTTOM CAMERA CONTROLS
          ========================================================================= */}
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/5">
         <div className="text-[11px] font-mono text-slate-500">
-          FRAME SEQUENCE 01 / 08 · INSTRUMENT: TELESCOPE · SKY: SYNCHRONIZED
+          FRAME SEQUENCE 01 / 08 · LEVEL 1: BEDROCK ENGINEERING & PHOTOGRAPHY
         </div>
 
         <button
@@ -198,10 +220,11 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
         </button>
 
         <div className="hidden sm:block text-[11px] font-mono text-slate-500">
-          SCROLL TO OPERATE CAMERA
+          SCROLL TO EXPLORE ARCHIVE
         </div>
       </div>
     </section>
   );
 }
+
 

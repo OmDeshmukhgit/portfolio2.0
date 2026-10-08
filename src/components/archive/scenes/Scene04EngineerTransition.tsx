@@ -1,32 +1,91 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Layers, Eye, Cpu, ArrowRight, ShieldCheck, GitBranch, Network, Sparkles, Compass } from 'lucide-react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { Eye, ArrowRight, ShieldCheck, GitBranch, Network, Terminal } from 'lucide-react';
 
 interface SceneProps {
   onProceedToSystems: () => void;
 }
 
 export default function Scene04EngineerTransition({ onProceedToSystems }: SceneProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Scroll progress for Astronaut moving THROUGH the transition space
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 65,
+    damping: 24,
+    restDelta: 0.001,
+  });
+
+  // Diagonal transit through engineering information: ENTRY -> CROSSOVER -> DISSOLVE
+  const astronautX = useTransform(smoothProgress, [0.1, 0.5, 0.88], ['-15vw', '38vw', '95vw']);
+  const astronautY = useTransform(smoothProgress, [0.1, 0.5, 0.88], ['36vh', '16vh', '-2vh']);
+  const astronautOpacity = useTransform(smoothProgress, [0.1, 0.28, 0.65, 0.88], [0, 0.75, 0.7, 0]);
+  const astronautScale = useTransform(smoothProgress, [0.1, 0.5, 0.88], [0.85, 1.05, 0.85]);
+
+  const engineeringTokens = [
+    { name: 'AWS', label: 'Cloud Topology' },
+    { name: 'Docker', label: 'OCI Containers' },
+    { name: 'Kubernetes', label: 'Cluster Orchestration' },
+    { name: 'Terraform', label: 'Declarative IaC' },
+    { name: 'CI/CD', label: 'Automated Delivery' },
+  ];
+
   return (
     <section
+      ref={sectionRef}
       id="scene-engineer"
       className="relative w-full min-h-[95vh] flex flex-col justify-center items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-white/5 bg-[#030306]"
     >
-      {/* Background Subtle Astronomical Grain & Depth */}
+      {/* Background Depth & Vignette */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-[#030306]" />
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-indigo-950/15 blur-[140px]" />
         <div className="absolute inset-0 bg-radial-[circle_at_center,transparent_40%,rgba(3,3,6,0.9)_100%]" />
       </div>
 
-      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center text-center">
+      {/* =========================================================================
+          02 — ASTRONAUT: METAPHOR FOR ENTERING UNKNOWN SYSTEMS
+          Enters diagonally, traverses through the engineering cloud nodes, then exits
+         ========================================================================= */}
+      <motion.div
+        style={{
+          x: astronautX,
+          y: astronautY,
+          opacity: astronautOpacity,
+          scale: astronautScale,
+        }}
+        className="absolute top-0 left-0 pointer-events-none z-[5] will-change-transform hidden md:flex flex-col items-center"
+      >
+        <div className="relative w-48 h-48 lg:w-56 lg:h-56">
+          <Image
+            src="/archive/illustration_astronaut_clean.webp"
+            alt="The Extravehicular Explorer — Stepping Into Unknown Systems"
+            fill
+            className="object-contain filter contrast-105 opacity-85 drop-shadow-[0_0_30px_rgba(212,175,55,0.15)]"
+            sizes="(max-width: 1024px) 192px, 224px"
+          />
+        </div>
+        <div className="mt-1 text-[8px] font-mono tracking-widest text-amber-300/60 uppercase whitespace-nowrap">
+          VENTURING INTO CLOUD TOPOLOGIES
+        </div>
+      </motion.div>
+
+      {/* =========================================================================
+          FOREGROUND: PORTFOLIO TRANSITION & ENGINEERING ARCHITECTURE BEDROCK
+         ========================================================================= */}
+      <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center">
         {/* Telemetry Header */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono uppercase mb-6">
           <Eye className="w-3.5 h-3.5 text-amber-400" />
-          <span>CINEMATIC TRANSITION // OBSERVATION ↓ EXPLORATION</span>
+          <span>FOCAL SHIFT // OBSERVATION ↓ EXPLORATION ↓ ENGINEERING</span>
         </div>
 
         {/* Narrative Title */}
@@ -45,66 +104,30 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-base sm:text-lg text-slate-300 max-w-2xl font-serif leading-relaxed mb-12"
+          className="text-base sm:text-lg text-slate-300 max-w-2xl font-serif leading-relaxed mb-10"
         >
-          Here, the archival journey ventures from ground observation into uncharted environments.
-          The same eye that calibrates lighting across photographic film demands deterministic order in distributed
-          cloud topologies, immutable containers, and automated deployment pipelines.
+          Here, the archival narrative crosses from visual observation into distributed computing.
+          The same eye that calibrates lighting across photographic film demands deterministic order in cloud topologies,
+          immutable containers, and automated deployment pipelines.
         </motion.p>
 
-        {/* =========================================================================
-            02 — ASTRONAUT: ONE CINEMATIC TRANSITION MOMENT
-            Archival illustration discovered during the journey, slow subtle movement,
-            partially obscured by darkness and grain, editorial field folio.
-           ========================================================================= */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, delay: 0.3 }}
-          className="relative w-full max-w-2xl mb-14"
-        >
-          {/* Archival Folio Frame */}
-          <div className="relative p-6 sm:p-8 rounded-3xl bg-[#070810]/90 border border-amber-400/25 shadow-[0_25px_60px_rgba(0,0,0,0.95)] backdrop-blur-2xl flex flex-col items-center overflow-hidden group">
-            {/* Edge Metadata */}
-            <div className="w-full flex items-center justify-between text-[9px] font-mono text-amber-400/70 border-b border-white/10 pb-3 mb-4">
-              <span>FOLIO IV // THE EXTRAVEHICULAR EXPLORER</span>
-              <span>DEPTH: 400 KM · ORBITAL VELOCITY</span>
-            </div>
-
-            {/* Astronaut Illustration with Slow Subtle Depth Drift */}
-            <motion.div
-              animate={{ y: [-4, 4, -4] }}
-              transition={{ duration: 9, ease: 'easeInOut', repeat: Infinity }}
-              className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center my-2"
+        {/* Engineering Tokens Traversed by the Explorer */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-12 font-mono text-xs max-w-3xl">
+          {engineeringTokens.map((t) => (
+            <div
+              key={t.name}
+              className="px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 text-slate-300 backdrop-blur-md"
             >
-              {/* Subtle Shadow Vignette Behind Astronaut */}
-              <div className="absolute inset-0 bg-radial-[circle_at_center,transparent_55%,rgba(7,8,16,0.85)_100%] pointer-events-none z-10" />
-
-              <Image
-                src="/archive/illustration_astronaut_clean.webp"
-                alt="Archival Astronaut Illustration — The Exploration Transition"
-                width={280}
-                height={280}
-                className="object-contain filter contrast-105 opacity-85 group-hover:opacity-100 transition-opacity"
-              />
-            </motion.div>
-
-            {/* Archival Folio Lower Caption */}
-            <div className="w-full mt-4 pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] font-mono text-slate-400">
-              <span className="text-amber-300 font-bold uppercase tracking-wider">
-                EXPLORATION ARCHETYPE
-              </span>
-              <span className="text-slate-400">
-                STEPPING INTO DISTRIBUTED CLOUD TOPOLOGIES
-              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+              <span className="font-bold text-amber-200">{t.name}</span>
+              <span className="text-[10px] text-slate-500">({t.label})</span>
             </div>
-          </div>
-        </motion.div>
+          ))}
+        </div>
 
-        {/* Transition Bridge Graphic */}
+        {/* 3 Core Architecture Tenets */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl mb-12 text-left font-mono text-xs">
-          <div className="p-5 rounded-2xl bg-[#090a12] border border-white/10 flex flex-col justify-between">
+          <div className="p-5 rounded-2xl bg-[#090a12]/95 border border-white/10 flex flex-col justify-between shadow-xl backdrop-blur-md">
             <div className="flex items-center gap-2 text-amber-300 mb-2 font-bold">
               <ShieldCheck className="w-4 h-4" />
               <span>IMMUTABILITY</span>
@@ -114,7 +137,7 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[#090a12] border border-white/10 flex flex-col justify-between">
+          <div className="p-5 rounded-2xl bg-[#090a12]/95 border border-white/10 flex flex-col justify-between shadow-xl backdrop-blur-md">
             <div className="flex items-center gap-2 text-cyan-300 mb-2 font-bold">
               <Network className="w-4 h-4" />
               <span>ORCHESTRATION</span>
@@ -124,7 +147,7 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[#090a12] border border-white/10 flex flex-col justify-between">
+          <div className="p-5 rounded-2xl bg-[#090a12]/95 border border-white/10 flex flex-col justify-between shadow-xl backdrop-blur-md">
             <div className="flex items-center gap-2 text-indigo-300 mb-2 font-bold">
               <GitBranch className="w-4 h-4" />
               <span>CONTINUITY</span>
@@ -148,4 +171,3 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
     </section>
   );
 }
-

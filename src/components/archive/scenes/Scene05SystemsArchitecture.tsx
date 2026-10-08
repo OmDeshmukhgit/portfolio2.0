@@ -1,22 +1,54 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ARCHIVE_DATA, ArchiveSkillLayer } from '@/data/portfolioData';
-import { Cloud, Layers, Cpu, Terminal, ArrowRight, CheckCircle2, ShieldCheck, Activity, GitFork, Globe } from 'lucide-react';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import { ARCHIVE_DATA } from '@/data/portfolioData';
+import { Layers, Cpu, Terminal, Activity, GitFork } from 'lucide-react';
 
 export default function Scene05SystemsArchitecture() {
   const { skillsLayers } = ARCHIVE_DATA;
   const [selectedLayerId, setSelectedLayerId] = useState<string>(skillsLayers[0].id);
+  const sectionRef = useRef<HTMLElement>(null);
 
+  // Subtle scroll parallax for Earth as background anchor of scale
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 50,
+    damping: 25,
+    restDelta: 0.001,
+  });
+
+  const earthY = useTransform(smoothProgress, [0, 1], ['-40px', '70px']);
   const activeLayer = skillsLayers.find((l) => l.id === selectedLayerId) || skillsLayers[0];
 
   return (
     <section
+      ref={sectionRef}
       id="scene-systems"
       className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-white/5 bg-[#040408]"
     >
+      {/* =========================================================================
+          05 — EARTH: BACKGROUND VISUAL ANCHOR FOR SCALE (OBSERVATION -> SCALE -> SYSTEMS)
+          Subtle parallax, low opacity (~15%), partially cropped, never competing with UI
+         ========================================================================= */}
+      <motion.div
+        style={{ y: earthY }}
+        className="absolute -top-12 -right-20 md:-right-12 lg:right-4 w-[360px] h-[360px] md:w-[480px] md:h-[480px] pointer-events-none z-0 opacity-15 select-none will-change-transform"
+      >
+        <Image
+          src="/archive/illustration_earth_clean.webp"
+          alt="Terrestrial Scale Anchor"
+          fill
+          className="object-contain filter contrast-110"
+          sizes="(max-width: 768px) 360px, 480px"
+        />
+      </motion.div>
+
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
         {/* Scene Identification Header */}
         <div className="w-full flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-amber-400/80 mb-8 border-b border-white/10 pb-3">
@@ -25,7 +57,7 @@ export default function Scene05SystemsArchitecture() {
             <span>SCENE 05 // SYSTEMS & INFRASTRUCTURE ARCHITECTURE</span>
           </div>
           <div className="text-slate-400">
-            LENS: 35mm · f/4.0 · 1/1000s · RESOLUTION: 1:1 DETERMINISTIC
+            LENS: 35mm · f/4.0 · 1/1000s · DETERMINISTIC BLUEPRINT
           </div>
         </div>
 
@@ -39,71 +71,13 @@ export default function Scene05SystemsArchitecture() {
             Architected Layers & Global Scale
           </h2>
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-serif">
-            Distributed infrastructure is not a list of disconnected tools. It is a synchronized planetary mesh where
-            declarative Terraform builds the cloud fabric across multiple availability zones, Kubernetes orchestrates self-healing container fleets,
-            and automated pipelines ensure uninterrupted continuity.
+            Distributed infrastructure is not a list of disconnected tools. It is a synchronized stack where
+            declarative Terraform provisions multi-region fabrics, Kubernetes orchestrates self-healing container fleets,
+            and automated pipelines ensure continuous production delivery.
           </p>
         </div>
 
-        {/* =========================================================================
-            05 — EARTH: SINGULAR VISUAL ANCHOR (OBSERVATION → SCALE → SYSTEMS)
-            Retro astronomical illustration communicating planetary distributed scale
-           ========================================================================= */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="w-full mb-10 p-5 sm:p-6 rounded-3xl bg-[#080913]/90 border border-amber-400/25 shadow-xl backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-6"
-        >
-          {/* Earth Editorial Plate */}
-          <div className="relative w-32 h-32 sm:w-40 sm:h-40 shrink-0 flex items-center justify-center p-2 rounded-2xl bg-black/50 border border-white/10">
-            <Image
-              src="/archive/illustration_earth_clean.webp"
-              alt="Archival Earth Illustration — Planetary Substrate & Multi-Region Topology"
-              width={150}
-              height={150}
-              className="object-contain filter contrast-105 opacity-90 hover:opacity-100 transition-opacity"
-            />
-          </div>
-
-          {/* Narrative Callout */}
-          <div className="flex-1 text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-mono text-amber-400 uppercase tracking-widest mb-1.5">
-              <Globe className="w-3.5 h-3.5 text-amber-400" />
-              <span>FIGURE V // PLANETARY SUBSTRATE · SCALE & RESILIENCE</span>
-            </div>
-            <h4 className="text-lg sm:text-xl font-serif font-bold text-[#f4f1ea]">
-              Observation → Scale → Systems
-            </h4>
-            <p className="text-xs text-slate-300 mt-1 max-w-2xl font-serif leading-relaxed">
-              When software serves users globally, geographical boundaries dissolve into latency matrices,
-              edge-caching nodes, and multi-region failover zones. Terraform scripts define cloud topology,
-              making an entire planetary deployment reproducible from a single terminal execution.
-            </p>
-          </div>
-
-          {/* Telemetry Points */}
-          <div className="shrink-0 flex flex-col gap-1 text-[10px] font-mono text-amber-300/90 border-t md:border-t-0 md:border-l border-white/10 pt-3 md:pt-0 md:pl-5 text-left">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>ap-south-1 (Mumbai / Primary)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-              <span>us-east-1 (N. Virginia / Edge)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
-              <span>eu-central-1 (Frankfurt / Sync)</span>
-            </div>
-            <span className="text-[9px] text-slate-500 mt-1 uppercase">
-              STATE: DETERMINISTIC REPLICATION
-            </span>
-          </div>
-        </motion.div>
-
-        {/* Systems Pipeline Flow Indicator */}
+        {/* Systems Pipeline Flow Selector */}
         <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8 font-mono text-xs">
           {skillsLayers.map((layer, index) => {
             const isSelected = layer.id === selectedLayerId;
@@ -115,7 +89,7 @@ export default function Scene05SystemsArchitecture() {
                 className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between ${
                   isSelected
                     ? 'bg-amber-400/15 border-amber-400 text-amber-200 shadow-[0_0_25px_rgba(212,175,55,0.25)]'
-                    : 'bg-[#080911] border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20'
+                    : 'bg-[#080911]/90 border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -142,8 +116,8 @@ export default function Scene05SystemsArchitecture() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.4 }}
-            className="w-full rounded-3xl bg-[#090a14] border border-amber-400/30 p-6 sm:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl"
+            transition={{ duration: 0.35 }}
+            className="w-full rounded-3xl bg-[#090a14]/95 border border-amber-400/30 p-6 sm:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl"
           >
             {/* Layer Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
@@ -206,4 +180,3 @@ export default function Scene05SystemsArchitecture() {
     </section>
   );
 }
-

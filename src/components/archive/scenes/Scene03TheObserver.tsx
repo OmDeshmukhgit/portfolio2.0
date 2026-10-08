@@ -1,19 +1,39 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
-import { Camera, Aperture, BookOpen, GraduationCap, Quote, Check, RefreshCw, Crosshair } from 'lucide-react';
+import { Camera, Aperture, GraduationCap, Quote, RefreshCw, Eye } from 'lucide-react';
 
 type FocusState = 'soft' | 'focusing' | 'locked';
 
 export default function Scene03TheObserver() {
   const { about, curator } = ARCHIVE_DATA;
+  const sectionRef = useRef<HTMLElement>(null);
   const [focusState, setFocusState] = useState<FocusState>('locked');
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
 
-  // Contact Sheet Frames (Photographer's Working Archive)
+  // Scroll progress for Telescope mechanical entry, optical alignment, and exit
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 70,
+    damping: 24,
+    restDelta: 0.001,
+  });
+
+  // Telescope: enters from right edge -> precision aligns sightline -> exits right
+  const telescopeX = useTransform(smoothProgress, [0.1, 0.4, 0.75, 0.95], ['90px', '0px', '0px', '130px']);
+  const telescopeOpacity = useTransform(smoothProgress, [0.1, 0.3, 0.75, 0.95], [0, 0.85, 0.85, 0]);
+
+  // Camera subtle shift on scroll entry
+  const cameraScale = useTransform(smoothProgress, [0.2, 0.45, 0.7], [0.94, 1.03, 0.96]);
+
+  // Photographer's Contact Sheet Frames
   const contactFrames = [
     {
       id: 'frame-001',
@@ -25,7 +45,6 @@ export default function Scene03TheObserver() {
       shutter: '1/250s',
       iso: 'ISO 400',
       stock: 'KODAK TRI-X 400',
-      note: 'Subject at rest before the terminal. Observational focus.',
     },
     {
       id: 'frame-002',
@@ -37,7 +56,6 @@ export default function Scene03TheObserver() {
       shutter: '1/500s',
       iso: 'ISO 200',
       stock: 'ILFORD HP5 PLUS',
-      note: 'Low-angle environmental frame. Geometry and natural lighting.',
     },
     {
       id: 'frame-003',
@@ -49,7 +67,6 @@ export default function Scene03TheObserver() {
       shutter: '1/1000s',
       iso: 'ISO 100',
       stock: 'TECHNICAL DIRECT',
-      note: 'Production VPC architecture with isolated subnets and NAT gateways.',
     },
     {
       id: 'frame-004',
@@ -61,13 +78,11 @@ export default function Scene03TheObserver() {
       shutter: '1/2000s',
       iso: 'ISO 100',
       stock: 'TECHNICAL DIRECT',
-      note: 'Self-healing Kubernetes pods orchestrated under declarative state.',
     },
   ];
 
   const currentFrame = contactFrames[activeFrameIndex];
 
-  // Camera Focus Step Handler
   const cycleFocus = () => {
     if (focusState === 'soft') {
       setFocusState('focusing');
@@ -81,9 +96,41 @@ export default function Scene03TheObserver() {
 
   return (
     <section
+      ref={sectionRef}
       id="scene-observer"
       className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-white/5 bg-[#030306]"
     >
+      {/* =========================================================================
+          01 — TELESCOPE: OBSERVATIONAL METAPHOR (EDGE -> SIGHTLINE -> EXIT)
+          Mechanical, slow, precise observational instrument at the viewport boundary
+         ========================================================================= */}
+      <motion.div
+        style={{
+          x: telescopeX,
+          opacity: telescopeOpacity,
+        }}
+        className="absolute top-28 right-0 pointer-events-none z-[4] will-change-transform hidden xl:flex items-center gap-2"
+      >
+        {/* Subtle Optical Sightline pointing toward the photography frame */}
+        <div className="w-24 border-t border-dashed border-amber-400/35 relative">
+          <span className="absolute -top-3 right-2 text-[7px] font-mono text-amber-400/60 uppercase">
+            OPTICAL SIGHTLINE
+          </span>
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 absolute -top-[3px] left-0 animate-ping" />
+        </div>
+
+        {/* Refracting Telescope Illustration */}
+        <div className="relative w-40 h-40 2xl:w-48 2xl:h-48 pr-4">
+          <Image
+            src="/archive/illustration_telescope_clean.webp"
+            alt="Telescope Observation Instrument"
+            fill
+            className="object-contain filter contrast-105 opacity-85"
+            sizes="192px"
+          />
+        </div>
+      </motion.div>
+
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
         {/* Scene Identification Header */}
         <div className="w-full flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-amber-400/80 mb-8 border-b border-white/10 pb-3">
@@ -96,11 +143,11 @@ export default function Scene03TheObserver() {
           </div>
         </div>
 
-        {/* Narrative Title & Camera Connection */}
+        {/* Narrative Title */}
         <div className="max-w-3xl text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono uppercase mb-4">
             <Aperture className="w-3.5 h-3.5 text-amber-400" />
-            <span>Optics & Observational Precision</span>
+            <span>Observation & Photographic Precision</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[#f4f1ea] tracking-wide mb-4">
             The Lens of The Observer
@@ -108,24 +155,43 @@ export default function Scene03TheObserver() {
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-serif">
             Observation connects photography and engineering. In photography, it is calibrating the focus ring
             to isolate form in shadows. In systems engineering, it is diagnosing distributed race conditions,
-            packet latency, and container bottlenecks before they breach production.
+            packet latency, and container bottlenecks before they reach production.
           </p>
         </div>
 
         {/* =========================================================================
-            06 — CAMERA ARTIFACT & INTERACTIVE CAMERA FOCUS CALIBRATION
-            IMAGE IS SOFT → FOCUSING... → FOCUS LOCKED
+            06 — CAMERA & PHOTOGRAPH INTERACTION: CAMERA ↓ PHOTO
+            Camera lens direction aligns toward photograph; photograph transitions SOFT -> FOCUSING -> LOCKED
            ========================================================================= */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-start mb-16">
-          {/* Left Column: Viewfinder Reticle Frame with Soft/Sharp Focus Interaction */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-7 flex flex-col items-center"
-          >
-            {/* Viewfinder Frame Container */}
+          {/* Left Column: Camera Rangefinder directly above Photograph Viewfinder */}
+          <div className="lg:col-span-7 flex flex-col items-center">
+            {/* Conceptual Camera Rangefinder (Relatively small, lens aligned downward) */}
+            <motion.div
+              style={{ scale: cameraScale }}
+              className="flex items-center gap-3 mb-2 px-4 py-2 rounded-2xl bg-[#090a14] border border-amber-400/25 shadow-md"
+            >
+              <div className="relative w-12 h-12 shrink-0">
+                <Image
+                  src="/archive/illustration_camera_clean.webp"
+                  alt="Mechanical Rangefinder Instrument"
+                  fill
+                  className="object-contain filter contrast-105 opacity-90"
+                  sizes="48px"
+                />
+              </div>
+              <div className="text-left font-mono">
+                <div className="text-[9px] text-amber-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  <span>RANGEFINDER ALIGNED ↓ VIEWING FRAME</span>
+                </div>
+                <div className="text-[8px] text-slate-400 mt-0.5">
+                  CALIBRATED: 85MM MEDIUM FORMAT · MANUAL HELICOID
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Photographic Viewfinder (The Hero Subject) */}
             <div className="w-full p-4 sm:p-6 rounded-3xl bg-[#080912] border border-amber-400/35 shadow-[0_25px_60px_rgba(0,0,0,0.95)] relative viewfinder-bracket">
               {/* Film Sprocket Edge Markings */}
               <div className="flex items-center justify-between text-[9px] font-mono text-amber-400/60 mb-3 px-2 border-b border-white/10 pb-2">
@@ -134,7 +200,7 @@ export default function Scene03TheObserver() {
                 <span>{currentFrame.lens} · {currentFrame.aperture} · {currentFrame.shutter}</span>
               </div>
 
-              {/* Photographic Viewfinder Window with Focus Effect */}
+              {/* Viewfinder Window with Interactive Focus */}
               <div className="relative w-full h-[360px] sm:h-[430px] rounded-2xl overflow-hidden bg-black border border-white/10 flex items-center justify-center">
                 <Image
                   src={currentFrame.src}
@@ -151,7 +217,7 @@ export default function Scene03TheObserver() {
                   sizes="(max-width: 768px) 100vw, 600px"
                 />
 
-                {/* Camera Viewfinder Crosshair / Focus Indicator */}
+                {/* Reticle Focus Indicator */}
                 <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
                   <div
                     className={`w-14 h-14 rounded-full border transition-all duration-500 flex items-center justify-center ${
@@ -172,13 +238,11 @@ export default function Scene03TheObserver() {
                       }`}
                     />
                   </div>
-
-                  {/* Crosshair Spikes */}
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-0.5 bg-amber-400/40 pointer-events-none" />
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-24 w-0.5 bg-amber-400/40 pointer-events-none" />
                 </div>
 
-                {/* Viewfinder Live Focus Status Badge */}
+                {/* Status Badge */}
                 <div className="absolute bottom-3 left-4 px-3 py-1.5 rounded-full bg-black/85 border border-white/20 text-[10px] font-mono flex items-center gap-2 backdrop-blur-md">
                   {focusState === 'locked' ? (
                     <>
@@ -206,7 +270,7 @@ export default function Scene03TheObserver() {
                 </div>
               </div>
 
-              {/* Camera Focus Controls Ring */}
+              {/* Focus Interaction Trigger */}
               <div className="mt-4 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 font-mono text-xs">
                 <div className="flex items-center gap-2">
                   <button
@@ -217,9 +281,9 @@ export default function Scene03TheObserver() {
                     <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
                     <span>
                       {focusState === 'locked'
-                        ? 'Soft Focus Simulator'
+                        ? 'Simulate Soft Aperture'
                         : focusState === 'soft'
-                        ? 'Engage Focus Mechanism'
+                        ? 'Engage Focus Calibration'
                         : 'Lock In Pin Focus'}
                     </span>
                   </button>
@@ -242,51 +306,16 @@ export default function Scene03TheObserver() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Right Column: 06 — CAMERA ARTIFACT (Static Field Plate) + Origin Dossier */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-5 flex flex-col gap-6"
-          >
-            {/* Retro Camera Archival Plate */}
-            <div className="p-5 rounded-3xl bg-[#090a14] border border-amber-400/30 backdrop-blur-xl shadow-xl flex items-center gap-5 group">
-              {/* Static Archival Camera Illustration (No rotation, restrained print tone) */}
-              <div className="relative w-28 h-28 shrink-0 flex items-center justify-center p-1 bg-black/40 rounded-2xl border border-white/10">
-                <Image
-                  src="/archive/illustration_camera_clean.webp"
-                  alt="Vintage Medium Format Camera — Archival Observation Mechanism"
-                  width={110}
-                  height={110}
-                  className="object-contain filter contrast-105 opacity-90 group-hover:opacity-100 transition-opacity"
-                />
-              </div>
-
-              <div>
-                <span className="text-[9px] font-mono uppercase text-amber-400 tracking-widest block mb-1">
-                  PLATE III // FIELD INSTRUMENT
-                </span>
-                <h4 className="text-base font-serif font-bold text-[#f4f1ea]">
-                  Analog Rangefinder Mechanism
-                </h4>
-                <p className="text-xs text-slate-400 leading-relaxed font-sans mt-1">
-                  Connects visual observation to distributed computing. Fixed mechanical body with manual focus helicoid.
-                </p>
-                <div className="mt-2 text-[9px] font-mono text-amber-300/80">
-                  CALIBRATION: 85MM MEDIUM FORMAT · GRAIN VERIFIED
-                </div>
-              </div>
-            </div>
-
+          {/* Right Column: Personal Narrative, Education & Philosophy */}
+          <div className="lg:col-span-5 flex flex-col gap-6">
             {/* Dossier Card 01: Curator Note & Origin */}
-            <div className="p-6 rounded-3xl bg-[#080911]/90 border border-white/10 backdrop-blur-xl">
+            <div className="p-6 sm:p-7 rounded-3xl bg-[#080911]/90 border border-white/10 backdrop-blur-xl">
               <span className="text-[10px] font-mono uppercase text-amber-400 tracking-widest block mb-2">
                 CHRONICLE 01 // ORIGIN & BEDROCK
               </span>
-              <h3 className="text-xl font-serif font-bold text-[#f4f1ea] mb-2">
+              <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#f4f1ea] mb-3">
                 From Raw Code to Production Machinery
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-serif mb-3">
@@ -334,11 +363,11 @@ export default function Scene03TheObserver() {
                 B.TECH
               </span>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* =========================================================================
-            ARCHIVE CONTACT SHEET: PHOTOGRAPHER'S WORKING ARCHIVE
+            ARCHIVE CONTACT SHEET: PHOTOGRAPHER'S WORKING PROOFS
             FRAME 001 · FRAME 002 · FRAME 003 · FRAME 004
            ========================================================================= */}
         <div className="w-full flex flex-col items-center">
@@ -348,7 +377,7 @@ export default function Scene03TheObserver() {
               <span>DARKROOM PROOF SHEET // BATCH 2024-2025</span>
             </div>
             <div className="text-slate-400">
-              SELECT FRAME TO INSPECT IN VIEWFINDER
+              SELECT PROOF FRAME TO INSPECT IN VIEWFINDER
             </div>
           </div>
 
@@ -369,13 +398,11 @@ export default function Scene03TheObserver() {
                       : 'bg-[#070810] border-white/10 hover:border-amber-400/40 hover:bg-[#0a0c16]'
                   }`}
                 >
-                  {/* Sprocket Edge Code */}
                   <div className="flex items-center justify-between text-[8px] font-mono text-amber-400/70 mb-2">
                     <span className="font-bold">{frame.frameNumber}</span>
                     <span>{frame.lens}</span>
                   </div>
 
-                  {/* Thumbnail */}
                   <div className="relative w-full h-28 rounded-lg overflow-hidden bg-black/60 mb-2 border border-white/5">
                     <Image
                       src={frame.src}
@@ -404,4 +431,3 @@ export default function Scene03TheObserver() {
     </section>
   );
 }
-

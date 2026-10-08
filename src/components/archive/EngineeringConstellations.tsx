@@ -1,19 +1,19 @@
 'use client';
 
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Compass, Eye, Info, Check } from 'lucide-react';
+import { Compass, CheckCircle2, Terminal } from 'lucide-react';
 
 export interface Constellation {
   id: string;
   name: string;
   latinName: string;
+  classification: string;
   role: string;
-  coordinates: string;
-  magnitude: string;
+  primitives: string[];
+  status: string;
   fieldNote: string;
-  stars: Array<{ x: number; y: number; r: number; label?: string }>; // normalized 0..100
-  lines: Array<[number, number]>; // star index pairs
+  stars: Array<{ x: number; y: number; r: number; label?: string }>;
+  lines: Array<[number, number]>;
 }
 
 export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
@@ -21,18 +21,19 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
     id: 'kubernetes',
     name: 'Kubernetes',
     latinName: 'Corona Gubernatoris',
-    role: 'Orchestration Fleet & Self-Healing Pods',
-    coordinates: 'α-HELM 19h 50m / +08° 52\'',
-    magnitude: '1.2 (Variable)',
-    fieldNote: 'Seven-spoked celestial helm. Governs automated failover, declarative pod replicas, and horizontal pod autoscaling.',
+    classification: 'CONTAINER ORCHESTRATION',
+    role: 'Fleet Management & Automated Self-Healing',
+    primitives: ['DEPLOYMENTS', 'SERVICES', 'INGRESS', 'HPA', 'CONFIGMAPS'],
+    status: 'PRODUCTION-GRADE CLUSTER STATE ENGINE',
+    fieldNote: 'Seven-spoked helm coordinates microservice pods under declarative state. Manages horizontal autoscaling, rolling zero-downtime updates, and automated failover.',
     stars: [
-      { x: 50, y: 50, r: 4.5, label: 'Control Plane' }, // 0: Center
-      { x: 50, y: 18, r: 3.2, label: 'API Server' },   // 1: Top
-      { x: 78, y: 32, r: 3.0, label: 'etcd' },         // 2: Top Right
-      { x: 82, y: 68, r: 3.0, label: 'Kubelet' },      // 3: Bottom Right
-      { x: 50, y: 84, r: 3.2, label: 'Kube-Proxy' },   // 4: Bottom
-      { x: 18, y: 68, r: 3.0, label: 'CoreDNS' },      // 5: Bottom Left
-      { x: 22, y: 32, r: 3.0, label: 'Scheduler' },    // 6: Top Left
+      { x: 50, y: 50, r: 4.2, label: 'Control Plane' },
+      { x: 50, y: 18, r: 3.2, label: 'API Server' },
+      { x: 78, y: 32, r: 3.0, label: 'etcd' },
+      { x: 82, y: 68, r: 3.0, label: 'Kubelet' },
+      { x: 50, y: 84, r: 3.2, label: 'Kube-Proxy' },
+      { x: 18, y: 68, r: 3.0, label: 'CoreDNS' },
+      { x: 22, y: 32, r: 3.0, label: 'Scheduler' },
     ],
     lines: [
       [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6],
@@ -43,10 +44,11 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
     id: 'aws',
     name: 'AWS',
     latinName: 'Nebula Nubium',
-    role: 'Cloud Substrate & Multi-Region Fabric',
-    coordinates: 'β-CLOUD 05h 35m / -05° 23\'',
-    magnitude: '1.4 (Pulsating)',
-    fieldNote: 'Interconnected triangular cloud delta. Distributes compute across VPCs, S3 object storage, and global edge locations.',
+    classification: 'MULTI-REGION CLOUD SUBSTRATE',
+    role: 'Cloud Infrastructure & High-Availability Networking',
+    primitives: ['MULTI-AZ VPC', 'EC2 FLEET', 'S3 STORAGE', 'IAM ROLES', 'ROUTE 53'],
+    status: 'RESILIENT GLOBAL CLOUD FABRIC',
+    fieldNote: 'Triangular cloud topology across availability zones. Enforces least-privilege IAM policies, NAT gateways, isolated subnets, and edge caching.',
     stars: [
       { x: 20, y: 62, r: 3.5, label: 'IAM' },
       { x: 38, y: 32, r: 3.8, label: 'VPC' },
@@ -64,10 +66,11 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
     id: 'docker',
     name: 'Docker',
     latinName: 'Cetus Vecturae',
-    role: 'Immutable Containerization',
-    coordinates: 'γ-CONTAINER 02h 45m / +12° 15\'',
-    magnitude: '1.8',
-    fieldNote: 'Geometric container grid riding atop the host kernel. Eliminates environment discrepancies through layered OCI images.',
+    classification: 'CONTAINER RUNTIME & PACKAGING',
+    role: 'Immutable Application Containers',
+    primitives: ['MULTI-STAGE BUILDS', 'DOCKER COMPOSE', 'OCI IMAGES', 'CGROUPS ISOLATION'],
+    status: 'STANDARDIZED DEPLOYMENT ARTIFACTS',
+    fieldNote: 'Layered OCI container architecture eliminating environment discrepancies. Produces lean distroless container images with minimal attack surfaces.',
     stars: [
       { x: 25, y: 35, r: 3.0, label: 'Base' },
       { x: 42, y: 35, r: 3.0, label: 'Layers' },
@@ -87,10 +90,11 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
     id: 'terraform',
     name: 'Terraform',
     latinName: 'Prisma Structurae',
-    role: 'Declarative Infrastructure as Code',
-    coordinates: 'δ-PRISM 14h 15m / +19° 10\'',
-    magnitude: '1.6',
-    fieldNote: 'Layered isometric prism. Converts declarative HCL configurations into deterministic cloud topology and state locks.',
+    classification: 'INFRASTRUCTURE AS CODE',
+    role: 'Declarative Cloud Topology & State Management',
+    primitives: ['S3 REMOTE STATE', 'STATE LOCKING', 'HCL MODULES', 'PLAN / APPLY VALIDATION'],
+    status: 'ZERO-DRIFT DETERMINISTIC PROVISIONING',
+    fieldNote: 'Converts declarative configuration files into validated dependency graphs. Provisions VPCs, compute, and databases reproducibly across environments.',
     stars: [
       { x: 50, y: 20, r: 4.2, label: 'State Lock' },
       { x: 22, y: 45, r: 3.4, label: 'Provider' },
@@ -108,10 +112,11 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
     id: 'cicd',
     name: 'CI/CD Pipeline',
     latinName: 'Circulus Perpetuus',
-    role: 'Automated Delivery & Verification',
-    coordinates: 'ε-PIPELINE 21h 30m / +42° 00\'',
-    magnitude: '1.3',
-    fieldNote: 'Continuous infinity loop connecting code commits to live verification. Zero downtime rollouts with automated rollbacks.',
+    classification: 'AUTOMATED CONTINUOUS DELIVERY',
+    role: 'Zero-Downtime Verification & Deployment Cycles',
+    primitives: ['JENKINS GROOVY', 'GITHUB ACTIONS', 'LINT / TEST GATES', 'CANARY ROLLOUT'],
+    status: 'CONTINUOUS TESTED PROMOTION TO PROD',
+    fieldNote: 'Automated continuous loop linking commits to production clusters. Enforces security scans, automated unit tests, container builds, and staging verification.',
     stars: [
       { x: 22, y: 50, r: 3.8, label: 'Commit' },
       { x: 36, y: 32, r: 3.2, label: 'Lint' },
@@ -129,10 +134,11 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
     id: 'linux',
     name: 'Linux',
     latinName: 'Polaris Substrati',
-    role: 'Operating System Foundation',
-    coordinates: 'ζ-POLAR 01h 00m / +89° 15\'',
-    magnitude: '1.0 (Fixed North)',
-    fieldNote: 'The guiding celestial pole. UNIX socket architecture, virtual file systems (/proc, /sys), and cgroups isolation.',
+    classification: 'OPERATING SYSTEM FOUNDATION',
+    role: 'Kernel Internals, Daemons & Process Isolation',
+    primitives: ['SYSTEMD', 'CGROUPS', 'NAMESPACES', 'BASH SCRIPTING', '/PROC MONITORING'],
+    status: 'BEDROCK SYSTEM EXECUTION LAYER',
+    fieldNote: 'The guiding system pole. UNIX socket architecture, virtual file systems, kernel networking tuning, and resource quotas governing every cloud node.',
     stars: [
       { x: 50, y: 18, r: 4.6, label: 'Kernel' },
       { x: 30, y: 40, r: 3.4, label: 'Systemd' },
@@ -151,10 +157,11 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
     id: 'python',
     name: 'Python',
     latinName: 'Serpens Automata',
-    role: 'Scripting, Tooling & Systems Logic',
-    coordinates: 'η-SERPENS 15h 45m / +06° 25\'',
-    magnitude: '1.5',
-    fieldNote: 'Dual intertwined spirals. Orchestrates API integrations, automation scripts, and systems performance analytics.',
+    classification: 'SYSTEMS AUTOMATION & TOOLING',
+    role: 'Cloud Automation, APIs & Performance Scripting',
+    primitives: ['FASTAPI', 'BOTO3 AWS SDK', 'ASYNCIO', 'PYTEST', 'AUTOMATION SCRIPTS'],
+    status: 'PRODUCTION AUTOMATION TOOLCHAIN',
+    fieldNote: 'Programmatic control of cloud APIs, health monitors, automation daemons, and data transformation scripts running in production.',
     stars: [
       { x: 25, y: 26, r: 3.6, label: 'Scripts' },
       { x: 45, y: 24, r: 3.8, label: 'FastAPI' },
@@ -177,22 +184,21 @@ interface ConstellationProps {
 export default function EngineeringConstellations({ onSelectConstellation }: ConstellationProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [activeId, setActiveId] = useState<string>('kubernetes');
-  const [isHoveredStar, setIsHoveredStar] = useState<string | null>(null);
 
   const activeConstellation = useMemo(
     () => ENGINEERING_CONSTELLATIONS.find((c) => c.id === activeId) || ENGINEERING_CONSTELLATIONS[0],
     [activeId]
   );
 
-  // Background random stars generated deterministically
+  // Deterministic starfield for background (pure canvas, zero PNGs)
   const backgroundStars = useMemo(() => {
     const list: Array<{ x: number; y: number; r: number; alpha: number }> = [];
-    for (let i = 0; i < 90; i++) {
+    for (let i = 0; i < 75; i++) {
       list.push({
         x: ((i * 37) % 100),
         y: ((i * 53) % 100),
-        r: (i % 5 === 0 ? 1.4 : 0.8),
-        alpha: (i % 3 === 0 ? 0.65 : 0.35),
+        r: (i % 6 === 0 ? 1.3 : 0.75),
+        alpha: (i % 3 === 0 ? 0.5 : 0.25),
       });
     }
     return list;
@@ -214,40 +220,37 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
 
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Draw Astrolabe / Celestial Coordinate Grid Lines
+      // 1. Astrolabe / Coordinate Grid Lines
       ctx.save();
-      ctx.strokeStyle = 'rgba(212, 175, 55, 0.08)';
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.06)';
       ctx.lineWidth = 1;
       ctx.setLineDash([3, 5]);
 
-      // Concentric Coordinate Rings
       const centerX = width / 2;
       const centerY = height / 2;
       const maxR = Math.min(width, height) * 0.44;
 
       ctx.beginPath();
-      ctx.arc(centerX, centerY, maxR * 0.4, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, maxR * 0.45, 0, Math.PI * 2);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.arc(centerX, centerY, maxR * 0.75, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, maxR * 0.8, 0, Math.PI * 2);
       ctx.stroke();
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, maxR, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Right Ascension / Declination Crosshairs
       ctx.beginPath();
       ctx.moveTo(centerX, centerY - maxR);
       ctx.lineTo(centerX, centerY + maxR);
       ctx.moveTo(centerX - maxR, centerY);
       ctx.lineTo(centerX + maxR, centerY);
       ctx.stroke();
-
       ctx.restore();
 
-      // 2. Draw Faint Background Stars (pure canvas, NO PNGs)
+      // 2. Background Stars
       backgroundStars.forEach((star, idx) => {
         const sx = (star.x / 100) * width;
         const sy = (star.y / 100) * height;
@@ -258,16 +261,15 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
         ctx.fill();
       });
 
-      // 3. Draw Active Engineering Constellation
+      // 3. Constellation Vectors
       const scaleX = width;
       const scaleY = height;
 
-      // Draw connecting lines with archival tungsten gold
       ctx.save();
-      ctx.strokeStyle = 'rgba(212, 175, 55, 0.75)';
-      ctx.lineWidth = 1.6;
-      ctx.shadowColor = 'rgba(212, 175, 55, 0.4)';
-      ctx.shadowBlur = 6;
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.shadowColor = 'rgba(212, 175, 55, 0.35)';
+      ctx.shadowBlur = 5;
 
       activeConstellation.lines.forEach(([iA, iB]) => {
         const starA = activeConstellation.stars[iA];
@@ -286,29 +288,26 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
       });
       ctx.restore();
 
-      // Draw Constellation Star Nodes
+      // 4. Star Nodes & Clean Monospace Labels
       activeConstellation.stars.forEach((star, idx) => {
         const x = (star.x / 100) * scaleX;
         const y = (star.y / 100) * scaleY;
-        const pulse = Math.sin(t * 1.5 + idx) * 0.8 + 1;
+        const pulse = Math.sin(t * 1.5 + idx) * 0.5 + 1;
 
-        // Outer soft glow
         ctx.save();
-        ctx.fillStyle = 'rgba(212, 175, 55, 0.22)';
+        ctx.fillStyle = 'rgba(212, 175, 55, 0.2)';
         ctx.beginPath();
-        ctx.arc(x, y, (star.r + 3.5) * pulse, 0, Math.PI * 2);
+        ctx.arc(x, y, (star.r + 3) * pulse, 0, Math.PI * 2);
         ctx.fill();
 
-        // Inner bright star core
-        ctx.fillStyle = '#fdf8eb';
-        ctx.shadowColor = 'rgba(212, 175, 55, 0.9)';
-        ctx.shadowBlur = 10;
+        ctx.fillStyle = '#fefcf8';
+        ctx.shadowColor = 'rgba(212, 175, 55, 0.8)';
+        ctx.shadowBlur = 8;
         ctx.beginPath();
         ctx.arc(x, y, star.r, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
-        // Star label text in vintage astronomical typography
         if (star.label) {
           ctx.save();
           ctx.font = '9px "JetBrains Mono", monospace';
@@ -337,18 +336,18 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* Observatory Sky Header & Selector Controls */}
+      {/* Chart Header */}
       <div className="w-full flex flex-wrap items-center justify-between gap-3 mb-4 text-xs font-mono border-b border-white/10 pb-3">
         <div className="flex items-center gap-2 text-amber-300">
-          <Compass className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '24s' }} />
-          <span className="font-bold tracking-wider uppercase">THE ENGINEERING SKY // OBSERVATORY</span>
+          <Compass className="w-4 h-4 text-amber-400" />
+          <span className="font-bold tracking-wider uppercase">ENGINEER&apos;S ANNOTATED STAR CHART</span>
         </div>
-        <div className="text-[11px] text-slate-400">
-          CHOOSE CELESTIAL CLUSTER TO CALIBRATE
+        <div className="text-[11px] text-slate-400 font-mono">
+          SELECT DISCIPLINE CLUSTER TO INSPECT TOPOLOGY
         </div>
       </div>
 
-      {/* Constellation Quick Selector Chips */}
+      {/* Selector Chips */}
       <div className="w-full flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mb-6">
         {ENGINEERING_CONSTELLATIONS.map((c) => {
           const isSelected = c.id === activeId;
@@ -359,7 +358,7 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
               onClick={() => handleSelect(c)}
               className={`px-3 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all flex items-center gap-1.5 ${
                 isSelected
-                  ? 'bg-amber-400/20 border border-amber-400 text-amber-200 shadow-[0_0_15px_rgba(212,175,55,0.3)]'
+                  ? 'bg-amber-400/20 border border-amber-400 text-amber-200 shadow-[0_0_15px_rgba(212,175,55,0.25)]'
                   : 'bg-[#090a12] border border-white/10 text-slate-400 hover:text-slate-200 hover:border-amber-400/30'
               }`}
             >
@@ -370,14 +369,12 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
         })}
       </div>
 
-      {/* The Observatory Canvas & Field Plate Card */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-        {/* The Interactive Sky Canvas */}
-        <div className="lg:col-span-7 relative w-full h-[320px] sm:h-[380px] rounded-3xl bg-[#040409] border border-amber-400/25 overflow-hidden shadow-[inset_0_0_60px_rgba(0,0,0,0.9)] flex items-center justify-center">
-          {/* Astrolabe Circular Border Overlay */}
-          <div className="absolute inset-4 sm:inset-6 rounded-full border border-amber-400/15 pointer-events-none" />
+      {/* Star Chart Canvas & Technical Engineering Dossier */}
+      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        {/* Star Chart Canvas */}
+        <div className="lg:col-span-7 relative w-full h-[320px] sm:h-[380px] rounded-3xl bg-[#040409] border border-amber-400/20 overflow-hidden shadow-[inset_0_0_60px_rgba(0,0,0,0.9)] flex items-center justify-center">
+          <div className="absolute inset-4 sm:inset-6 rounded-full border border-amber-400/10 pointer-events-none" />
 
-          {/* Canvas Rendering System */}
           <canvas
             ref={canvasRef}
             width={540}
@@ -385,44 +382,63 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
             className="w-full h-full object-contain"
           />
 
-          {/* Archival Quadrant Stamp */}
           <div className="absolute top-3 left-4 text-[9px] font-mono text-amber-400/60 uppercase">
-            CELESTIAL QUADRANT // {activeConstellation.coordinates}
+            VECTOR // {activeConstellation.classification}
           </div>
 
           <div className="absolute bottom-3 right-4 text-[9px] font-mono text-slate-500 uppercase">
-            PROJECTION: GNOMONIC · NO PHOTO-PNGS
+            CANVAS CELESTIAL PROJECTION
           </div>
         </div>
 
-        {/* Archival Field Plate Dossier */}
-        <div className="lg:col-span-5 flex flex-col justify-between p-6 rounded-3xl bg-[#080913]/95 border border-amber-400/20 backdrop-blur-xl h-full shadow-xl">
+        {/* Technical Archival Annotation Box */}
+        <div className="lg:col-span-5 flex flex-col justify-between p-6 rounded-3xl bg-[#080913]/95 border border-amber-400/20 backdrop-blur-xl shadow-xl">
           <div>
             <div className="flex items-center justify-between text-[10px] font-mono text-amber-400 uppercase tracking-widest border-b border-white/10 pb-2 mb-3">
-              <span>FIELD PLATE // CATALOG 2024</span>
-              <span>MAG: {activeConstellation.magnitude}</span>
+              <span>ORBITAL CLASSIFICATION</span>
+              <span className="font-bold text-amber-300">{activeConstellation.classification}</span>
             </div>
 
-            <div className="text-[11px] font-serif italic text-amber-300/80 mb-1">
+            <div className="text-[11px] font-serif italic text-amber-300/80 mb-0.5">
               {activeConstellation.latinName}
             </div>
 
             <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#f4f1ea] mb-2">
-              Constellation: {activeConstellation.name}
+              {activeConstellation.name}
             </h3>
 
-            <div className="inline-block px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/25 text-amber-300 text-xs font-mono mb-4">
+            <div className="text-xs text-amber-300 font-mono mb-4">
               {activeConstellation.role}
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-serif">
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-serif mb-5">
               {activeConstellation.fieldNote}
             </p>
+
+            {/* Core Primitives Checklist */}
+            <div className="border-t border-white/5 pt-3">
+              <span className="text-[9px] font-mono uppercase text-slate-400 tracking-wider block mb-2">
+                CORE TECHNICAL PRIMITIVES
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {activeConstellation.primitives.map((prim) => (
+                  <span
+                    key={prim}
+                    className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-amber-200"
+                  >
+                    {prim}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-400">
-            <span>NODES: {activeConstellation.stars.length} STELLAR VERTICES</span>
-            <span className="text-amber-400/90 font-bold">CALIBRATED</span>
+          <div className="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-400">
+            <span>TOPOLOGY: {activeConstellation.stars.length} VERIFIED NODES</span>
+            <span className="text-emerald-400 font-bold flex items-center gap-1">
+              <CheckCircle2 className="w-3 h-3" />
+              <span>DETERMINISTIC</span>
+            </span>
           </div>
         </div>
       </div>
