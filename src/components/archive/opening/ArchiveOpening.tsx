@@ -234,26 +234,36 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
               : phase === 'converge'
               ? 0.45
               : 0.15,
-          filter:
-            phase === 'travel' || phase === 'response'
-              ? 'brightness(1.08) contrast(1.12)'
-              : phase === 'converge'
-              ? 'brightness(0.65) contrast(1.05)'
-              : 'brightness(0.92) contrast(1.1)',
         }}
         transition={{
           duration: isDarkVoid ? 0.6 : 1.2,
           ease: 'easeInOut',
         }}
-        className="absolute inset-0 pointer-events-none z-0 will-change-transform"
+        className="absolute inset-0 pointer-events-none z-0"
       >
         <Image
           src="/archive/opening/signal-space-bg.webp"
           alt="Cinematic Deep Space Signal Environment"
           fill
           priority
-          className="object-cover object-center"
+          unoptimized
+          quality={100}
+          className="object-cover object-[38%_center] sm:object-center"
           sizes="100vw"
+        />
+
+        {/* Dynamic Atmospheric Awakening Sheen (Brightens during signal transmission without causing mobile GPU texture downsampling) */}
+        <motion.div
+          animate={{
+            opacity:
+              phase === 'travel' || phase === 'response'
+                ? 0.18
+                : phase === 'converge'
+                ? 0
+                : 0.04,
+          }}
+          transition={{ duration: 1.0, ease: 'easeInOut' }}
+          className="absolute inset-0 bg-cyan-400/20 mix-blend-screen pointer-events-none"
         />
 
         {/* Soft edge vignette: seamlessly transitions into #030305 & cleanly hides bottom watermark */}
