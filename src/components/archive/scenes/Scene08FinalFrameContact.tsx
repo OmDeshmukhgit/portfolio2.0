@@ -215,34 +215,116 @@ export default function Scene08FinalFrameContact() {
             {/* Social Channels & Resume */}
             <div className="mt-8 pt-6 border-t border-white/10">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <a
-                    href={curator.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 rounded-xl bg-black/60 hover:bg-amber-500 hover:text-black border border-white/10 text-amber-300 transition-all shadow-md"
-                    title="GitHub Archive"
-                  >
-                    <GithubIcon className="w-4 h-4" />
-                  </a>
-                  <a
-                    href={curator.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 rounded-xl bg-black/60 hover:bg-amber-500 hover:text-black border border-white/10 text-amber-300 transition-all shadow-md"
-                    title="LinkedIn Network"
-                  >
-                    <LinkedinIcon className="w-4 h-4" />
-                  </a>
-                  <a
-                    href={curator.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 rounded-xl bg-black/60 hover:bg-amber-500 hover:text-black border border-white/10 text-amber-300 transition-all shadow-md"
-                    title="Instagram Dispatch"
-                  >
-                    <InstagramIcon className="w-4 h-4" />
-                  </a>
+                {/* Social Channels with Interspace Signal Blinking Motion */}
+                <div className="flex items-center gap-3">
+                  {[
+                    {
+                      href: curator.github,
+                      title: 'GitHub Archive // Signal 01',
+                      Icon: GithubIcon,
+                      delay: 0,
+                    },
+                    {
+                      href: curator.linkedin,
+                      title: 'LinkedIn Network // Signal 02',
+                      Icon: LinkedinIcon,
+                      delay: 0.5,
+                    },
+                    {
+                      href: curator.instagram,
+                      title: 'Instagram Dispatch // Signal 03',
+                      Icon: InstagramIcon,
+                      delay: 1.0,
+                    },
+                  ].map(({ href, title, Icon, delay }, idx) => (
+                    <motion.a
+                      key={idx}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={title}
+                      whileHover={{ scale: 1.08, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      animate={{
+                        borderColor: [
+                          'rgba(255,255,255,0.12)',
+                          'rgba(34,211,238,0.85)',
+                          'rgba(251,191,36,0.7)',
+                          'rgba(255,255,255,0.12)',
+                        ],
+                        boxShadow: [
+                          '0 0 0px rgba(34,211,238,0)',
+                          '0 0 18px rgba(34,211,238,0.55), inset 0 0 10px rgba(34,211,238,0.2)',
+                          '0 0 10px rgba(251,191,36,0.3)',
+                          '0 0 0px rgba(34,211,238,0)',
+                        ],
+                        backgroundColor: [
+                          'rgba(4,6,14,0.85)',
+                          'rgba(8,18,34,0.95)',
+                          'rgba(12,14,24,0.9)',
+                          'rgba(4,6,14,0.85)',
+                        ],
+                      }}
+                      transition={{
+                        duration: 2.2,
+                        repeat: Infinity,
+                        repeatDelay: 0.8,
+                        delay,
+                        ease: 'easeInOut',
+                      }}
+                      className="group relative p-3 rounded-xl border backdrop-blur-md transition-colors cursor-pointer overflow-visible flex items-center justify-center"
+                    >
+                      {/* Periodic Interspace Wavefront Ripple */}
+                      <motion.span
+                        animate={{
+                          scale: [1, 1.45, 1.8],
+                          opacity: [0, 0.75, 0],
+                        }}
+                        transition={{
+                          duration: 1.4,
+                          repeat: Infinity,
+                          repeatDelay: 1.6,
+                          delay,
+                          ease: 'easeOut',
+                        }}
+                        className="absolute -inset-1 rounded-xl border border-cyan-400/50 pointer-events-none"
+                      />
+
+                      {/* Corner Interspace Signal Telemetry Beacon Dot */}
+                      <motion.span
+                        animate={{
+                          scale: [0.8, 1.6, 0.9],
+                          opacity: [0.35, 1, 0.4],
+                        }}
+                        transition={{
+                          duration: 2.2,
+                          repeat: Infinity,
+                          repeatDelay: 0.8,
+                          delay,
+                          ease: 'easeInOut',
+                        }}
+                        className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,1)] pointer-events-none"
+                      />
+
+                      {/* Icon with Signal Starlight Transmission Glow */}
+                      <motion.div
+                        animate={{
+                          color: ['#fcd34d', '#38bdf8', '#fef08a', '#fcd34d'],
+                          scale: [1, 1.1, 1],
+                        }}
+                        transition={{
+                          duration: 2.2,
+                          repeat: Infinity,
+                          repeatDelay: 0.8,
+                          delay,
+                          ease: 'easeInOut',
+                        }}
+                        className="relative z-10 flex items-center justify-center"
+                      >
+                        <Icon className="w-4 h-4" />
+                      </motion.div>
+                    </motion.a>
+                  ))}
                 </div>
 
                 <a
