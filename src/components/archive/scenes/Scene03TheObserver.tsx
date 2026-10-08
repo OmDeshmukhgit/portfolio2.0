@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
@@ -14,72 +14,24 @@ export default function Scene03TheObserver() {
   const [focusState, setFocusState] = useState<FocusState>('locked');
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
 
-  // Local Scene 03 scroll progress for Telescope mechanical aim & optical sightline lock
+  // Scroll progress for Telescope mechanical entry, optical alignment, and exit
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 60,
-    damping: 26,
+    stiffness: 70,
+    damping: 24,
     restDelta: 0.001,
   });
 
-  // CINEMATIC LOCAL BEATS:
-  // Beat A (0.12–0.28): ENTRY — Telescope glides in from right, tilted at setup angle (14deg)
-  // Beat B (0.28–0.46): MECHANICAL ALIGNMENT — Slowly tilts/rotates down to -6deg, aiming optical barrel at photo
-  // Beat C (0.46–0.70): HERO / HOLD & LOCK-ON — Instrument pauses in stillness. Optical sightline extends to photo.
-  // Beat D (0.70–0.90): EXIT — Sightline fades, telescope slowly retracts to edge and fades
-  const telescopeX = useTransform(
-    smoothProgress,
-    [0.12, 0.28, 0.46, 0.70, 0.90],
-    ['120px', '20px', '0px', '0px', '140px']
-  );
-  const telescopeY = useTransform(
-    smoothProgress,
-    [0.12, 0.28, 0.46, 0.70, 0.90],
-    ['-20px', '0px', '8px', '8px', '30px']
-  );
-  const telescopeRotate = useTransform(
-    smoothProgress,
-    [0.12, 0.28, 0.46, 0.70, 0.90],
-    ['14deg', '8deg', '-6deg', '-6deg', '10deg']
-  );
-  const telescopeScale = useTransform(
-    smoothProgress,
-    [0.12, 0.28, 0.46, 0.70, 0.90],
-    [0.92, 0.98, 1.03, 1.03, 0.95]
-  );
-  const telescopeOpacity = useTransform(
-    smoothProgress,
-    [0.10, 0.22, 0.72, 0.88],
-    [0, 0.88, 0.88, 0]
-  );
+  // Telescope: enters from right edge -> precision aligns sightline -> exits right
+  const telescopeX = useTransform(smoothProgress, [0.1, 0.4, 0.75, 0.95], ['90px', '0px', '0px', '130px']);
+  const telescopeOpacity = useTransform(smoothProgress, [0.1, 0.3, 0.75, 0.95], [0, 0.85, 0.85, 0]);
 
-  // Optical Sightline Opacity (Strictly visible only during Lock-on Beat C)
-  const sightlineOpacity = useTransform(
-    smoothProgress,
-    [0.42, 0.48, 0.68, 0.74],
-    [0, 1, 1, 0]
-  );
-
-  // Camera Rangefinder Helicoid Calibration Scale
-  const cameraScale = useTransform(
-    smoothProgress,
-    [0.25, 0.46, 0.70],
-    [0.95, 1.03, 0.97]
-  );
-
-  // Synchronize focus lock during mechanical lock beat C
-  useEffect(() => {
-    const unsubscribe = smoothProgress.on('change', (latest) => {
-      if (latest >= 0.46 && latest <= 0.70 && focusState !== 'locked') {
-        setFocusState('locked');
-      }
-    });
-    return () => unsubscribe();
-  }, [smoothProgress, focusState]);
+  // Camera subtle shift on scroll entry
+  const cameraScale = useTransform(smoothProgress, [0.2, 0.45, 0.7], [0.94, 1.03, 0.96]);
 
   // Photographer's Contact Sheet Frames
   const contactFrames = [
@@ -149,47 +101,33 @@ export default function Scene03TheObserver() {
       className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-white/5 bg-[#030306]"
     >
       {/* =========================================================================
-          01 — TELESCOPE: OBSERVATIONAL METAPHOR (18–30vw SCALE)
-          Enters with tilt -> rotates to aim tube at photo -> projects sightline -> locks -> exits
+          01 — TELESCOPE: OBSERVATIONAL METAPHOR (EDGE -> SIGHTLINE -> EXIT)
+          Mechanical, slow, precise observational instrument at the viewport boundary
          ========================================================================= */}
       <motion.div
         style={{
           x: telescopeX,
-          y: telescopeY,
-          rotate: telescopeRotate,
-          scale: telescopeScale,
           opacity: telescopeOpacity,
         }}
-        className="absolute top-28 right-0 2xl:right-8 pointer-events-none z-[4] will-change-transform hidden lg:flex items-center gap-2"
+        className="absolute top-28 right-0 pointer-events-none z-[4] will-change-transform hidden xl:flex items-center gap-2"
       >
-        {/* Subtle Optical Sightline projecting from the objective lens toward the photography viewfinder */}
-        <motion.div
-          style={{ opacity: sightlineOpacity }}
-          className="flex items-center gap-1.5 pointer-events-none"
-        >
-          <div className="w-32 xl:w-48 border-t border-dashed border-amber-400/50 relative">
-            <span className="absolute -top-3.5 right-3 text-[7px] font-mono text-amber-300/80 uppercase tracking-widest bg-[#05060b]/90 px-2 py-0.5 rounded border border-amber-400/30">
-              OPTICAL SIGHTLINE // LOCK-ON
-            </span>
-            <span className="w-2 h-2 rounded-full bg-amber-400 absolute -top-[4px] left-0 animate-ping" />
-            <span className="w-2 h-2 rounded-full border border-amber-400 absolute -top-[4px] left-0" />
-          </div>
-        </motion.div>
+        {/* Subtle Optical Sightline pointing toward the photography frame */}
+        <div className="w-24 border-t border-dashed border-amber-400/35 relative">
+          <span className="absolute -top-3 right-2 text-[7px] font-mono text-amber-400/60 uppercase">
+            OPTICAL SIGHTLINE
+          </span>
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 absolute -top-[3px] left-0 animate-ping" />
+        </div>
 
-        {/* Refracting Telescope Illustration (18–30vw Scale) */}
-        <div className="flex flex-col items-center">
-          <div className="relative w-56 h-56 xl:w-72 xl:h-72 2xl:w-84 2xl:h-84 pr-4">
-            <Image
-              src="/archive/illustration_telescope_clean.webp"
-              alt="Refracting Telescope Observational Instrument"
-              fill
-              className="object-contain filter contrast-105 opacity-90 drop-shadow-[0_0_35px_rgba(212,175,55,0.18)]"
-              sizes="(max-width: 1280px) 240px, (max-width: 1536px) 290px, 340px"
-            />
-          </div>
-          <div className="mt-1 px-3 py-1 rounded-full bg-[#080911]/90 border border-amber-400/25 text-[8px] font-mono tracking-widest text-amber-300/80 uppercase shadow-lg backdrop-blur-sm">
-            OBSERVATIONAL INSTRUMENT // AERIAL REFRACTOR
-          </div>
+        {/* Refracting Telescope Illustration */}
+        <div className="relative w-40 h-40 2xl:w-48 2xl:h-48 pr-4">
+          <Image
+            src="/archive/illustration_telescope_clean.webp"
+            alt="Telescope Observation Instrument"
+            fill
+            className="object-contain filter contrast-105 opacity-85"
+            sizes="192px"
+          />
         </div>
       </motion.div>
 
@@ -222,13 +160,13 @@ export default function Scene03TheObserver() {
         </div>
 
         {/* =========================================================================
-            06 — CAMERA & PHOTOGRAPH INTERACTION: TELESCOPE → PHOTO → CAMERA
-            Camera calibrates helicoid, sightline locks on, photo sharpens to pin-focus
+            06 — CAMERA & PHOTOGRAPH INTERACTION: CAMERA ↓ PHOTO
+            Camera lens direction aligns toward photograph; photograph transitions SOFT -> FOCUSING -> LOCKED
            ========================================================================= */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-start mb-16">
           {/* Left Column: Camera Rangefinder directly above Photograph Viewfinder */}
           <div className="lg:col-span-7 flex flex-col items-center">
-            {/* Conceptual Camera Rangefinder (Helicoid Focus Mechanism) */}
+            {/* Conceptual Camera Rangefinder (Relatively small, lens aligned downward) */}
             <motion.div
               style={{ scale: cameraScale }}
               className="flex items-center gap-3 mb-2 px-4 py-2 rounded-2xl bg-[#090a14] border border-amber-400/25 shadow-md"
@@ -244,11 +182,11 @@ export default function Scene03TheObserver() {
               </div>
               <div className="text-left font-mono">
                 <div className="text-[9px] text-amber-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                  <span>RANGEFINDER ALIGNED ↓ SIGHTLINE FOCUS LOCKED</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  <span>RANGEFINDER ALIGNED ↓ VIEWING FRAME</span>
                 </div>
                 <div className="text-[8px] text-slate-400 mt-0.5">
-                  CALIBRATED: 85MM MEDIUM FORMAT · PIN-SHARP ACCURACY
+                  CALIBRATED: 85MM MEDIUM FORMAT · MANUAL HELICOID
                 </div>
               </div>
             </motion.div>
