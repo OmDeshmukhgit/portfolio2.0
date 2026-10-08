@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useReducedMotion } from 'framer-motion';
 import { Eye, ArrowRight, ShieldCheck, GitBranch, Network, Terminal } from 'lucide-react';
 
 interface SceneProps {
@@ -11,6 +11,7 @@ interface SceneProps {
 
 export default function Scene04EngineerTransition({ onProceedToSystems }: SceneProps) {
   const sectionRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   // Scroll progress for Astronaut moving THROUGH the transition space
   const { scrollYProgress } = useScroll({
@@ -57,10 +58,10 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
          ========================================================================= */}
       <motion.div
         style={{
-          x: astronautX,
-          y: astronautY,
-          opacity: astronautOpacity,
-          scale: astronautScale,
+          x: shouldReduceMotion ? '35vw' : astronautX,
+          y: shouldReduceMotion ? '18vh' : astronautY,
+          opacity: shouldReduceMotion ? 0.75 : astronautOpacity,
+          scale: shouldReduceMotion ? 1 : astronautScale,
         }}
         className="absolute top-0 left-0 pointer-events-none z-[5] will-change-transform hidden md:flex flex-col items-center"
       >

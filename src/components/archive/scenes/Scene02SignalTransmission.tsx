@@ -2,30 +2,66 @@
 
 import React, { useRef } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useReducedMotion } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
 import { Radio, Activity, Waves } from 'lucide-react';
 
 export default function Scene02SignalTransmission() {
   const { pillars } = ARCHIVE_DATA;
   const sectionRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
-  // Scroll progress for tiny background satellite orbital crossing
+  // Local Scene 02 scroll progress for Satellite orbital trajectory & pipeline telemetry
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 70,
-    damping: 25,
+    stiffness: 60,
+    damping: 26,
     restDelta: 0.001,
   });
 
-  // Satellite crosses from RIGHT to LEFT across the upper background
-  const satelliteX = useTransform(smoothProgress, [0.1, 0.85], ['102vw', '-12vw']);
-  const satelliteY = useTransform(smoothProgress, [0.1, 0.85], ['14vh', '22vh']);
-  const satelliteOpacity = useTransform(smoothProgress, [0.1, 0.25, 0.7, 0.85], [0, 0.65, 0.65, 0]);
+  // CINEMATIC LOCAL BEATS:
+  // Beat A (0.18–0.32): ENTRY — Satellite enters along upper-right orbit
+  // Beat B (0.32–0.48): ORBITAL ARC — Curves down along gravitational trajectory toward center
+  // Beat C (0.48–0.66): HERO / HOLD & TRANSMISSION — Stillness / slow drift above deployment pipeline.
+  //                     Archival transmission line connects down, data pulse travels, pipeline responds.
+  // Beat D (0.66–0.85): EXIT — Signal disconnects, satellite exits along upper left quadrant
+  // 0.85–1.00: Transits out completely before Scene 03
+  const satelliteX = useTransform(
+    smoothProgress,
+    [0.18, 0.34, 0.50, 0.64, 0.84],
+    ['82vw', '64vw', '52vw', '44vw', '-12vw']
+  );
+  const satelliteY = useTransform(
+    smoothProgress,
+    [0.18, 0.34, 0.50, 0.64, 0.84],
+    ['8vh', '15vh', '19vh', '18vh', '7vh']
+  );
+  const satelliteRotate = useTransform(
+    smoothProgress,
+    [0.18, 0.34, 0.50, 0.64, 0.84],
+    ['-14deg', '-6deg', '4deg', '10deg', '22deg']
+  );
+  const satelliteScale = useTransform(
+    smoothProgress,
+    [0.18, 0.34, 0.50, 0.64, 0.84],
+    [0.9, 0.98, 1.05, 1.02, 0.88]
+  );
+  const satelliteOpacity = useTransform(
+    smoothProgress,
+    [0.16, 0.24, 0.68, 0.82],
+    [0, 0.85, 0.85, 0]
+  );
+
+  // Technical Editorial Transmission Signal Beam Opacity (Active strictly during Hold Beat)
+  const signalOpacity = useTransform(
+    smoothProgress,
+    [0.46, 0.50, 0.62, 0.68],
+    [0, 1, 1, 0]
+  );
 
   const engineeringStack = [
     { name: 'AWS', role: 'Cloud Substrate', color: 'text-amber-400' },
@@ -49,33 +85,55 @@ export default function Scene02SignalTransmission() {
       </div>
 
       {/* =========================================================================
-          03 — SATELLITE: SUBTLE BACKGROUND MOVING INSTRUMENT (RIGHT -> LEFT)
-          Represents Data, Signal, Network, Deployment flowing in the background
+          03 — SATELLITE: ORBITAL TRANSMISSION RELAY (CURVED ORBIT & SIGNAL BEAM)
+          Scaled to 90–140px. Travels on shallow curved arc, emits technical downlink
+          connecting directly to the deployment pipeline during the hold beat.
          ========================================================================= */}
       <motion.div
         style={{
-          x: satelliteX,
-          y: satelliteY,
-          opacity: satelliteOpacity,
+          x: shouldReduceMotion ? '65vw' : satelliteX,
+          y: shouldReduceMotion ? '14vh' : satelliteY,
+          rotate: shouldReduceMotion ? 0 : satelliteRotate,
+          scale: shouldReduceMotion ? 1 : satelliteScale,
+          opacity: shouldReduceMotion ? 0.75 : satelliteOpacity,
         }}
-        className="absolute top-0 left-0 pointer-events-none z-[4] will-change-transform hidden md:flex items-center gap-3"
+        className="absolute top-0 left-0 pointer-events-none z-[4] will-change-transform hidden md:flex flex-col items-center"
       >
-        <div className="relative w-14 h-14">
-          <Image
-            src="/archive/illustration_satellite_clean.webp"
-            alt="Orbital Satellite — Data and Signal Metaphor"
-            fill
-            className="object-contain filter contrast-110 opacity-75"
-            sizes="56px"
-          />
-        </div>
-        <div className="flex flex-col text-[8px] font-mono text-cyan-400/60 uppercase tracking-widest whitespace-nowrap">
-          <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-            <span>ORBITAL TELEMETRY RELAY</span>
+        <div className="flex items-center gap-3">
+          <div className="relative w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32">
+            <Image
+              src="/archive/illustration_satellite_clean.webp"
+              alt="Orbital Satellite — Data and Signal Telemetry Relay"
+              fill
+              className="object-contain filter contrast-110 opacity-85 drop-shadow-[0_0_30px_rgba(34,211,238,0.15)]"
+              sizes="(max-width: 1024px) 112px, 128px"
+            />
           </div>
-          <span className="text-slate-500 text-[7px]">ALT: 35,786 KM · SIGNAL LOCKED</span>
+          <div className="flex flex-col text-[8px] font-mono text-cyan-400/80 uppercase tracking-widest whitespace-nowrap bg-[#080911]/90 px-3 py-1.5 rounded-xl border border-cyan-500/20 shadow-lg backdrop-blur-sm">
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+              <span>ORBITAL TELEMETRY RELAY</span>
+            </div>
+            <span className="text-slate-400 text-[7px] mt-0.5">ALT: 35,786 KM · 1.4204 GHz HYDROGEN LINE</span>
+          </div>
         </div>
+
+        {/* =======================================================================
+            ARCHIVAL DOWNLINK TRANSMISSION RAY (THIN, EDITORIAL, PRECISE)
+            Active strictly when satellite aligns over the deployment pipeline
+           ======================================================================= */}
+        <motion.div
+          style={{ opacity: shouldReduceMotion ? 0 : signalOpacity }}
+          className="flex flex-col items-center pointer-events-none mt-1"
+        >
+          {/* Hairline dashed connector with travelling telemetry packet */}
+          <div className="w-px h-28 lg:h-36 bg-gradient-to-b from-cyan-400/60 via-cyan-400/30 to-transparent border-l border-dashed border-cyan-400/50 relative">
+            <div className="absolute w-1.5 h-1.5 rounded-full bg-cyan-300 -left-[3px] animate-bounce shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+          </div>
+          <div className="px-2 py-0.5 rounded bg-[#05060b]/95 border border-cyan-400/40 text-[7px] font-mono text-cyan-300 uppercase tracking-widest whitespace-nowrap shadow-md mt-1">
+            DOWNLINK VECTOR ↓ PIPELINE
+          </div>
+        </motion.div>
       </motion.div>
 
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
@@ -106,22 +164,39 @@ export default function Scene02SignalTransmission() {
           </p>
         </div>
 
-        {/* The Engineering Deployment Pipeline */}
-        <div className="w-full max-w-3xl flex flex-wrap items-center justify-center gap-2 sm:gap-3 p-3.5 rounded-2xl bg-[#070810]/90 border border-cyan-400/20 backdrop-blur-md font-mono text-xs mb-12 shadow-lg">
-          <span className="text-[10px] text-slate-400 uppercase tracking-wider mr-1">
-            DEPLOYMENT PIPELINE:
-          </span>
-          {engineeringStack.map((item, idx) => (
-            <React.Fragment key={item.name}>
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/5 border border-white/10">
-                <span className={`font-bold ${item.color}`}>{item.name}</span>
-                <span className="text-[9px] text-slate-400">({item.role})</span>
-              </div>
-              {idx < engineeringStack.length - 1 && (
-                <span className="text-cyan-400/70 font-bold">→</span>
-              )}
-            </React.Fragment>
-          ))}
+        {/* =======================================================================
+            THE ENGINEERING DEPLOYMENT PIPELINE
+            Visually communicates with the satellite transmission relay
+           ======================================================================= */}
+        <div
+          id="deployment-pipeline"
+          className="w-full max-w-3xl flex flex-col items-center p-4 rounded-2xl bg-[#070810]/90 border border-cyan-400/25 backdrop-blur-md font-mono text-xs mb-12 shadow-xl relative transition-all"
+        >
+          {/* Active Downlink Ingest Notice */}
+          <motion.div
+            style={{ opacity: shouldReduceMotion ? 0.6 : signalOpacity }}
+            className="flex items-center gap-2 mb-2 text-[9px] font-mono text-cyan-300 uppercase tracking-widest"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+            <span>SATELLITE DOWNLINK DETECTED · TELEMETRY INGEST ACTIVE</span>
+          </motion.div>
+
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            <span className="text-[10px] text-slate-400 uppercase tracking-wider mr-1">
+              DEPLOYMENT PIPELINE:
+            </span>
+            {engineeringStack.map((item, idx) => (
+              <React.Fragment key={item.name}>
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-cyan-400/40 transition-colors">
+                  <span className={`font-bold ${item.color}`}>{item.name}</span>
+                  <span className="text-[9px] text-slate-400">({item.role})</span>
+                </div>
+                {idx < engineeringStack.length - 1 && (
+                  <span className="text-cyan-400/70 font-bold">→</span>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
 
         {/* The 5 Interlocking Pillars Grid */}
