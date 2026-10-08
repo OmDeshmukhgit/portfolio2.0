@@ -154,10 +154,10 @@ export default function ArchiveSoundtrack({
       />
 
       {/* Persistent Floating Minimalist Console (Bottom Right) */}
-      <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-2 font-mono select-none">
+      <div className="fixed bottom-3 right-3 sm:bottom-5 sm:right-5 z-40 flex flex-col items-end gap-2 font-mono select-none">
         {/* Expanded Console Panel */}
         {isExpanded && (
-          <div className="w-80 sm:w-96 p-4 rounded-2xl bg-[#090a12]/95 border border-amber-400/40 shadow-[0_15px_40px_rgba(0,0,0,0.9)] backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="w-[calc(100vw-1.5rem)] max-w-sm sm:w-96 p-4 rounded-2xl bg-[#090a12]/95 border border-amber-400/40 shadow-[0_15px_40px_rgba(0,0,0,0.9)] backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-2 text-xs text-amber-300 font-bold uppercase tracking-wider font-serif">
                 <Music className="w-3.5 h-3.5" />
@@ -260,14 +260,20 @@ export default function ArchiveSoundtrack({
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="group flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#090a12]/90 hover:bg-[#121320] border border-amber-400/50 hover:border-amber-300 text-amber-200 shadow-[0_10px_25px_rgba(0,0,0,0.8)] backdrop-blur-xl transition-all"
+          className="group flex items-center gap-2 sm:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[#090a12]/95 hover:bg-[#121320] border border-amber-400/50 hover:border-amber-300 text-amber-200 shadow-[0_10px_25px_rgba(0,0,0,0.85)] backdrop-blur-xl transition-all cursor-pointer"
+          aria-label={isExpanded ? 'Collapse soundtrack player' : 'Expand soundtrack player'}
         >
-          <Disc3 className={`w-4 h-4 text-amber-400 ${isPlaying ? 'animate-spin' : ''}`} />
+          <Disc3 className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 flex-shrink-0 ${isPlaying ? 'animate-spin' : ''}`} />
           <div className="flex flex-col text-left">
-            <span className="text-[11px] font-bold tracking-wider uppercase font-serif text-amber-200">
-              {isPlaying ? currentTrack.title : 'Soundtrack Console'}
-            </span>
-            <span className="text-[9px] text-amber-400/60 font-mono">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase font-serif text-amber-200 truncate max-w-[85px] xs:max-w-[120px] sm:max-w-none">
+                {isPlaying ? currentTrack.title : 'Soundtrack'}
+              </span>
+              {isPlaying && (
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse sm:hidden" />
+              )}
+            </div>
+            <span className="hidden sm:inline text-[9px] text-amber-400/60 font-mono">
               {isPlaying ? 'NOW PLAYING · TAP TO EXPAND' : 'PAUSED · TAP TO PLAY'}
             </span>
           </div>
