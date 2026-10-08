@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
 import { Mail, Phone, MapPin, Send, Check, FileDown, ExternalLink, Sparkles, Copy } from 'lucide-react';
@@ -11,6 +11,16 @@ export default function Scene08FinalFrameContact() {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [isTransmitted, setIsTransmitted] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', message: '' });
+
+  // Linear cycle telemetry signal sequencer: GitHub (0) -> LinkedIn (1) -> Instagram (2) -> Pause (3)
+  const [activeSignalIndex, setActiveSignalIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSignalIndex((prev) => (prev + 1) % 4);
+    }, 650);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(curator.email);
@@ -215,116 +225,91 @@ export default function Scene08FinalFrameContact() {
             {/* Social Channels & Resume */}
             <div className="mt-8 pt-6 border-t border-white/10">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                {/* Social Channels with Interspace Signal Blinking Motion */}
+                {/* Social Channels with Sequential Orange Interspace Signal Cycle */}
                 <div className="flex items-center gap-3">
                   {[
                     {
                       href: curator.github,
                       title: 'GitHub Archive // Signal 01',
                       Icon: GithubIcon,
-                      delay: 0,
+                      idx: 0,
                     },
                     {
                       href: curator.linkedin,
                       title: 'LinkedIn Network // Signal 02',
                       Icon: LinkedinIcon,
-                      delay: 0.5,
+                      idx: 1,
                     },
                     {
                       href: curator.instagram,
                       title: 'Instagram Dispatch // Signal 03',
                       Icon: InstagramIcon,
-                      delay: 1.0,
+                      idx: 2,
                     },
-                  ].map(({ href, title, Icon, delay }, idx) => (
-                    <motion.a
-                      key={idx}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={title}
-                      whileHover={{ scale: 1.08, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      animate={{
-                        borderColor: [
-                          'rgba(255,255,255,0.12)',
-                          'rgba(34,211,238,0.85)',
-                          'rgba(251,191,36,0.7)',
-                          'rgba(255,255,255,0.12)',
-                        ],
-                        boxShadow: [
-                          '0 0 0px rgba(34,211,238,0)',
-                          '0 0 18px rgba(34,211,238,0.55), inset 0 0 10px rgba(34,211,238,0.2)',
-                          '0 0 10px rgba(251,191,36,0.3)',
-                          '0 0 0px rgba(34,211,238,0)',
-                        ],
-                        backgroundColor: [
-                          'rgba(4,6,14,0.85)',
-                          'rgba(8,18,34,0.95)',
-                          'rgba(12,14,24,0.9)',
-                          'rgba(4,6,14,0.85)',
-                        ],
-                      }}
-                      transition={{
-                        duration: 2.2,
-                        repeat: Infinity,
-                        repeatDelay: 0.8,
-                        delay,
-                        ease: 'easeInOut',
-                      }}
-                      className="group relative p-3 rounded-xl border backdrop-blur-md transition-colors cursor-pointer overflow-visible flex items-center justify-center"
-                    >
-                      {/* Periodic Interspace Wavefront Ripple */}
-                      <motion.span
-                        animate={{
-                          scale: [1, 1.45, 1.8],
-                          opacity: [0, 0.75, 0],
-                        }}
-                        transition={{
-                          duration: 1.4,
-                          repeat: Infinity,
-                          repeatDelay: 1.6,
-                          delay,
-                          ease: 'easeOut',
-                        }}
-                        className="absolute -inset-1 rounded-xl border border-cyan-400/50 pointer-events-none"
-                      />
+                  ].map(({ href, title, Icon, idx }) => {
+                    const isActive = activeSignalIndex === idx;
 
-                      {/* Corner Interspace Signal Telemetry Beacon Dot */}
-                      <motion.span
+                    return (
+                      <motion.a
+                        key={idx}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={title}
+                        whileHover={{ scale: 1.08, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
                         animate={{
-                          scale: [0.8, 1.6, 0.9],
-                          opacity: [0.35, 1, 0.4],
+                          borderColor: isActive
+                            ? 'rgba(251, 191, 36, 0.9)'
+                            : 'rgba(255, 255, 255, 0.12)',
+                          boxShadow: isActive
+                            ? '0 0 20px rgba(245, 158, 11, 0.65), inset 0 0 10px rgba(245, 158, 11, 0.25)'
+                            : '0 0 0px rgba(245, 158, 11, 0)',
+                          backgroundColor: isActive
+                            ? 'rgba(245, 158, 11, 0.16)'
+                            : 'rgba(6, 7, 14, 0.85)',
+                          scale: isActive ? 1.05 : 1,
                         }}
-                        transition={{
-                          duration: 2.2,
-                          repeat: Infinity,
-                          repeatDelay: 0.8,
-                          delay,
-                          ease: 'easeInOut',
-                        }}
-                        className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,1)] pointer-events-none"
-                      />
-
-                      {/* Icon with Signal Starlight Transmission Glow */}
-                      <motion.div
-                        animate={{
-                          color: ['#fcd34d', '#38bdf8', '#fef08a', '#fcd34d'],
-                          scale: [1, 1.1, 1],
-                        }}
-                        transition={{
-                          duration: 2.2,
-                          repeat: Infinity,
-                          repeatDelay: 0.8,
-                          delay,
-                          ease: 'easeInOut',
-                        }}
-                        className="relative z-10 flex items-center justify-center"
+                        transition={{ duration: 0.28, ease: 'easeInOut' }}
+                        className="group relative p-3 rounded-xl border backdrop-blur-md cursor-pointer overflow-visible flex items-center justify-center transition-colors"
                       >
-                        <Icon className="w-4 h-4" />
-                      </motion.div>
-                    </motion.a>
-                  ))}
+                        {/* Expanding Orange Interspace Wavefront Ring on Active Blink */}
+                        {isActive && (
+                          <motion.span
+                            key={`wave-${activeSignalIndex}`}
+                            initial={{ scale: 1, opacity: 0.85 }}
+                            animate={{ scale: 1.6, opacity: 0 }}
+                            transition={{ duration: 0.55, ease: 'easeOut' }}
+                            className="absolute -inset-1 rounded-xl border border-amber-400/80 shadow-[0_0_12px_rgba(245,158,11,0.5)] pointer-events-none"
+                          />
+                        )}
+
+                        {/* Corner Orange Interspace Signal Telemetry Beacon Dot */}
+                        <span
+                          className={`absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full transition-all duration-300 pointer-events-none ${
+                            isActive
+                              ? 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,1),0_0_16px_rgba(245,158,11,0.8)] scale-125 opacity-100'
+                              : 'bg-amber-400/35 scale-90 opacity-40 group-hover:opacity-80 group-hover:bg-amber-400'
+                          }`}
+                        />
+
+                        {/* Icon with Matching Amber/Orange Telemetry Starlight Flash */}
+                        <motion.div
+                          animate={{
+                            scale: isActive ? 1.15 : 1,
+                            color: isActive ? '#fffbeb' : '#fcd34d',
+                            filter: isActive
+                              ? 'drop-shadow(0 0 8px rgba(245,158,11,0.9))'
+                              : 'none',
+                          }}
+                          transition={{ duration: 0.28 }}
+                          className="relative z-10 flex items-center justify-center group-hover:text-amber-200"
+                        >
+                          <Icon className="w-4 h-4" />
+                        </motion.div>
+                      </motion.a>
+                    );
+                  })}
                 </div>
 
                 <a
