@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useSpring, useReducedMotion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
 import { ArrowDown, Sparkles } from 'lucide-react';
 import EngineeringConstellations from '@/components/archive/EngineeringConstellations';
@@ -14,7 +14,6 @@ interface SceneProps {
 export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
   const { curator, pillars } = ARCHIVE_DATA;
   const sectionRef = useRef<HTMLElement>(null);
-  const shouldReduceMotion = useReducedMotion();
 
   // Local Scene 01 scroll progress for Moon choreography
   const { scrollYProgress } = useScroll({
@@ -102,11 +101,11 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
          ========================================================================= */}
       <motion.div
         style={{
-          x: shouldReduceMotion ? '6vw' : moonX,
-          y: shouldReduceMotion ? '18vh' : moonY,
-          opacity: shouldReduceMotion ? 0.75 : moonOpacity,
-          scale: shouldReduceMotion ? 1 : moonScale,
-          rotate: shouldReduceMotion ? 0 : moonRotate,
+          x: moonX,
+          y: moonY,
+          opacity: moonOpacity,
+          scale: moonScale,
+          rotate: moonRotate,
         }}
         className="absolute top-0 left-0 pointer-events-none z-[5] will-change-transform hidden sm:flex flex-col items-center"
       >

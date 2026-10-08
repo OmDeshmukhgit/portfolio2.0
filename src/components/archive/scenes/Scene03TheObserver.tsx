@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useSpring, useReducedMotion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
 import { Camera, Aperture, GraduationCap, Quote, RefreshCw, Eye } from 'lucide-react';
 
@@ -11,7 +11,6 @@ type FocusState = 'soft' | 'focusing' | 'locked';
 export default function Scene03TheObserver() {
   const { about, curator } = ARCHIVE_DATA;
   const sectionRef = useRef<HTMLElement>(null);
-  const shouldReduceMotion = useReducedMotion();
   const [focusState, setFocusState] = useState<FocusState>('locked');
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
 
@@ -155,17 +154,17 @@ export default function Scene03TheObserver() {
          ========================================================================= */}
       <motion.div
         style={{
-          x: shouldReduceMotion ? '0px' : telescopeX,
-          y: shouldReduceMotion ? '0px' : telescopeY,
-          rotate: shouldReduceMotion ? 0 : telescopeRotate,
-          scale: shouldReduceMotion ? 1 : telescopeScale,
-          opacity: shouldReduceMotion ? 0.85 : telescopeOpacity,
+          x: telescopeX,
+          y: telescopeY,
+          rotate: telescopeRotate,
+          scale: telescopeScale,
+          opacity: telescopeOpacity,
         }}
         className="absolute top-28 right-0 2xl:right-8 pointer-events-none z-[4] will-change-transform hidden lg:flex items-center gap-2"
       >
         {/* Subtle Optical Sightline projecting from the objective lens toward the photography viewfinder */}
         <motion.div
-          style={{ opacity: shouldReduceMotion ? 0.7 : sightlineOpacity }}
+          style={{ opacity: sightlineOpacity }}
           className="flex items-center gap-1.5 pointer-events-none"
         >
           <div className="w-32 xl:w-48 border-t border-dashed border-amber-400/50 relative">
@@ -231,7 +230,7 @@ export default function Scene03TheObserver() {
           <div className="lg:col-span-7 flex flex-col items-center">
             {/* Conceptual Camera Rangefinder (Helicoid Focus Mechanism) */}
             <motion.div
-              style={{ scale: shouldReduceMotion ? 1 : cameraScale }}
+              style={{ scale: cameraScale }}
               className="flex items-center gap-3 mb-2 px-4 py-2 rounded-2xl bg-[#090a14] border border-amber-400/25 shadow-md"
             >
               <div className="relative w-12 h-12 shrink-0">

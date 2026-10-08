@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence, useScroll, useTransform, useSpring, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
 import { Layers, Cpu, Terminal, Activity, GitFork } from 'lucide-react';
 
@@ -10,7 +10,6 @@ export default function Scene05SystemsArchitecture() {
   const { skillsLayers } = ARCHIVE_DATA;
   const [selectedLayerId, setSelectedLayerId] = useState<string>(skillsLayers[0].id);
   const sectionRef = useRef<HTMLElement>(null);
-  const shouldReduceMotion = useReducedMotion();
 
   // Subtle scroll parallax for Earth as background anchor of scale
   const { scrollYProgress } = useScroll({
@@ -38,7 +37,7 @@ export default function Scene05SystemsArchitecture() {
           Subtle parallax, low opacity (~15%), partially cropped, never competing with UI
          ========================================================================= */}
       <motion.div
-        style={{ y: shouldReduceMotion ? '0px' : earthY }}
+        style={{ y: earthY }}
         className="absolute -top-12 -right-20 md:-right-12 lg:right-4 w-[360px] h-[360px] md:w-[480px] md:h-[480px] pointer-events-none z-0 opacity-15 select-none will-change-transform"
       >
         <Image

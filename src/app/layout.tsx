@@ -70,9 +70,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${cinzel.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col bg-[#030305] text-[#f4f1ea] font-sans selection:bg-[#d4af37] selection:text-[#030305]">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-[#030305] text-[#f4f1ea] font-sans selection:bg-[#d4af37] selection:text-[#030305]"
+      >
         {children}
       </body>
     </html>

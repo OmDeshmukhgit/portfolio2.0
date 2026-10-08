@@ -2,14 +2,13 @@
 
 import React, { useRef } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useSpring, useReducedMotion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
 import { Radio, Activity, Waves } from 'lucide-react';
 
 export default function Scene02SignalTransmission() {
   const { pillars } = ARCHIVE_DATA;
   const sectionRef = useRef<HTMLElement>(null);
-  const shouldReduceMotion = useReducedMotion();
 
   // Local Scene 02 scroll progress for Satellite orbital trajectory & pipeline telemetry
   const { scrollYProgress } = useScroll({
@@ -91,11 +90,11 @@ export default function Scene02SignalTransmission() {
          ========================================================================= */}
       <motion.div
         style={{
-          x: shouldReduceMotion ? '65vw' : satelliteX,
-          y: shouldReduceMotion ? '14vh' : satelliteY,
-          rotate: shouldReduceMotion ? 0 : satelliteRotate,
-          scale: shouldReduceMotion ? 1 : satelliteScale,
-          opacity: shouldReduceMotion ? 0.75 : satelliteOpacity,
+          x: satelliteX,
+          y: satelliteY,
+          rotate: satelliteRotate,
+          scale: satelliteScale,
+          opacity: satelliteOpacity,
         }}
         className="absolute top-0 left-0 pointer-events-none z-[4] will-change-transform hidden md:flex flex-col items-center"
       >
@@ -123,7 +122,7 @@ export default function Scene02SignalTransmission() {
             Active strictly when satellite aligns over the deployment pipeline
            ======================================================================= */}
         <motion.div
-          style={{ opacity: shouldReduceMotion ? 0 : signalOpacity }}
+          style={{ opacity: signalOpacity }}
           className="flex flex-col items-center pointer-events-none mt-1"
         >
           {/* Hairline dashed connector with travelling telemetry packet */}
@@ -174,7 +173,7 @@ export default function Scene02SignalTransmission() {
         >
           {/* Active Downlink Ingest Notice */}
           <motion.div
-            style={{ opacity: shouldReduceMotion ? 0.6 : signalOpacity }}
+            style={{ opacity: signalOpacity }}
             className="flex items-center gap-2 mb-2 text-[9px] font-mono text-cyan-300 uppercase tracking-widest"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />

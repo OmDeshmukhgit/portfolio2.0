@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { MotionConfig } from 'framer-motion';
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
 import ArchiveHeader from '@/components/archive/ArchiveHeader';
 import ArchiveSoundtrack from '@/components/archive/ArchiveSoundtrack';
@@ -58,51 +59,53 @@ export default function Home() {
 
   return (
     <SmoothScrollProvider>
-      <main className="relative w-full min-h-screen bg-[#030305] text-[#f4f1ea] overflow-x-hidden selection:bg-[#d4af37] selection:text-[#030305]">
-        {/* Persistent Cinematic Archive Navigation & Telemetry HUD */}
-        <ArchiveHeader
-          activeSceneId={activeSceneId}
-          onSceneSelect={handleSceneSelect}
-          isAudioPlaying={isAudioPlaying}
-          onToggleAudio={() => setIsAudioPlaying(!isAudioPlaying)}
-          currentTrackTitle={currentTrackTitle}
-        />
+      <MotionConfig reducedMotion="user">
+        <main className="relative w-full min-h-screen bg-[#030305] text-[#f4f1ea] overflow-x-hidden selection:bg-[#d4af37] selection:text-[#030305]">
+          {/* Persistent Cinematic Archive Navigation & Telemetry HUD */}
+          <ArchiveHeader
+            activeSceneId={activeSceneId}
+            onSceneSelect={handleSceneSelect}
+            isAudioPlaying={isAudioPlaying}
+            onToggleAudio={() => setIsAudioPlaying(!isAudioPlaying)}
+            currentTrackTitle={currentTrackTitle}
+          />
 
-        {/* Master Sound Console */}
-        <ArchiveSoundtrack
-          isPlaying={isAudioPlaying}
-          setIsPlaying={setIsAudioPlaying}
-          currentTrackIndex={currentTrackIndex}
-          setCurrentTrackIndex={setCurrentTrackIndex}
-        />
+          {/* Master Sound Console */}
+          <ArchiveSoundtrack
+            isPlaying={isAudioPlaying}
+            setIsPlaying={setIsAudioPlaying}
+            currentTrackIndex={currentTrackIndex}
+            setCurrentTrackIndex={setCurrentTrackIndex}
+          />
 
-        {/* =========================================================================
-            THE 8 CINEMATIC ARCHIVE SCENES
-           ========================================================================= */}
-        {/* Scene 01: Deep Space / The Cosmic Lens */}
-        <Scene01CosmicOpening onScrollToNext={handleScrollToNext} />
+          {/* =========================================================================
+              THE 8 CINEMATIC ARCHIVE SCENES
+             ========================================================================= */}
+          {/* Scene 01: Deep Space / The Cosmic Lens */}
+          <Scene01CosmicOpening onScrollToNext={handleScrollToNext} />
 
-        {/* Scene 02: Signal & Frequency (The 5 Pillars) */}
-        <Scene02SignalTransmission />
+          {/* Scene 02: Signal & Frequency (The 5 Pillars) */}
+          <Scene02SignalTransmission />
 
-        {/* Scene 03: The Observer (Contact Sheet Exhibition & Philosophy) */}
-        <Scene03TheObserver />
+          {/* Scene 03: The Observer (Contact Sheet Exhibition & Philosophy) */}
+          <Scene03TheObserver />
 
-        {/* Scene 04: The Transition to Architecture */}
-        <Scene04EngineerTransition onProceedToSystems={() => handleSceneSelect('systems')} />
+          {/* Scene 04: The Transition to Architecture */}
+          <Scene04EngineerTransition onProceedToSystems={() => handleSceneSelect('systems')} />
 
-        {/* Scene 05: Systems & Infrastructure Architecture */}
-        <Scene05SystemsArchitecture />
+          {/* Scene 05: Systems & Infrastructure Architecture */}
+          <Scene05SystemsArchitecture />
 
-        {/* Scene 06: Captured Frames (Real Projects) */}
-        <Scene06CapturedProjects />
+          {/* Scene 06: Captured Frames (Real Projects) */}
+          <Scene06CapturedProjects />
 
-        {/* Scene 07: The Archive & Reflections */}
-        <Scene07ReflectionsArchive />
+          {/* Scene 07: The Archive & Reflections */}
+          <Scene07ReflectionsArchive />
 
-        {/* Scene 08: Final Frame / Dispatch Transmission */}
-        <Scene08FinalFrameContact />
-      </main>
+          {/* Scene 08: Final Frame / Dispatch Transmission */}
+          <Scene08FinalFrameContact />
+        </main>
+      </MotionConfig>
     </SmoothScrollProvider>
   );
 }
