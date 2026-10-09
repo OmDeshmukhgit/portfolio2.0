@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ARCHIVE_DATA } from '@/data/portfolioData';
 import { Layers, Cpu, Terminal, Activity, GitFork } from 'lucide-react';
+import { SkillIcon, LayerIcon } from '@/components/archive/TechIcons';
 
 export default function Scene05SystemsArchitecture() {
   const { skillsLayers } = ARCHIVE_DATA;
@@ -86,16 +87,24 @@ export default function Scene05SystemsArchitecture() {
                 key={layer.id}
                 type="button"
                 onClick={() => setSelectedLayerId(layer.id)}
-                className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between group ${
                   isSelected
                     ? 'bg-amber-400/15 border-amber-400 text-amber-200 shadow-[0_0_25px_rgba(212,175,55,0.25)]'
                     : 'bg-[#080911]/90 border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] text-amber-400/80 font-bold">
-                    0{index + 1} // {layer.codeName}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <LayerIcon
+                      layerId={layer.id}
+                      className={`w-3.5 h-3.5 transition-colors ${
+                        isSelected ? 'text-amber-400' : 'text-slate-500 group-hover:text-amber-400/70'
+                      }`}
+                    />
+                    <span className="text-[10px] text-amber-400/80 font-bold">
+                      0{index + 1} // {layer.codeName}
+                    </span>
+                  </div>
                   <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-amber-400 animate-ping' : 'bg-slate-700'}`} />
                 </div>
                 <span className="font-serif font-bold text-xs sm:text-sm text-[#f4f1ea] line-clamp-1">
@@ -123,7 +132,7 @@ export default function Scene05SystemsArchitecture() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
               <div>
                 <div className="flex items-center gap-2 text-xs font-mono text-amber-400 mb-1">
-                  <Layers className="w-4 h-4" />
+                  <LayerIcon layerId={activeLayer.id} className="w-4 h-4 text-amber-400" />
                   <span>LAYER LEVEL 0{activeLayer.level} · {activeLayer.codeName}</span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#f4f1ea]">
@@ -141,24 +150,29 @@ export default function Scene05SystemsArchitecture() {
               </div>
             </div>
 
-            {/* Components Grid */}
+            {/* Components Grid with Dedicated Technical Skill Icons */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
               {activeLayer.components.map((comp) => (
                 <div
                   key={comp.name}
-                  className="p-4 rounded-xl bg-white/5 border border-white/5 hover:border-amber-400/40 transition-all flex flex-col justify-between"
+                  className="p-4 rounded-xl bg-white/5 border border-white/5 hover:border-amber-400/40 hover:bg-white/[0.08] transition-all flex items-start gap-3.5 group"
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-amber-200 font-mono">
-                      {comp.name}
-                    </h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400/10 text-amber-300 border border-amber-400/20">
-                      {comp.status}
-                    </span>
+                  <div className="w-10 h-10 rounded-xl bg-black/60 border border-amber-400/25 flex items-center justify-center shrink-0 text-amber-300 shadow-[0_0_15px_rgba(212,175,55,0.12)] group-hover:border-amber-400/60 group-hover:text-amber-200 group-hover:scale-105 transition-all">
+                    <SkillIcon name={comp.name} className="w-5 h-5 text-amber-300 group-hover:text-amber-200" />
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed font-sans">
-                    {comp.detail}
-                  </p>
+                  <div className="flex-1 min-w-0 flex flex-col justify-between">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <h4 className="text-sm font-bold text-amber-200 font-mono truncate">
+                        {comp.name}
+                      </h4>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400/10 text-amber-300 border border-amber-400/20 shrink-0">
+                        {comp.status}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                      {comp.detail}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>

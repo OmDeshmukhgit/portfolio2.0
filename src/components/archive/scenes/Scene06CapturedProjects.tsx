@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ARCHIVE_DATA, ArchiveProject } from '@/data/portfolioData';
 import { Camera, ExternalLink, Layers, Info, CheckCircle2, ChevronRight, Sparkles } from 'lucide-react';
 import { GithubIcon } from '@/components/pixel/BrandIcons';
+import { SkillIcon } from '@/components/archive/TechIcons';
 
 export default function Scene06CapturedProjects() {
   const { projects } = ARCHIVE_DATA;
@@ -275,9 +276,10 @@ export default function Scene06CapturedProjects() {
                   {activeProject.technologies.map((t) => (
                     <span
                       key={t}
-                      className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[11px] font-mono text-amber-300"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[11px] font-mono text-amber-300"
                     >
-                      {t}
+                      <SkillIcon name={t} className="w-3.5 h-3.5 text-amber-400/90 shrink-0" />
+                      <span>{t}</span>
                     </span>
                   ))}
                 </div>
