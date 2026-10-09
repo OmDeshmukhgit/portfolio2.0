@@ -75,7 +75,7 @@ export default function Home() {
 
   return (
     <SmoothScrollProvider>
-      <MotionConfig reducedMotion="never">
+      <MotionConfig reducedMotion="user">
         <main className="relative w-full min-h-screen bg-[#030305] text-[#f4f1ea] overflow-x-hidden selection:bg-[#d4af37] selection:text-[#030305]">
           {/* Pre-Entry Cinematic Camera Opening Experience */}
           <AnimatePresence>

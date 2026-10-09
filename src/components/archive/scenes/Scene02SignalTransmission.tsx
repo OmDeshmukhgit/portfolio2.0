@@ -143,9 +143,6 @@ export default function Scene02SignalTransmission() {
               className="absolute -left-[3.5px] w-2 h-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.9)]"
             />
           </div>
-          <div className="px-2.5 py-0.5 rounded bg-[#060812]/90 border border-cyan-400/30 text-[7px] font-mono text-cyan-300 whitespace-nowrap mt-1">
-            DOWNLINK RAY // TELEMETRY PACKET DISPATCH ↓
-          </div>
         </motion.div>
       </motion.div>
 
@@ -241,22 +238,20 @@ export default function Scene02SignalTransmission() {
         </div>
 
         {/* Radio Telemetry Diagnostics Bar */}
-        <div className="w-full p-4 rounded-2xl bg-[#07080e]/95 border border-cyan-500/20 shadow-xl flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-300">
+        <div className="w-full px-5 py-3 rounded-2xl bg-[#07080e]/95 border border-cyan-500/20 shadow-xl flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-slate-300">
           <div className="flex items-center gap-2">
-            <Activity className="w-4 h-4 text-cyan-400 animate-pulse" />
-            <span className="text-cyan-300 font-bold">SIGNAL TELEMETRY:</span>
-            <span className="text-slate-400">1.4204 GHz (Hydrogen Frequency)</span>
+            <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+            <span className="text-cyan-300 font-bold">TELEMETRY:</span>
+            <span className="text-slate-400">1.4204 GHz (H-Line) · TCP / HTTP/2 / gRPC</span>
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="text-slate-400">PROTOCOLS: TCP / HTTP/2 / WebSockets / gRPC</span>
+            <span className="text-amber-300">STATION: AKOLA, IN</span>
             <span className="text-white/20">|</span>
-            <span className="text-amber-300">GROUND STATION: AKOLA, IN</span>
-          </div>
-
-          <div className="flex items-center gap-2 text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>PACKET STREAM: 100% HEALTH</span>
+            <div className="flex items-center gap-1.5 text-emerald-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>STREAM: 100% HEALTH</span>
+            </div>
           </div>
         </div>
       </div>

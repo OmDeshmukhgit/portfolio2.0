@@ -127,6 +127,38 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
   // 8. ARCHIVE EMERGES (5200ms):
   //    Existing Archive reveals cleanly. Music starts.
   // =========================================================================
+  const handleFastEnter = useCallback(() => {
+    if (phase === 'revealed') return;
+    if (onTrigger) {
+      onTrigger();
+    }
+    setPhase('revealed');
+    onEnter();
+  }, [phase, onTrigger, onEnter]);
+
+  // Global Escape key shortcut to skip intro immediately
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleFastEnter();
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [handleFastEnter]);
+
+  // =========================================================================
+  // THE SIGNAL CHOREOGRAPHY TIMELINE (Full & Complete ~5.2s Celestial Cycle):
+  //
+  // 1. DORMANT SPACE (idle): Quiet cosmic expanse.
+  // 2. CLICK -> SILENCE (0 - 650ms): UI fades away. Motion halts.
+  // 3. FIRST SIGNAL (650 - 1850ms): At (28%, 26%), 3 measured pulses with diffraction spikes.
+  // 4. SIGNAL TRAVEL & WAVEFRONTS (1850 - 2750ms): Concentric optical wavefronts propagate.
+  // 5. STAR RESPONSE & NETWORK (2750 - 4100ms): All 7 responding stars awaken sequentially.
+  // 6. CONVERGENCE (4100 - 4750ms): Signal and cosmic energy converge toward center (50%, 50%).
+  // 7. ATMOSPHERIC BLOOM & VOID (4750 - 5200ms): Soft bloom contracts into deep blue-black (#030305).
+  // 8. ARCHIVE EMERGES (5200ms): Clean Archive reveal and soundtrack initiation.
+  // =========================================================================
   const handleTrigger = useCallback(() => {
     if (phase !== 'idle') return;
 
@@ -173,11 +205,14 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
     }, 650);
   }, [phase, onTrigger, onEnter, mouseX, mouseY]);
 
-  // Keyboard accessibility (Enter / Space)
+  // Keyboard accessibility (Enter / Space to start, Esc to skip)
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleTrigger();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      handleFastEnter();
     }
   };
 
@@ -247,7 +282,6 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
           fill
           priority
           unoptimized
-          quality={100}
           className="object-cover object-[38%_center] sm:object-center"
           sizes="100vw"
         />
@@ -688,9 +722,19 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
             <span className="text-cyan-400/80 group-hover:translate-y-0.5 transition-transform">↓</span>
           </button>
 
-          <span className="text-[8px] sm:text-[9px] font-mono tracking-widest text-slate-400 uppercase">
-            TRANSMISSION STANDBY · AWAITING INPUT
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-[8px] sm:text-[9px] font-mono tracking-widest text-slate-400 uppercase">
+              TRANSMISSION STANDBY · AWAITING INPUT
+            </span>
+            <span className="text-slate-600 text-[9px]">·</span>
+            <button
+              type="button"
+              onClick={handleFastEnter}
+              className="text-[8px] sm:text-[9px] font-mono tracking-widest text-amber-300/80 hover:text-amber-200 uppercase underline decoration-amber-400/40 hover:decoration-amber-300 transition-colors"
+            >
+              SKIP INTRO [ESC] →
+            </button>
+          </div>
         </motion.div>
       </div>
 

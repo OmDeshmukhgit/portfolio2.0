@@ -299,7 +299,6 @@ export default function Scene03TheObserver() {
                   src={currentFrame.src}
                   alt={currentFrame.title}
                   fill
-                  priority
                   className={`object-cover transition-all duration-700 ease-out ${
                     focusState === 'soft'
                       ? 'blur-md contrast-75 brightness-75 scale-105'
@@ -365,37 +364,21 @@ export default function Scene03TheObserver() {
 
               {/* Focus Interaction Trigger */}
               <div className="mt-4 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 font-mono text-xs">
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={cycleFocus}
-                    className="px-4 py-2 rounded-full bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/40 text-amber-200 text-xs font-mono uppercase tracking-wider transition-all flex items-center gap-2"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
-                    <span>
-                      {focusState === 'locked'
-                        ? 'Simulate Soft Aperture'
-                        : focusState === 'soft'
-                        ? 'Engage Focus Calibration'
-                        : 'Lock In Pin Focus'}
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      isManualRef.current = true;
-                      setFocusState('locked');
-                    }}
-                    className={`px-3 py-2 rounded-full text-xs transition-all border ${
-                      focusState === 'locked'
-                        ? 'bg-emerald-950/60 border-emerald-500/50 text-emerald-300'
-                        : 'bg-white/5 border-white/10 text-slate-400 hover:text-slate-200'
-                    }`}
-                  >
-                    Lock Sharp (1:1)
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={cycleFocus}
+                  className="px-3.5 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/30 hover:border-amber-400/60 text-amber-200 text-xs font-mono uppercase tracking-wider transition-all flex items-center gap-2 group"
+                  aria-label="Calibrate optical focus"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 text-amber-400 transition-transform ${focusState === 'focusing' ? 'animate-spin' : 'group-hover:rotate-180'}`} />
+                  <span>
+                    {focusState === 'locked'
+                      ? 'Optics: 1:1 Sharp Focus'
+                      : focusState === 'focusing'
+                      ? 'Calibrating Optics...'
+                      : 'Optics: Soft Aperture'}
+                  </span>
+                </button>
 
                 <div className="text-[10px] text-slate-400">
                   {currentFrame.title}
@@ -437,7 +420,7 @@ export default function Scene03TheObserver() {
               </div>
             </div>
 
-            {/* Academic Foundation (MIT ADT University) */}
+            {/* Academic Foundation (Government College of Engineering, Yavatmal) */}
             <div className="p-4 sm:p-5 rounded-2xl bg-[#080911]/90 border border-white/10 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-300">

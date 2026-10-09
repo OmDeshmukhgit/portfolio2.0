@@ -20,7 +20,7 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
   {
     id: 'kubernetes',
     name: 'Kubernetes',
-    latinName: 'Corona Gubernatoris',
+    latinName: 'CLUSTER CONTROL PLANE & STATE ENGINE',
     classification: 'CONTAINER ORCHESTRATION',
     role: 'Fleet Management & Automated Self-Healing',
     primitives: ['DEPLOYMENTS', 'SERVICES', 'INGRESS', 'HPA', 'CONFIGMAPS'],
@@ -43,7 +43,7 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
   {
     id: 'aws',
     name: 'AWS',
-    latinName: 'Nebula Nubium',
+    latinName: 'MULTI-REGION CLOUD INFRASTRUCTURE SUBSTRATE',
     classification: 'MULTI-REGION CLOUD SUBSTRATE',
     role: 'Cloud Infrastructure & High-Availability Networking',
     primitives: ['MULTI-AZ VPC', 'EC2 FLEET', 'S3 STORAGE', 'IAM ROLES', 'ROUTE 53'],
@@ -65,7 +65,7 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
   {
     id: 'docker',
     name: 'Docker',
-    latinName: 'Cetus Vecturae',
+    latinName: 'CONTAINER RUNTIME & OCI SPECIFICATION',
     classification: 'CONTAINER RUNTIME & PACKAGING',
     role: 'Immutable Application Containers',
     primitives: ['MULTI-STAGE BUILDS', 'DOCKER COMPOSE', 'OCI IMAGES', 'CGROUPS ISOLATION'],
@@ -89,7 +89,7 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
   {
     id: 'terraform',
     name: 'Terraform',
-    latinName: 'Prisma Structurae',
+    latinName: 'DECLARATIVE TOPOLOGY & STATE GRAPH ENGINE',
     classification: 'INFRASTRUCTURE AS CODE',
     role: 'Declarative Cloud Topology & State Management',
     primitives: ['S3 REMOTE STATE', 'STATE LOCKING', 'HCL MODULES', 'PLAN / APPLY VALIDATION'],
@@ -111,7 +111,7 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
   {
     id: 'cicd',
     name: 'CI/CD Pipeline',
-    latinName: 'Circulus Perpetuus',
+    latinName: 'CONTINUOUS DELIVERY & VERIFICATION CYCLE',
     classification: 'AUTOMATED CONTINUOUS DELIVERY',
     role: 'Zero-Downtime Verification & Deployment Cycles',
     primitives: ['JENKINS GROOVY', 'GITHUB ACTIONS', 'LINT / TEST GATES', 'CANARY ROLLOUT'],
@@ -133,7 +133,7 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
   {
     id: 'linux',
     name: 'Linux',
-    latinName: 'Polaris Substrati',
+    latinName: 'BEDROCK KERNEL & PROCESS ISOLATION LAYER',
     classification: 'OPERATING SYSTEM FOUNDATION',
     role: 'Kernel Internals, Daemons & Process Isolation',
     primitives: ['SYSTEMD', 'CGROUPS', 'NAMESPACES', 'BASH SCRIPTING', '/PROC MONITORING'],
@@ -156,7 +156,7 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
   {
     id: 'python',
     name: 'Python',
-    latinName: 'Serpens Automata',
+    latinName: 'SYSTEMS AUTOMATION & TOOLING RUNTIME',
     classification: 'SYSTEMS AUTOMATION & TOOLING',
     role: 'Cloud Automation, APIs & Performance Scripting',
     primitives: ['FASTAPI', 'BOTO3 AWS SDK', 'ASYNCIO', 'PYTEST', 'AUTOMATION SCRIPTS'],
@@ -305,22 +305,45 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
 
     let animFrame: number;
     let t = 0;
+    let isVisible = true;
 
-    const render = () => {
-      t += 0.02;
+    let displayWidth = canvas.clientWidth || 540;
+    let displayHeight = canvas.clientHeight || 380;
 
-      const dpr = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2.5);
-      const rect = canvas.getBoundingClientRect();
-      const displayWidth = Math.round(rect.width || 540);
-      const displayHeight = Math.round(rect.height || 380);
-
+    const updateDimensions = () => {
+      if (!canvas) return;
+      const dpr = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2);
+      displayWidth = canvas.clientWidth || 540;
+      displayHeight = canvas.clientHeight || 380;
       const physicalWidth = Math.round(displayWidth * dpr);
       const physicalHeight = Math.round(displayHeight * dpr);
-
       if (canvas.width !== physicalWidth || canvas.height !== physicalHeight) {
         canvas.width = physicalWidth;
         canvas.height = physicalHeight;
       }
+    };
+
+    updateDimensions();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateDimensions();
+    });
+    resizeObserver.observe(canvas);
+
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      if (isVisible) {
+        cancelAnimationFrame(animFrame);
+        animFrame = requestAnimationFrame(render);
+      }
+    }, { threshold: 0.05 });
+    intersectionObserver.observe(canvas);
+
+    const render = () => {
+      if (!isVisible) return;
+      t += 0.02;
+
+      const dpr = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2);
 
       ctx.save();
       ctx.scale(dpr, dpr);
@@ -409,10 +432,12 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
       animFrame = requestAnimationFrame(render);
     };
 
-    render();
+    animFrame = requestAnimationFrame(render);
 
     return () => {
       cancelAnimationFrame(animFrame);
+      resizeObserver.disconnect();
+      intersectionObserver.disconnect();
     };
   }, [activeConstellation, backgroundStars]);
 
@@ -508,7 +533,7 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
               <span className="font-bold text-amber-300">{activeConstellation.classification}</span>
             </div>
 
-            <div className="text-[11px] font-serif italic text-amber-300/80 mb-0.5">
+            <div className="text-[10px] font-mono tracking-widest text-amber-300/80 uppercase mb-1">
               {activeConstellation.latinName}
             </div>
 

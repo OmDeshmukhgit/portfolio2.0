@@ -88,7 +88,7 @@ export default function Scene07ReflectionsArchive() {
             </div>
           </div>
 
-          {/* Vault 3: Academic Grounding (MIT ADT) */}
+          {/* Vault 3: Academic Grounding (Government College of Engineering, Yavatmal) */}
           <div className="p-6 rounded-3xl bg-[#080911]/90 border border-white/10 hover:border-amber-400/40 shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all group">
             <div>
               <div className="w-10 h-10 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-300 mb-5 group-hover:scale-110 transition-transform">
@@ -101,13 +101,13 @@ export default function Scene07ReflectionsArchive() {
                 Computer Engineering Rigor
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-serif">
-                Earning my B.Tech in Computer Engineering at MIT ADT University cemented the theoretical
+                Earning my B.Tech in Computer Engineering at Government College of Engineering, Yavatmal cemented the theoretical
                 pillars: operating system schedulers, TCP/IP network protocol state machines, and relational algebra.
                 That rigor transforms intuition into repeatable production engineering.
               </p>
             </div>
             <div className="mt-6 pt-4 border-t border-white/5 text-[10px] font-mono text-slate-500">
-              MIT ADT UNIVERSITY · B.TECH
+              GOVERNMENT COLLEGE OF ENGINEERING, YAVATMAL · B.TECH
             </div>
           </div>
         </div>

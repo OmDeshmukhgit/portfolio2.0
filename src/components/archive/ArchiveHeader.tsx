@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ARCHIVE_DATA, ArchiveScene } from '@/data/portfolioData';
-import { Camera, Compass, Radio, Disc3, ChevronDown, Sparkles, X } from 'lucide-react';
+import { Camera, Compass, Radio, Disc3, ChevronDown, Sparkles, X, FileDown } from 'lucide-react';
 
 interface ArchiveHeaderProps {
   activeSceneId: string;
@@ -77,13 +77,26 @@ export default function ArchiveHeader({
             <span className="text-slate-400">{activeScene.aperture}</span>
           </div>
 
-          {/* Right: Sound Controller Pill & Scene Index Trigger */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* Right: Sound Controller Pill, Dossier Link & Scene Index Trigger */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
+            {/* Persistent Engineering Dossier / Resume Link */}
+            <a
+              href={ARCHIVE_DATA.curator.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View Om Deshmukh Resume / Engineering Dossier (opens in new tab)"
+              title="View / Download Engineering Dossier (Resume)"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/40 hover:border-amber-300 text-amber-300 hover:text-amber-100 text-xs font-mono tracking-wider transition-all shadow-[0_0_15px_rgba(212,175,55,0.15)]"
+            >
+              <FileDown className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+              <span className="hidden sm:inline">RESUME</span>
+            </a>
+
             {/* Soundtrack Toggle Pill */}
             <button
               type="button"
               onClick={onToggleAudio}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono transition-all ${
+              className={`flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-full border text-xs font-mono transition-all ${
                 isAudioPlaying
                   ? 'bg-amber-400/15 border-amber-400/60 text-amber-300 shadow-[0_0_20px_rgba(212,175,55,0.3)]'
                   : 'bg-black/40 border-white/15 text-slate-400 hover:text-slate-200 hover:border-white/30'
@@ -91,7 +104,7 @@ export default function ArchiveHeader({
               title={isAudioPlaying ? 'Mute Soundtrack' : 'Play Soundtrack'}
             >
               <Disc3 className={`w-3.5 h-3.5 ${isAudioPlaying ? 'animate-spin' : ''}`} />
-              <span className="hidden sm:inline truncate max-w-[120px]">
+              <span className="hidden sm:inline truncate max-w-[95px] lg:max-w-[120px]">
                 {isAudioPlaying ? currentTrackTitle : 'Soundtrack'}
               </span>
             </button>
@@ -100,7 +113,7 @@ export default function ArchiveHeader({
             <button
               type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-mono tracking-wider transition-all"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-mono tracking-wider transition-all"
             >
               <span>INDEX</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
@@ -168,9 +181,21 @@ export default function ArchiveHeader({
               })}
             </div>
 
-            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-slate-400">
-              <span>COORDINATES: {ARCHIVE_DATA.curator.coordinates}</span>
-              <span>BASE: {ARCHIVE_DATA.curator.baseLocation}</span>
+            <div className="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-slate-400">
+              <div className="flex items-center gap-3">
+                <span>COORDINATES: {ARCHIVE_DATA.curator.coordinates}</span>
+                <span className="hidden sm:inline">· BASE: {ARCHIVE_DATA.curator.baseLocation}</span>
+              </div>
+              <a
+                href={ARCHIVE_DATA.curator.resume}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/40 text-amber-200 text-xs font-mono transition-colors shadow-sm"
+                aria-label="Download Om Deshmukh Engineering Dossier Resume"
+              >
+                <FileDown className="w-3.5 h-3.5 text-amber-400" />
+                <span>DOWNLOAD DOSSIER (RESUME)</span>
+              </a>
             </div>
           </div>
         </div>

@@ -45,26 +45,88 @@ export default function Scene06CapturedProjects() {
           </p>
         </div>
 
-        {/* Project Frame Selector Tabs */}
-        <div className="w-full flex items-center gap-2 overflow-x-auto pb-4 mb-8 font-mono text-xs">
-          {projects.map((proj) => {
-            const isSelected = proj.id === selectedProjectId;
-            return (
-              <button
-                key={proj.id}
-                type="button"
-                onClick={() => setSelectedProjectId(proj.id)}
-                className={`px-4 py-2.5 rounded-full border whitespace-nowrap transition-all flex items-center gap-2 ${
-                  isSelected
-                    ? 'bg-amber-400/20 border-amber-400 text-amber-200 shadow-[0_0_20px_rgba(212,175,55,0.25)]'
-                    : 'bg-[#080911] border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20'
-                }`}
-              >
-                <span className="text-[10px] text-amber-400/80 font-bold">{proj.frameNumber}</span>
-                <span className="font-serif font-semibold">{proj.title}</span>
-              </button>
-            );
-          })}
+        {/* Archival Contact Sheet — 5 Production Exhibits Cataloged */}
+        <div className="w-full mb-10">
+          <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-3 px-1 border-b border-white/5 pb-2">
+            <span className="text-amber-400/80 font-bold uppercase tracking-wider flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <span>ARCHIVAL CONTACT SHEET // 5 FRAMES</span>
+            </span>
+            <span className="text-slate-400 text-[10px] hidden sm:inline">
+              SELECT ANY FRAME TO INSPECT FULL ARCHITECTURAL DOSSIER
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            {projects.map((proj) => {
+              const isSelected = proj.id === selectedProjectId;
+              return (
+                <button
+                  key={proj.id}
+                  type="button"
+                  onClick={() => setSelectedProjectId(proj.id)}
+                  aria-pressed={isSelected}
+                  aria-label={`Inspect ${proj.frameNumber}: ${proj.title}`}
+                  className={`group relative text-left p-2.5 sm:p-3 rounded-2xl border transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer ${
+                    isSelected
+                      ? 'bg-[#0b0c16] border-amber-400/80 shadow-[0_0_25px_rgba(212,175,55,0.22)] scale-[1.02]'
+                      : 'bg-[#07080f]/90 border-white/10 hover:border-amber-400/40 hover:bg-[#090b14]'
+                  }`}
+                >
+                  <div>
+                    {/* Top Status Bar: Frame & Active Indicator */}
+                    <div className="flex items-center justify-between text-[9px] font-mono mb-2 pb-1.5 border-b border-white/5">
+                      <span className={isSelected ? 'text-amber-300 font-bold' : 'text-amber-400/70 font-semibold'}>
+                        {proj.frameNumber}
+                      </span>
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full transition-all ${
+                          isSelected
+                            ? 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,1)] scale-110'
+                            : 'bg-white/20 group-hover:bg-amber-400/50'
+                        }`}
+                      />
+                    </div>
+
+                    {/* Thumbnail Preview Window */}
+                    <div className="relative w-full h-16 sm:h-20 rounded-lg overflow-hidden bg-black/70 border border-white/5 mb-2.5">
+                      <Image
+                        src={proj.image}
+                        alt={proj.title}
+                        fill
+                        className={`object-cover object-top transition-transform duration-500 ${
+                          isSelected ? 'scale-105 filter contrast-110' : 'opacity-70 group-hover:opacity-95 group-hover:scale-105'
+                        }`}
+                        sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 20vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                      <span className="absolute bottom-1 left-1.5 text-[8px] font-mono text-amber-300/90 font-medium truncate max-w-[90%]">
+                        {proj.category.split('/')[0].trim()}
+                      </span>
+                    </div>
+
+                    {/* Project Title & Stack summary */}
+                    <h3 className={`text-xs font-serif font-bold leading-snug line-clamp-1 transition-colors ${
+                      isSelected ? 'text-[#f4f1ea]' : 'text-slate-300 group-hover:text-white'
+                    }`}>
+                      {proj.title}
+                    </h3>
+                    <p className="text-[9px] font-mono text-slate-400 mt-1 truncate">
+                      {proj.technologies.slice(0, 3).join(' · ')}
+                    </p>
+                  </div>
+
+                  {/* Active Inspection Indicator Banner */}
+                  <div className={`mt-2.5 pt-1.5 border-t border-white/5 text-[8px] font-mono flex items-center justify-between uppercase transition-colors ${
+                    isSelected ? 'text-amber-300 font-bold border-amber-400/20' : 'text-slate-400 group-hover:text-slate-300'
+                  }`}>
+                    <span>{isSelected ? 'INSPECTING' : 'VIEW FRAME'}</span>
+                    <span>{isSelected ? '↓' : '→'}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Selected Project Exhibition Dossier */}
@@ -112,6 +174,7 @@ export default function Scene06CapturedProjects() {
                     href={activeProject.github}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={`View source code for ${activeProject.title} on GitHub`}
                     className="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-white/10 hover:border-amber-400/50 text-amber-200 text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2"
                   >
                     <GithubIcon className="w-4 h-4" />
@@ -124,11 +187,18 @@ export default function Scene06CapturedProjects() {
                     href={activeProject.link}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={`Open live deployment for ${activeProject.title}`}
                     className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 shadow-lg"
                   >
                     <span>Live Transmission</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
+                )}
+                {!activeProject.github && !activeProject.link && (
+                  <div className="flex-1 py-2 px-3 rounded-xl bg-white/5 border border-white/10 text-slate-400 text-[11px] font-mono text-center flex items-center justify-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+                    <span>INTERNAL ARCHIVE · REPOSITORY AVAILABLE UPON REQUEST</span>
+                  </div>
                 )}
               </div>
             </div>

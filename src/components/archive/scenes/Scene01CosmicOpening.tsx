@@ -12,7 +12,7 @@ interface SceneProps {
 }
 
 export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
-  const { curator, pillars } = ARCHIVE_DATA;
+  const { curator } = ARCHIVE_DATA;
   const sectionRef = useRef<HTMLElement>(null);
 
   // Local Scene 01 scroll progress for Moon choreography
@@ -131,10 +131,10 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
           <span>EXPEDITION: 01 // DIGITAL ARCHIVE & OBSERVATORY</span>
         </div>
-        <div className="hidden sm:flex items-center gap-4 text-slate-400">
-          <span>COORDINATES: {curator.coordinates}</span>
+        <div className="hidden sm:flex items-center gap-3 text-slate-400">
+          <span>{curator.coordinates}</span>
           <span>·</span>
-          <span>LOCATION: {curator.baseLocation}</span>
+          <span>{curator.baseLocation}</span>
         </div>
         <div className="text-amber-300 font-bold">
           [ 85mm · f/1.2 · ISO 100 ]
@@ -157,16 +157,6 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           <div className="absolute -bottom-1 w-2 h-0.5 bg-amber-400/80" />
           <div className="absolute -left-1 h-2 w-0.5 bg-amber-400/80" />
           <div className="absolute -right-1 h-2 w-0.5 bg-amber-400/80" />
-        </motion.div>
-
-        {/* Supertitle */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="text-xs sm:text-sm font-mono tracking-[0.3em] uppercase text-amber-300/80 mb-3"
-        >
-          PERSONAL ENGINEERING & PHOTOGRAPHIC ARCHIVE
         </motion.div>
 
         {/* Master Curator Name */}
@@ -200,25 +190,6 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           &ldquo;{curator.tagline}&rdquo;
         </motion.p>
 
-        {/* The 5 Pillars Indicator */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 1.1 }}
-          className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-mono text-slate-300"
-        >
-          {pillars.map((p) => (
-            <span
-              key={p.name}
-              className="px-3.5 py-1.5 rounded-lg bg-white/5 border border-white/10 flex items-center gap-1.5"
-            >
-              <span className="text-amber-400">{p.symbol}</span>
-              <span className="text-slate-200">{p.name}</span>
-              <span className="text-slate-500 text-[10px]">({p.role})</span>
-            </span>
-          ))}
-        </motion.div>
-
         {/* =========================================================================
             THE CELESTIAL ENGINEERING SKY: ANNOTATED STAR CHART
             Constellations: AWS · DOCKER · KUBERNETES · TERRAFORM · CI/CD · LINUX · PYTHON
@@ -233,7 +204,7 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
          ========================================================================= */}
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/5">
         <div className="text-[11px] font-mono text-slate-500">
-          FRAME SEQUENCE 01 / 08 · LEVEL 1: BEDROCK ENGINEERING & PHOTOGRAPHY
+          FRAME 01 / 08 · THE COSMIC LENS
         </div>
 
         <button

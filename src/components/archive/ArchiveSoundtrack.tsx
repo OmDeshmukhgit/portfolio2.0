@@ -150,7 +150,7 @@ export default function ArchiveSoundtrack({
         src={currentTrack.src}
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleNext}
-        preload="metadata"
+        preload="none"
       />
 
       {/* Persistent Floating Minimalist Console (Bottom Right) */}
@@ -266,7 +266,7 @@ export default function ArchiveSoundtrack({
           <Disc3 className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 flex-shrink-0 ${isPlaying ? 'animate-spin' : ''}`} />
           <div className="flex flex-col text-left">
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase font-serif text-amber-200 truncate max-w-[85px] xs:max-w-[120px] sm:max-w-none">
+              <span className="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase font-serif text-amber-200 truncate max-w-[110px] sm:max-w-none">
                 {isPlaying ? currentTrack.title : 'Soundtrack'}
               </span>
               {isPlaying && (
