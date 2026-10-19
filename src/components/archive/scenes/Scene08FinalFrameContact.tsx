@@ -53,7 +53,7 @@ export default function Scene08FinalFrameContact() {
             <Send className="w-3.5 h-3.5 text-amber-400" />
             <span>SCENE 08 // FINAL FRAME · DISPATCH TRANSMISSION</span>
           </div>
-          <div className="text-slate-400">
+          <div className="hidden sm:block text-slate-500 font-mono text-[10px] sm:text-[11px]">
             LENS: 24mm · f/1.4 · 1/125s · THE CYCLE PERSISTS
           </div>
         </div>
@@ -65,13 +65,13 @@ export default function Scene08FinalFrameContact() {
            ========================================================================= */}
         <div className="max-w-3xl text-center mb-14">
           {/* Quiet Sequence Breadcrumb */}
-          <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-amber-400/80 uppercase tracking-widest mb-6">
-            <span>ARCHIVE</span>
-            <span className="text-slate-600">↓</span>
-            <span>SYSTEMS</span>
-            <span className="text-slate-600">↓</span>
-            <span>TRANSMISSION</span>
-            <span className="text-slate-600">↓</span>
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] font-mono text-amber-400/70 uppercase tracking-wider sm:tracking-widest mb-6">
+            <span className="hidden sm:inline">ARCHIVE</span>
+            <span className="hidden sm:inline text-slate-600">↓</span>
+            <span className="hidden sm:inline">SYSTEMS</span>
+            <span className="hidden sm:inline text-slate-600">↓</span>
+            <span className="hidden sm:inline">TRANSMISSION</span>
+            <span className="hidden sm:inline text-slate-600">↓</span>
             <span className="text-amber-300 font-bold">THE ARCHIVE REMAINS OPEN</span>
           </div>
 

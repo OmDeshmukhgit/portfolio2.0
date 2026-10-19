@@ -177,7 +177,7 @@ export default function Scene02SignalTransmission() {
         {/* Telemetry Ingest Badge (Responds to Satellite Transmission) */}
         <motion.div
           style={{ opacity: transmissionOpacity }}
-          className="flex items-center gap-2 mb-2 px-3 py-1 rounded-full bg-cyan-950/50 border border-cyan-400/35 text-[9px] font-mono text-cyan-300 shadow-md"
+          className="hidden sm:flex items-center gap-2 mb-2 px-3 py-1 rounded-full bg-cyan-950/50 border border-cyan-400/35 text-[9px] font-mono text-cyan-300 shadow-md"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
           <span>SATELLITE DOWNLINK SYNCHRONIZED · TELEMETRY INGEST ACTIVE</span>

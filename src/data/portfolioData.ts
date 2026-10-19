@@ -60,7 +60,7 @@ export const ARCHIVE_DATA = {
     github: "https://github.com/OmDeshmukhgit",
     linkedin: "https://www.linkedin.com/in/om-deshmukh-1376b4328",
     instagram: "https://www.instagram.com/omdeshmukh863/profilecard/?igsh=N2VjYXcwaTA1anpk",
-    resume: "https://drive.google.com/file/d/13YgD1L-2fm34ULE3aaF6QM4ixO2VzoSn/view?usp=drive_link",
+    resume: "https://drive.google.com/file/d/10J2QLab0FdeDyPdZ1_JVFil8dZkZ2KCR/view?usp=drive_link",
   },
 
   pillars: [

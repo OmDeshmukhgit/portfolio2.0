@@ -57,7 +57,7 @@ export default function Scene05SystemsArchitecture() {
             <Cpu className="w-3.5 h-3.5 text-amber-400" />
             <span>SCENE 05 // SYSTEMS & INFRASTRUCTURE ARCHITECTURE</span>
           </div>
-          <div className="text-slate-400">
+          <div className="hidden sm:block text-slate-500 font-mono text-[10px] sm:text-[11px]">
             LENS: 35mm · f/4.0 · 1/1000s · DETERMINISTIC BLUEPRINT
           </div>
         </div>

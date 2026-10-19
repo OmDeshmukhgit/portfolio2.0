@@ -136,7 +136,7 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           <span>·</span>
           <span>{curator.baseLocation}</span>
         </div>
-        <div className="text-amber-300 font-bold">
+        <div className="hidden sm:block text-amber-300/60 font-mono text-xs">
           [ 85mm · f/1.2 · ISO 100 ]
         </div>
       </div>

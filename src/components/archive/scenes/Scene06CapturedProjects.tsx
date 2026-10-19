@@ -158,8 +158,8 @@ export default function Scene06CapturedProjects() {
             {/* Left: Photographic Exhibit Frame */}
             <div className="lg:col-span-5 flex flex-col gap-4">
               <div className="w-full rounded-2xl bg-black/80 border border-white/10 overflow-hidden relative shadow-2xl viewfinder-bracket">
-                {/* Viewfinder Spec Ribbon */}
-                <div className="flex items-center justify-between p-2.5 bg-black/90 border-b border-white/10 text-[10px] font-mono text-amber-300/80">
+                {/* Viewfinder Spec Ribbon (Atmospheric on desktop, hidden on mobile) */}
+                <div className="hidden sm:flex items-center justify-between p-2.5 bg-black/90 border-b border-white/10 text-[10px] font-mono text-amber-300/70">
                   <span>{activeProject.frameNumber}</span>
                   <span>{activeProject.focalLength}</span>
                   <span>{activeProject.exposure}</span>
@@ -176,9 +176,9 @@ export default function Scene06CapturedProjects() {
                   />
                 </div>
 
-                {/* Bottom Frame Badge */}
-                <div className="p-2.5 bg-black/90 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-400">
-                  <span className="text-amber-400 uppercase">{activeProject.category}</span>
+                {/* Bottom Frame Badge (Atmospheric on desktop, hidden on mobile) */}
+                <div className="hidden sm:flex items-center justify-between p-2.5 bg-black/90 border-t border-white/10 text-[10px] font-mono text-slate-500">
+                  <span className="text-amber-400/80 uppercase">{activeProject.category}</span>
                   <span>{activeProject.aspectRatio}</span>
                 </div>
               </div>

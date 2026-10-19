@@ -278,7 +278,7 @@ export default function Scene03TheObserver() {
                       : 'RANGEFINDER: APERTURE WIDE OPEN · SOFT APERTURE'}
                   </span>
                 </div>
-                <div className="text-[8px] text-slate-400 mt-0.5">
+                <div className="hidden sm:block text-[8px] text-slate-500 mt-0.5">
                   INSTRUMENT: 85MM MEDIUM FORMAT · COUPLED TO PHOTOGRAPHIC HERO
                 </div>
               </div>
@@ -286,10 +286,10 @@ export default function Scene03TheObserver() {
 
             {/* Photographic Viewfinder (The Hero Subject) */}
             <div className="w-full p-4 sm:p-6 rounded-3xl bg-[#080912] border border-amber-400/35 shadow-[0_25px_60px_rgba(0,0,0,0.95)] relative viewfinder-bracket">
-              {/* Film Sprocket Edge Markings */}
-              <div className="flex items-center justify-between text-[9px] font-mono text-amber-400/60 mb-3 px-2 border-b border-white/10 pb-2">
+              {/* Film Sprocket Edge Markings (Atmospheric on desktop, hidden on mobile) */}
+              <div className="hidden sm:flex items-center justify-between text-[9px] font-mono text-amber-400/40 mb-3 px-2 border-b border-white/10 pb-2">
                 <span>{currentFrame.stock}</span>
-                <span className="font-bold text-amber-300">{currentFrame.frameNumber}</span>
+                <span className="font-bold text-amber-300/80">{currentFrame.frameNumber}</span>
                 <span>{currentFrame.lens} · {currentFrame.aperture} · {currentFrame.shutter}</span>
               </div>
 
@@ -357,7 +357,7 @@ export default function Scene03TheObserver() {
                   )}
                 </div>
 
-                <div className="absolute top-3 right-4 px-2.5 py-1 rounded bg-black/80 border border-white/10 text-[9px] font-mono text-amber-300">
+                <div className="hidden sm:block absolute top-3 right-4 px-2.5 py-1 rounded bg-black/80 border border-white/10 text-[9px] font-mono text-amber-300/80">
                   {currentFrame.iso} · {currentFrame.lens}
                 </div>
               </div>
