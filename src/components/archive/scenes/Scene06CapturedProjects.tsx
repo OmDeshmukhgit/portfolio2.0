@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ARCHIVE_DATA, ArchiveProject } from '@/data/portfolioData';
-import { Camera, ExternalLink, Layers, Info, CheckCircle2, ChevronRight, Sparkles } from 'lucide-react';
+import { Camera, ExternalLink, Layers, Info, CheckCircle2, ChevronRight, Sparkles, ShieldCheck } from 'lucide-react';
 import { GithubIcon } from '@/components/pixel/BrandIcons';
 import { SkillIcon } from '@/components/archive/TechIcons';
 
@@ -112,9 +112,24 @@ export default function Scene06CapturedProjects() {
                     }`}>
                       {proj.title}
                     </h3>
-                    <p className="text-[9px] font-mono text-slate-400 mt-1 truncate">
-                      {proj.technologies.slice(0, 3).join(' · ')}
-                    </p>
+                    <div className="flex items-center justify-between gap-1 mt-1">
+                      <p className="text-[9px] font-mono text-slate-400 truncate">
+                        {proj.technologies.slice(0, 3).join(' · ')}
+                      </p>
+                      {proj.github && proj.link ? (
+                        <span className="text-[8px] font-mono px-1 py-0.2 rounded bg-amber-400/10 text-amber-300 border border-amber-400/25 shrink-0">
+                          LIVE+CODE
+                        </span>
+                      ) : proj.github ? (
+                        <span className="text-[8px] font-mono px-1 py-0.2 rounded bg-slate-800 text-slate-300 border border-slate-700 shrink-0">
+                          CODE
+                        </span>
+                      ) : proj.link ? (
+                        <span className="text-[8px] font-mono px-1 py-0.2 rounded bg-emerald-950/60 text-emerald-300 border border-emerald-500/30 shrink-0">
+                          LIVE
+                        </span>
+                      ) : null}
+                    </div>
                   </div>
 
                   {/* Active Inspection Indicator Banner */}
@@ -168,18 +183,18 @@ export default function Scene06CapturedProjects() {
                 </div>
               </div>
 
-              {/* External Links */}
-              <div className="flex items-center gap-3">
+              {/* External Action Links (SOURCE CODE & LIVE DEMO) */}
+              <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
                 {activeProject.github && (
                   <a
                     href={activeProject.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`View source code for ${activeProject.title} on GitHub`}
-                    className="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-white/10 hover:border-amber-400/50 text-amber-200 text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2"
+                    aria-label={`View source code for ${activeProject.title} on GitHub (opens in new tab)`}
+                    className="flex-1 py-2.5 px-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-white/10 hover:border-amber-400/50 text-amber-200 text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400/50"
                   >
-                    <GithubIcon className="w-4 h-4" />
-                    <span>Source Code</span>
+                    <GithubIcon className="w-4 h-4 text-amber-300" />
+                    <span>SOURCE CODE</span>
                     <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                   </a>
                 )}
@@ -188,10 +203,10 @@ export default function Scene06CapturedProjects() {
                     href={activeProject.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Open live deployment for ${activeProject.title}`}
-                    className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 shadow-lg"
+                    aria-label={`Open live demonstration for ${activeProject.title} (opens in new tab)`}
+                    className="flex-1 py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-300"
                   >
-                    <span>Live Transmission</span>
+                    <span>LIVE DEMO</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 )}
@@ -216,6 +231,25 @@ export default function Scene06CapturedProjects() {
                 <p className="text-sm font-mono text-amber-300/80 mt-1">
                   {activeProject.subtitle}
                 </p>
+
+                {/* Evidence & Verification Badges */}
+                {activeProject.verificationEvidence && activeProject.verificationEvidence.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-3 border-t border-white/5">
+                    <span className="text-[10px] font-mono uppercase text-slate-400 mr-1 flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                      <span>EVIDENCE:</span>
+                    </span>
+                    {activeProject.verificationEvidence.map((evidence) => (
+                      <span
+                        key={evidence}
+                        className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/25 text-[10px] font-mono text-amber-300"
+                      >
+                        <span className="w-1 h-1 rounded-full bg-amber-400" />
+                        {evidence}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* WHAT / WHY / HOW Trilogy */}

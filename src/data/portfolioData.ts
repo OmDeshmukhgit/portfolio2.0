@@ -15,6 +15,7 @@ export interface ArchiveProject {
   technologies: string[];
   github?: string;
   link?: string;
+  verificationEvidence?: string[];
 }
 
 export interface ArchiveSkillLayer {
@@ -297,6 +298,7 @@ export const ARCHIVE_DATA = {
       ],
       technologies: ["Terraform", "AWS", "VPC", "EC2", "S3", "Security Groups", "Linux", "Bash"],
       github: "https://github.com/OmDeshmukhgit/aws-terraform-project",
+      verificationEvidence: ["Source Repository", "Terraform / Infrastructure as Code", "AWS Multi-AZ VPC"],
     },
     {
       id: "pokedex",
@@ -319,7 +321,9 @@ export const ARCHIVE_DATA = {
         "MongoDB Persistent Volume Integration",
       ],
       technologies: ["Docker", "Kubernetes", "Jenkins", "React", "Node.js", "MongoDB", "Git"],
+      github: "https://github.com/OmDeshmukhgit/Pokedex",
       link: "https://pokedexorion.netlify.app/",
+      verificationEvidence: ["Live Demo", "Source Repository", "Docker & Kubernetes", "CI/CD Pipeline"],
     },
     {
       id: "chatty",
@@ -342,7 +346,9 @@ export const ARCHIVE_DATA = {
         "Resilient Connection Reconnect Logic",
       ],
       technologies: ["Socket.IO", "Node.js", "Express", "Docker", "Kubernetes", "React", "JWT"],
+      github: "https://github.com/OmDeshmukhgit/full-stack-chatapp",
       link: "http://orionchat.duckdns.org/",
+      verificationEvidence: ["Live Demo", "Source Repository", "Kubernetes Ingress", "JWT Authentication"],
     },
     {
       id: "plantest",
@@ -364,7 +370,9 @@ export const ARCHIVE_DATA = {
         "Cloud-Hosted Real-Time Inference Container",
       ],
       technologies: ["PyTorch", "Python", "Computer Vision", "Streamlit", "Deep Learning", "Docker"],
+      github: "https://github.com/OmDeshmukhgit/plant_test",
       link: "https://planttest-r4ktyr7hnshg7zgpb777m3.streamlit.app/",
+      verificationEvidence: ["Live Demo", "Source Repository", "PyTorch CNN Model", "Streamlit Cloud"],
     },
     {
       id: "url-shortener",
@@ -385,7 +393,9 @@ export const ARCHIVE_DATA = {
         "Click Analytics & Referrer Logging",
       ],
       technologies: ["Node.js", "Express", "MongoDB", "JavaScript", "REST APIs"],
+      github: "https://github.com/OmDeshmukhgit/Url-shortener",
       link: "https://url-shortener-orion.netlify.app/",
+      verificationEvidence: ["Live Demo", "Source Repository", "Node.js REST API", "MongoDB Indexing"],
     },
   ] as ArchiveProject[],
 
