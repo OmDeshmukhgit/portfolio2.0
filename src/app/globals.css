@@ -1,52 +1,188 @@
 @import "tailwindcss";
 
+@theme {
+  --color-archive-bg: var(--archive-bg);
+  --color-archive-bg-deep: var(--archive-bg-deep);
+  --color-archive-surface: var(--archive-surface);
+  --color-archive-surface-elevated: var(--archive-surface-elevated);
+  --color-archive-surface-card: var(--archive-surface-card);
+  --color-archive-surface-hover: var(--archive-surface-hover);
+  --color-archive-indigo: var(--archive-indigo);
+  --color-archive-cobalt: var(--archive-cobalt);
+  --color-archive-violet: var(--archive-violet);
+  --color-archive-orchid: var(--archive-orchid);
+  --color-archive-magenta: var(--archive-magenta);
+  --color-archive-coral: var(--archive-coral);
+  --color-archive-peach: var(--archive-peach);
+  --color-archive-apricot: var(--archive-apricot);
+  --color-archive-mint: var(--archive-mint);
+  --color-archive-yellow: var(--archive-yellow);
+  --color-archive-text-primary: var(--archive-text-primary);
+  --color-archive-text-secondary: var(--archive-text-secondary);
+  --color-archive-text-muted: var(--archive-text-muted);
+}
+
 @layer base {
+  /* =========================================================================
+     PALETTE 1: TWILIGHT INDIGO 2.0 (Illustrated Reference Inspired)
+     55-65% Deep Observatory Indigo / Ink Violet
+     20-25% Dream Violet & Cobalt Night Depth
+     10-15% Sunset Coral Pink, Peach & Warm Apricot Accents
+     5-10%  Soft Mint & Warm Lantern Yellow Starlight Highlights
+     ========================================================================= */
+  :root,
+  [data-palette="twilight"] {
+    --archive-bg: #100f21;
+    --archive-bg-deep: #0c0b1a;
+    --archive-surface: #19182f;
+    --archive-surface-elevated: #242448;
+    --archive-surface-card: #1c1b35;
+    --archive-surface-hover: #262547;
+    --archive-surface-border: rgba(112, 65, 166, 0.28);
+    --archive-surface-border-strong: rgba(242, 123, 155, 0.45);
+
+    --archive-indigo: #292f8f;
+    --archive-cobalt: #3d49b8;
+    --archive-violet: #7041a6;
+    --archive-orchid: #a53ead;
+
+    --archive-magenta: #d957a6;
+    --archive-coral: #f27b9b;
+    --archive-peach: #ffb69b;
+    --archive-apricot: #ffd0ad;
+
+    --archive-mint: #8ed9c1;
+    --archive-yellow: #ffd66b;
+
+    --archive-text-primary: #fff0e5;
+    --archive-text-secondary: #f4f2ff;
+    --archive-text-muted: #a8a2c8;
+    --archive-text-subtle: #7b759e;
+
+    --archive-border: rgba(112, 65, 166, 0.25);
+    --archive-border-warm: rgba(242, 123, 155, 0.4);
+    --archive-border-violet: rgba(112, 65, 166, 0.45);
+    --archive-border-mint: rgba(142, 217, 193, 0.4);
+
+    --archive-glow-ambient: rgba(112, 65, 166, 0.28);
+    --archive-glow-warm: rgba(242, 123, 155, 0.35);
+    --archive-glow-starlight: rgba(255, 214, 107, 0.45);
+
+    --archive-selection-bg: #f27b9b;
+    --archive-selection-text: #100f21;
+  }
+
+  /* =========================================================================
+     PALETTE 2: CLASSIC OBSIDIAN AMBER (Original Portfolio Scheme)
+     Deep Obsidian Void, Amber/Gold Accents, Slate/Ivory Readability
+     ========================================================================= */
+  [data-palette="classic"] {
+    --archive-bg: #020204;
+    --archive-bg-deep: #000000;
+    --archive-surface: #080912;
+    --archive-surface-elevated: #0f101f;
+    --archive-surface-card: #090a14;
+    --archive-surface-hover: #141629;
+    --archive-surface-border: rgba(255, 255, 255, 0.1);
+    --archive-surface-border-strong: rgba(251, 191, 36, 0.4);
+
+    --archive-indigo: #1e293b;
+    --archive-cobalt: #0f172a;
+    --archive-violet: #334155;
+    --archive-orchid: #ca8a04;
+
+    --archive-magenta: #d97706;
+    --archive-coral: #fbbf24;
+    --archive-peach: #fcd34d;
+    --archive-apricot: #fef3c7;
+
+    --archive-mint: #34d399;
+    --archive-yellow: #fcd34d;
+
+    --archive-text-primary: #f4f1ea;
+    --archive-text-secondary: #e2e8f0;
+    --archive-text-muted: #94a3b8;
+    --archive-text-subtle: #64748b;
+
+    --archive-border: rgba(255, 255, 255, 0.08);
+    --archive-border-warm: rgba(251, 191, 36, 0.35);
+    --archive-border-violet: rgba(255, 255, 255, 0.12);
+    --archive-border-mint: rgba(52, 211, 153, 0.4);
+
+    --archive-glow-ambient: rgba(245, 158, 11, 0.15);
+    --archive-glow-warm: rgba(251, 191, 36, 0.25);
+    --archive-glow-starlight: rgba(252, 211, 77, 0.4);
+
+    --archive-selection-bg: #fbbf24;
+    --archive-selection-text: #020204;
+  }
+
   html {
     scroll-behavior: smooth;
     color-scheme: dark;
-    background-color: #030305;
+    background-color: var(--archive-bg);
+    transition: background-color 0.4s ease, color 0.4s ease;
   }
 
   body {
-    background-color: #030305;
-    color: #e5e5eb;
+    background-color: var(--archive-bg);
+    color: var(--archive-text-primary);
     overflow-x: hidden;
     min-height: 100vh;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    transition: background-color 0.4s ease, color 0.4s ease;
   }
 
-  /* Cinematic Tungsten / Silver Scrollbar */
+  /* Cinematic Dynamic Scrollbar */
   ::-webkit-scrollbar {
-    width: 5px;
+    width: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #050508;
+    background: var(--archive-bg-deep);
   }
   ::-webkit-scrollbar-thumb {
-    background: #272733;
+    background: var(--archive-surface-elevated);
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #d4af37;
+    background: var(--archive-violet);
   }
 
   ::selection {
-    background-color: #d4af37;
-    color: #030305;
+    background-color: var(--archive-selection-bg);
+    color: var(--archive-selection-text);
   }
 }
 
 /* =========================================================================
-   CINEMATIC ARCHIVE & VIEWFINDER VISUAL UTILITIES
+   ATMOSPHERIC DEPTH & GLOW UTILITIES
    ========================================================================= */
+
+/* Twilight ambient backdrop radial gradient with subtle starlight drift */
+.twilight-radial-glow {
+  background: radial-gradient(
+    circle at 50% 35%,
+    var(--archive-glow-ambient) 0%,
+    rgba(41, 47, 143, 0.12) 40%,
+    transparent 72%
+  );
+}
+
+.starlight-lantern-glow {
+  box-shadow: 0 0 25px var(--archive-glow-starlight);
+}
+
+.luminous-vector-line {
+  filter: drop-shadow(0 0 8px var(--archive-glow-ambient));
+}
 
 /* Subtle film grain texture */
 .film-grain {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 0);
+  background-image: radial-gradient(rgba(244, 242, 255, 0.04) 1px, transparent 0);
   background-size: 24px 24px;
 }
 
-/* Camera viewfinder reticle borders */
+/* Camera viewfinder reticle borders with dynamic accent color */
 .viewfinder-bracket {
   position: relative;
 }
@@ -57,8 +193,8 @@
   left: -2px;
   width: 14px;
   height: 14px;
-  border-top: 2px solid rgba(212, 175, 55, 0.75);
-  border-left: 2px solid rgba(212, 175, 55, 0.75);
+  border-top: 2px solid var(--archive-coral);
+  border-left: 2px solid var(--archive-coral);
 }
 .viewfinder-bracket::after {
   content: '';
@@ -67,8 +203,8 @@
   right: -2px;
   width: 14px;
   height: 14px;
-  border-bottom: 2px solid rgba(212, 175, 55, 0.75);
-  border-right: 2px solid rgba(212, 175, 55, 0.75);
+  border-bottom: 2px solid var(--archive-coral);
+  border-right: 2px solid var(--archive-coral);
 }
 
 /* Cinematic film letterbox aspect ratios */
@@ -79,11 +215,11 @@
 /* Slow cosmic starlight pulse */
 @keyframes stellarDrift {
   0%, 100% {
-    opacity: 0.3;
+    opacity: 0.35;
     transform: scale(0.98);
   }
   50% {
-    opacity: 0.85;
+    opacity: 0.9;
     transform: scale(1.02);
   }
 }
@@ -94,7 +230,7 @@
     opacity: 0.8;
   }
   50% {
-    transform: scale(1.15);
+    transform: scale(1.18);
     opacity: 0.2;
   }
   100% {

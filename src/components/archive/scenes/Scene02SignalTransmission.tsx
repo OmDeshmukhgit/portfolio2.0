@@ -70,18 +70,18 @@ export default function Scene02SignalTransmission() {
     smoothProgress,
     [0.48, 0.54, 0.60, 0.64],
     [
-      'rgba(34, 211, 238, 0.2)',
-      'rgba(34, 211, 238, 0.55)',
-      'rgba(34, 211, 238, 0.55)',
-      'rgba(34, 211, 238, 0.2)',
+      'rgba(142, 217, 193, 0.2)',
+      'rgba(142, 217, 193, 0.65)',
+      'rgba(142, 217, 193, 0.65)',
+      'rgba(142, 217, 193, 0.2)',
     ]
   );
 
   const engineeringStack = [
-    { name: 'AWS', role: 'Cloud Substrate', color: 'text-amber-400' },
-    { name: 'Terraform', role: 'Declarative IaC', color: 'text-purple-400' },
-    { name: 'Kubernetes', role: 'Cluster Orchestration', color: 'text-cyan-400' },
-    { name: 'CI/CD', role: 'Continuous Delivery', color: 'text-emerald-400' },
+    { name: 'AWS', role: 'Cloud Substrate', color: 'text-[#ffd66b]' },
+    { name: 'Terraform', role: 'Declarative IaC', color: 'text-[#a53ead]' },
+    { name: 'Kubernetes', role: 'Cluster Orchestration', color: 'text-[#8ed9c1]' },
+    { name: 'CI/CD', role: 'Continuous Delivery', color: 'text-[#f27b9b]' },
   ];
 
   return (
@@ -90,12 +90,13 @@ export default function Scene02SignalTransmission() {
       id="scene-signal"
       className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-white/5"
     >
-      {/* Background Radio Waves Graphic */}
+      {/* Background Radio Waves Graphic with Atmospheric Depth */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[#040407]" />
+        <div className="absolute inset-0 bg-[var(--archive-bg)] transition-colors duration-400" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[850px] rounded-full bg-[var(--archive-glow-ambient)] blur-[140px] pointer-events-none opacity-30" />
         {/* Subtle radial frequency ripples */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full border border-cyan-500/10 animate-beacon" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] rounded-full border border-indigo-500/5 animate-beacon" style={{ animationDelay: '1.2s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full border border-[var(--archive-cobalt)]/20 animate-beacon" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] rounded-full border border-[var(--archive-violet)]/15 animate-beacon" style={{ animationDelay: '1.2s' }} />
       </div>
 
       {/* =========================================================================
@@ -118,16 +119,16 @@ export default function Scene02SignalTransmission() {
               src="/archive/illustration_satellite_clean.webp"
               alt="Orbital Telemetry Relay — Data & Signal Transmission Metaphor"
               fill
-              className="object-contain filter contrast-110 drop-shadow-[0_0_25px_rgba(34,211,238,0.2)]"
+              className="object-contain filter contrast-110 drop-shadow-[0_0_25px_rgba(142,217,193,0.25)]"
               sizes="(max-width: 640px) 80px, (max-width: 768px) 112px, 128px"
             />
           </div>
-          <div className="flex flex-col text-[7px] sm:text-[8px] font-mono text-cyan-300 uppercase tracking-widest whitespace-nowrap bg-[#080911]/90 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border border-cyan-400/25 shadow-lg backdrop-blur-md">
+          <div className="flex flex-col text-[7px] sm:text-[8px] font-mono text-[#8ed9c1] uppercase tracking-widest whitespace-nowrap bg-[#19182f]/90 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border border-[#8ed9c1]/35 shadow-lg backdrop-blur-md">
             <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#8ed9c1] animate-ping" />
               <span>ORBITAL TELEMETRY RELAY</span>
             </div>
-            <span className="text-slate-400 text-[6.5px] sm:text-[7px] mt-0.5">ALT: 35,786 KM · DOWNLINK ACTIVE</span>
+            <span className="text-[#a8a2c8] text-[6.5px] sm:text-[7px] mt-0.5">ALT: 35,786 KM · DOWNLINK ACTIVE</span>
           </div>
         </div>
 
@@ -136,11 +137,11 @@ export default function Scene02SignalTransmission() {
           style={{ opacity: transmissionOpacity }}
           className="flex flex-col items-center mt-1 pointer-events-none"
         >
-          <div className="h-14 sm:h-28 w-px border-l border-dashed border-cyan-400/40 relative">
+          <div className="h-14 sm:h-28 w-px border-l border-dashed border-[#8ed9c1]/40 relative">
             {/* Traveling Data Pulse */}
             <motion.div
               style={{ top: dataPulseY }}
-              className="absolute -left-[3.5px] w-2 h-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.9)]"
+              className="absolute -left-[3.5px] w-2 h-2 rounded-full bg-[#8ed9c1] shadow-[0_0_12px_rgba(142,217,193,0.9)]"
             />
           </div>
         </motion.div>
@@ -148,26 +149,26 @@ export default function Scene02SignalTransmission() {
 
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
         {/* Scene Identification Header */}
-        <div className="w-full flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-cyan-400/80 mb-8 border-b border-white/10 pb-3">
+        <div className="w-full flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-[#8ed9c1]/90 mb-8 border-b border-white/10 pb-3">
           <div className="flex items-center gap-2">
-            <Radio className="w-3.5 h-3.5 animate-pulse" />
+            <Radio className="w-3.5 h-3.5 animate-pulse text-[#8ed9c1]" />
             <span>SCENE 02 // FREQUENCY DISPATCH & RECEPTOR</span>
           </div>
-          <div className="text-slate-400">
+          <div className="text-[#a8a2c8]">
             LENS: 200mm · f/2.8 · 1/125s · RECEPTOR CALIBRATED
           </div>
         </div>
 
         {/* Narrative Title */}
         <div className="max-w-3xl text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/40 border border-cyan-400/30 text-cyan-300 text-xs font-mono uppercase mb-4">
-            <Waves className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#7041a6]/25 border border-[#8ed9c1]/30 text-[#8ed9c1] text-xs font-mono uppercase mb-4">
+            <Waves className="w-3.5 h-3.5 text-[#8ed9c1]" />
             <span>Telemetry & The 5 Pillars</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[#f4f1ea] tracking-wide mb-4">
+          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[#fff0e5] tracking-wide mb-4">
             Listening Across The Wire
           </h2>
-          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-serif">
+          <p className="text-sm sm:text-base text-[#f4f2ff] leading-relaxed font-serif">
             Before an engineer provisions clusters or writes a single line of automation, they observe.
             Space, photography, cinema, and music are not diversions — they are the perceptual foundation
             that teaches an architect how complex systems hold together.
@@ -177,28 +178,28 @@ export default function Scene02SignalTransmission() {
         {/* Telemetry Ingest Badge (Responds to Satellite Transmission) */}
         <motion.div
           style={{ opacity: transmissionOpacity }}
-          className="hidden sm:flex items-center gap-2 mb-2 px-3 py-1 rounded-full bg-cyan-950/50 border border-cyan-400/35 text-[9px] font-mono text-cyan-300 shadow-md"
+          className="hidden sm:flex items-center gap-2 mb-2 px-3 py-1 rounded-full bg-[#19182f]/90 border border-[#8ed9c1]/40 text-[9px] font-mono text-[#8ed9c1] shadow-md"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#8ed9c1] animate-ping" />
           <span>SATELLITE DOWNLINK SYNCHRONIZED · TELEMETRY INGEST ACTIVE</span>
         </motion.div>
 
         {/* The Engineering Deployment Pipeline */}
         <motion.div
           style={{ borderColor: pipelineBorderColor }}
-          className="w-full max-w-3xl flex flex-wrap items-center justify-center gap-2 sm:gap-3 p-3.5 rounded-2xl bg-[#070810]/90 border border-cyan-400/20 backdrop-blur-md font-mono text-xs mb-12 shadow-lg transition-colors"
+          className="w-full max-w-3xl flex flex-wrap items-center justify-center gap-2 sm:gap-3 p-3.5 rounded-2xl bg-[#19182f]/90 border border-[#7041a6]/30 backdrop-blur-md font-mono text-xs mb-12 shadow-lg transition-colors"
         >
-          <span className="text-[10px] text-slate-400 uppercase tracking-wider mr-1">
+          <span className="text-[10px] text-[#a8a2c8] uppercase tracking-wider mr-1">
             DEPLOYMENT PIPELINE:
           </span>
           {engineeringStack.map((item, idx) => (
             <React.Fragment key={item.name}>
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/5 border border-white/10 group">
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#242448] border border-[#7041a6]/30 group">
                 <span className={`font-bold ${item.color}`}>{item.name}</span>
-                <span className="text-[9px] text-slate-400">({item.role})</span>
+                <span className="text-[9px] text-[#a8a2c8]">({item.role})</span>
               </div>
               {idx < engineeringStack.length - 1 && (
-                <span className="text-cyan-400/70 font-bold">→</span>
+                <span className="text-[#f27b9b]/70 font-bold">→</span>
               )}
             </React.Fragment>
           ))}
@@ -213,24 +214,24 @@ export default function Scene02SignalTransmission() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="p-5 rounded-2xl bg-[#080911]/90 border border-white/10 hover:border-amber-400/50 shadow-xl backdrop-blur-md flex flex-col justify-between transition-all group"
+              className="p-5 rounded-2xl bg-[#19182f]/90 border border-white/10 hover:border-[#f27b9b]/50 shadow-xl backdrop-blur-md flex flex-col justify-between transition-all group"
             >
               <div>
-                <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg text-amber-300 mb-4 group-hover:scale-110 group-hover:border-amber-400/60 transition-all">
+                <div className="w-9 h-9 rounded-xl bg-[#242448] border border-[#7041a6]/30 flex items-center justify-center text-lg text-[#ffd0ad] mb-4 group-hover:scale-110 group-hover:border-[#f27b9b]/60 group-hover:text-[#fff0e5] transition-all">
                   {pillar.symbol}
                 </div>
-                <span className="text-[10px] font-mono uppercase text-amber-400/80 tracking-widest block mb-1">
+                <span className="text-[10px] font-mono uppercase text-[#f27b9b] tracking-widest block mb-1">
                   {pillar.role}
                 </span>
-                <h3 className="text-lg font-serif font-bold text-[#f4f1ea] mb-2">
+                <h3 className="text-lg font-serif font-bold text-[#fff0e5] mb-2">
                   {pillar.name}
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-[#a8a2c8] leading-relaxed">
                   {pillar.description}
                 </p>
               </div>
 
-              <div className="mt-6 pt-3 border-t border-white/5 text-[9px] font-mono text-slate-500 uppercase">
+              <div className="mt-6 pt-3 border-t border-white/5 text-[9px] font-mono text-[#a8a2c8]/80 uppercase">
                 NODE 0{i + 1} // SYNCED
               </div>
             </motion.div>
@@ -238,18 +239,18 @@ export default function Scene02SignalTransmission() {
         </div>
 
         {/* Radio Telemetry Diagnostics Bar */}
-        <div className="w-full px-5 py-3 rounded-2xl bg-[#07080e]/95 border border-cyan-500/20 shadow-xl flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-slate-300">
+        <div className="w-full px-5 py-3 rounded-2xl bg-[#19182f]/95 border border-[#8ed9c1]/30 shadow-xl flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-[#a8a2c8]">
           <div className="flex items-center gap-2">
-            <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-            <span className="text-cyan-300 font-bold">TELEMETRY:</span>
-            <span className="text-slate-400">1.4204 GHz (H-Line) · TCP / HTTP/2 / gRPC</span>
+            <Activity className="w-3.5 h-3.5 text-[#8ed9c1] animate-pulse" />
+            <span className="text-[#8ed9c1] font-bold">TELEMETRY:</span>
+            <span className="text-[#f4f2ff]">1.4204 GHz (H-Line) · TCP / HTTP/2 / gRPC</span>
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="text-amber-300">STATION: AKOLA, IN</span>
+            <span className="text-[#ffd0ad]">STATION: AKOLA, IN</span>
             <span className="text-white/20">|</span>
-            <div className="flex items-center gap-1.5 text-emerald-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <div className="flex items-center gap-1.5 text-[#8ed9c1]">
+              <span className="w-2 h-2 rounded-full bg-[#8ed9c1] animate-ping" />
               <span>STREAM: 100% HEALTH</span>
             </div>
           </div>

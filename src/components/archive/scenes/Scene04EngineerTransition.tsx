@@ -42,17 +42,17 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
     <section
       ref={sectionRef}
       id="scene-engineer"
-      className="relative w-full min-h-[95vh] flex flex-col justify-center items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-white/5 bg-[#030306]"
+      className="relative w-full min-h-[95vh] flex flex-col justify-center items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-[var(--archive-border)] bg-[var(--archive-bg)] transition-colors duration-400"
     >
       {/* Background Depth & Vignette */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[#030306]" />
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-indigo-950/15 blur-[140px]" />
-        <div className="absolute inset-0 bg-radial-[circle_at_center,transparent_40%,rgba(3,3,6,0.9)_100%]" />
+        <div className="absolute inset-0 bg-[var(--archive-bg)] transition-colors duration-400" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-[var(--archive-indigo)]/20 blur-[140px]" />
+        <div className="absolute inset-0 bg-radial-[circle_at_center,transparent_40%,rgba(0,0,0,0.9)_100%]" />
       </div>
 
       {/* =========================================================================
-          02 — ASTRONAUT: METAPHOR FOR ENTERING UNKNOWN SYSTEMS
+          02 — ASTRONAUT: METAPHOR FOR ENTERING UNKNOWN SYSTEMS (FROZEN)
           Enters diagonally, traverses through the engineering cloud nodes, then exits
          ========================================================================= */}
       <motion.div
@@ -73,7 +73,7 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
             sizes="(max-width: 640px) 144px, (max-width: 1024px) 192px, 224px"
           />
         </div>
-        <div className="mt-1 text-[7px] sm:text-[8px] font-mono tracking-widest text-amber-300/60 uppercase whitespace-nowrap">
+        <div className="mt-1 text-[7px] sm:text-[8px] font-mono tracking-widest text-[var(--archive-apricot)]/70 uppercase whitespace-nowrap">
           VENTURING INTO CLOUD TOPOLOGIES
         </div>
       </motion.div>
@@ -83,8 +83,8 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
          ========================================================================= */}
       <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center">
         {/* Telemetry Header */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono uppercase mb-6">
-          <Eye className="w-3.5 h-3.5 text-amber-400" />
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--archive-violet)]/25 border border-[var(--archive-border-warm)] text-[var(--archive-apricot)] text-xs font-mono uppercase mb-6">
+          <Eye className="w-3.5 h-3.5 text-[var(--archive-coral)]" />
           <span>FOCAL SHIFT // OBSERVATION ↓ EXPLORATION ↓ ENGINEERING</span>
         </div>
 
@@ -94,7 +94,7 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold text-[#f4f1ea] max-w-4xl tracking-wide mb-6"
+          className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold text-[var(--archive-text-primary)] max-w-4xl tracking-wide mb-6"
         >
           &ldquo;Observation captures what exists. Engineering constructs what endures.&rdquo;
         </motion.h2>
@@ -104,7 +104,7 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-base sm:text-lg text-slate-300 max-w-2xl font-serif leading-relaxed mb-10"
+          className="text-base sm:text-lg text-[var(--archive-text-secondary)] max-w-2xl font-serif leading-relaxed mb-10"
         >
           Here, the archival narrative crosses from visual observation into distributed computing.
           The same eye that calibrates lighting across photographic film demands deterministic order in cloud topologies,
@@ -116,43 +116,43 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
           {engineeringTokens.map((t) => (
             <div
               key={t.name}
-              className="px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 text-slate-300 backdrop-blur-md"
+              className="px-3.5 py-1.5 rounded-xl bg-[var(--archive-surface)] border border-[var(--archive-border-violet)] flex items-center gap-2 text-[var(--archive-text-muted)] backdrop-blur-md"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-              <span className="font-bold text-amber-200">{t.name}</span>
-              <span className="text-[10px] text-slate-500">({t.label})</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--archive-coral)]" />
+              <span className="font-bold text-[var(--archive-apricot)]">{t.name}</span>
+              <span className="text-[10px] text-[var(--archive-text-muted)]/70">({t.label})</span>
             </div>
           ))}
         </div>
 
         {/* 3 Core Architecture Tenets */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl mb-12 text-left font-mono text-xs">
-          <div className="p-5 rounded-2xl bg-[#090a12]/95 border border-white/10 flex flex-col justify-between shadow-xl backdrop-blur-md">
-            <div className="flex items-center gap-2 text-amber-300 mb-2 font-bold">
+          <div className="p-5 rounded-2xl bg-[var(--archive-surface)]/95 border border-[var(--archive-border-violet)] flex flex-col justify-between shadow-xl backdrop-blur-md">
+            <div className="flex items-center gap-2 text-[var(--archive-yellow)] mb-2 font-bold">
               <ShieldCheck className="w-4 h-4" />
               <span>IMMUTABILITY</span>
             </div>
-            <p className="text-slate-400 text-[11px] font-sans">
+            <p className="text-[var(--archive-text-muted)] text-[11px] font-sans">
               No configuration drift. Infrastructure defined strictly through declarative code.
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[#090a12]/95 border border-white/10 flex flex-col justify-between shadow-xl backdrop-blur-md">
-            <div className="flex items-center gap-2 text-cyan-300 mb-2 font-bold">
+          <div className="p-5 rounded-2xl bg-[var(--archive-surface)]/95 border border-[var(--archive-border-violet)] flex flex-col justify-between shadow-xl backdrop-blur-md">
+            <div className="flex items-center gap-2 text-[var(--archive-mint)] mb-2 font-bold">
               <Network className="w-4 h-4" />
               <span>ORCHESTRATION</span>
             </div>
-            <p className="text-slate-400 text-[11px] font-sans">
+            <p className="text-[var(--archive-text-muted)] text-[11px] font-sans">
               Self-healing container fleets with automated failover and dynamic scaling.
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[#090a12]/95 border border-white/10 flex flex-col justify-between shadow-xl backdrop-blur-md">
-            <div className="flex items-center gap-2 text-indigo-300 mb-2 font-bold">
+          <div className="p-5 rounded-2xl bg-[var(--archive-surface)]/95 border border-[var(--archive-border-violet)] flex flex-col justify-between shadow-xl backdrop-blur-md">
+            <div className="flex items-center gap-2 text-[var(--archive-coral)] mb-2 font-bold">
               <GitBranch className="w-4 h-4" />
               <span>CONTINUITY</span>
             </div>
-            <p className="text-slate-400 text-[11px] font-sans">
+            <p className="text-[var(--archive-text-muted)] text-[11px] font-sans">
               Automated pipelines testing, packing, and rolling out code with zero downtime.
             </p>
           </div>
@@ -162,7 +162,7 @@ export default function Scene04EngineerTransition({ onProceedToSystems }: SceneP
         <button
           type="button"
           onClick={onProceedToSystems}
-          className="group px-7 py-3 rounded-full bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-black font-bold text-xs uppercase tracking-widest font-mono shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all flex items-center gap-2 hover:scale-105"
+          className="group px-7 py-3 rounded-full bg-gradient-to-r from-[var(--archive-magenta)] via-[var(--archive-coral)] to-[var(--archive-peach)] hover:opacity-95 text-[var(--archive-bg)] font-bold text-xs uppercase tracking-widest font-mono shadow-[0_0_25px_var(--archive-glow-warm)] transition-all flex items-center gap-2 hover:scale-105"
         >
           <span>Examine Infrastructure Architecture</span>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

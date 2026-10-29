@@ -157,26 +157,26 @@ export default function ArchiveSoundtrack({
       <div className="fixed bottom-3 right-3 sm:bottom-5 sm:right-5 z-40 flex flex-col items-end gap-2 font-mono select-none">
         {/* Expanded Console Panel */}
         {isExpanded && (
-          <div className="w-[calc(100vw-1.5rem)] max-w-sm sm:w-96 p-4 rounded-2xl bg-[#090a12]/95 border border-amber-400/40 shadow-[0_15px_40px_rgba(0,0,0,0.9)] backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <div className="flex items-center gap-2 text-xs text-amber-300 font-bold uppercase tracking-wider font-serif">
-                <Music className="w-3.5 h-3.5" />
+          <div className="w-[calc(100vw-1.5rem)] max-w-sm sm:w-96 p-4 rounded-2xl bg-[var(--archive-surface)]/95 border border-[var(--archive-border)] shadow-[0_15px_40px_rgba(0,0,0,0.6)] backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-2 duration-300 transition-colors">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--archive-border)]">
+              <div className="flex items-center gap-2 text-xs text-[var(--archive-apricot)] font-bold uppercase tracking-wider font-serif">
+                <Music className="w-3.5 h-3.5 text-[var(--archive-coral)]" />
                 <span>Archive Master Tape</span>
               </div>
-              <span className="text-[10px] text-slate-400">
+              <span className="text-[10px] text-[var(--archive-text-muted)]">
                 TRACK 0{currentTrackIndex + 1} / 0{tracks.length}
               </span>
             </div>
 
             {/* Track Info */}
             <div className="my-3">
-              <h4 className="text-sm font-semibold text-[#f4f1ea] truncate font-serif">
+              <h4 className="text-sm font-semibold text-[var(--archive-text-primary)] truncate font-serif">
                 {currentTrack.title}
               </h4>
-              <p className="text-xs text-amber-400/80 truncate">
+              <p className="text-xs text-[var(--archive-coral)] truncate">
                 {currentTrack.artist}
               </p>
-              <p className="text-[10px] text-slate-400 mt-1 italic">
+              <p className="text-[10px] text-[var(--archive-text-muted)] mt-1 italic">
                 {currentTrack.theme}
               </p>
             </div>
@@ -189,9 +189,9 @@ export default function ArchiveSoundtrack({
                 max={duration || 100}
                 value={currentTime}
                 onChange={handleSeek}
-                className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                className="w-full h-1 bg-[var(--archive-surface-alt)] rounded-lg appearance-none cursor-pointer accent-[var(--archive-coral)]"
               />
-              <div className="flex justify-between text-[10px] text-slate-400">
+              <div className="flex justify-between text-[10px] text-[var(--archive-text-muted)]">
                 <span>{formatTime(currentTime)}</span>
                 <span>{formatTime(duration)}</span>
               </div>
@@ -203,7 +203,7 @@ export default function ArchiveSoundtrack({
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                  className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[var(--archive-text-muted)] hover:text-[var(--archive-text-primary)] transition-colors"
                   title="Previous Track"
                 >
                   <SkipBack className="w-3.5 h-3.5" />
@@ -211,7 +211,7 @@ export default function ArchiveSoundtrack({
                 <button
                   type="button"
                   onClick={togglePlay}
-                  className="p-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold shadow-lg transition-transform hover:scale-105"
+                  className="p-2 rounded-xl bg-gradient-to-r from-[var(--archive-coral)] to-[var(--archive-apricot)] hover:opacity-90 text-[var(--archive-bg)] font-bold shadow-lg transition-transform hover:scale-105"
                   title={isPlaying ? 'Pause' : 'Play'}
                 >
                   {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
@@ -219,7 +219,7 @@ export default function ArchiveSoundtrack({
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                  className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[var(--archive-text-muted)] hover:text-[var(--archive-text-primary)] transition-colors"
                   title="Next Track"
                 >
                   <SkipForward className="w-3.5 h-3.5" />
@@ -231,7 +231,7 @@ export default function ArchiveSoundtrack({
                 <button
                   type="button"
                   onClick={() => setIsMuted(!isMuted)}
-                  className="text-slate-400 hover:text-amber-300 transition-colors"
+                  className="text-[var(--archive-text-muted)] hover:text-[var(--archive-apricot)] transition-colors"
                 >
                   {isMuted || volume === 0 ? (
                     <VolumeX className="w-4 h-4" />
@@ -249,7 +249,7 @@ export default function ArchiveSoundtrack({
                     setVolume(clampVolume(parseFloat(e.target.value)));
                     setIsMuted(false);
                   }}
-                  className="w-16 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                  className="w-16 h-1 bg-[var(--archive-surface-alt)] rounded-lg appearance-none cursor-pointer accent-[var(--archive-coral)]"
                 />
               </div>
             </div>
@@ -260,20 +260,20 @@ export default function ArchiveSoundtrack({
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="group flex items-center gap-2 sm:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[#090a12]/95 hover:bg-[#121320] border border-amber-400/50 hover:border-amber-300 text-amber-200 shadow-[0_10px_25px_rgba(0,0,0,0.85)] backdrop-blur-xl transition-all cursor-pointer"
+          className="group flex items-center gap-2 sm:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[var(--archive-surface)]/95 hover:bg-[var(--archive-surface-alt)] border border-[var(--archive-border)] hover:border-[var(--archive-border-warm)] text-[var(--archive-apricot)] shadow-[0_10px_25px_rgba(0,0,0,0.5)] backdrop-blur-xl transition-all cursor-pointer"
           aria-label={isExpanded ? 'Collapse soundtrack player' : 'Expand soundtrack player'}
         >
-          <Disc3 className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 flex-shrink-0 ${isPlaying ? 'animate-spin' : ''}`} />
+          <Disc3 className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--archive-coral)] flex-shrink-0 ${isPlaying ? 'animate-spin' : ''}`} />
           <div className="flex flex-col text-left">
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase font-serif text-amber-200 truncate max-w-[110px] sm:max-w-none">
+              <span className="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase font-serif text-[var(--archive-apricot)] truncate max-w-[110px] sm:max-w-none">
                 {isPlaying ? currentTrack.title : 'Soundtrack'}
               </span>
               {isPlaying && (
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse sm:hidden" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--archive-mint)] animate-pulse sm:hidden" />
               )}
             </div>
-            <span className="hidden sm:inline text-[9px] text-amber-400/60 font-mono">
+            <span className="hidden sm:inline text-[9px] text-[var(--archive-text-muted)] font-mono">
               {isPlaying ? 'NOW PLAYING · TAP TO EXPAND' : 'PAUSED · TAP TO PLAY'}
             </span>
           </div>
@@ -289,16 +289,16 @@ export default function ArchiveSoundtrack({
               setHasInteracted(true);
               setIsPlaying(true);
             }}
-            className="group px-5 py-2.5 rounded-full bg-slate-950/95 border border-amber-400/50 hover:border-amber-300 text-amber-200 text-xs font-mono tracking-wider shadow-[0_0_30px_rgba(212,175,55,0.25)] backdrop-blur-xl flex items-center gap-3 hover:scale-105 transition-all"
+            className="group px-5 py-2.5 rounded-full bg-[var(--archive-surface)]/95 border border-[var(--archive-border-warm)] hover:border-[var(--archive-coral)] text-[var(--archive-apricot)] text-xs font-mono tracking-wider shadow-[0_0_30px_rgba(0,0,0,0.5)] backdrop-blur-xl flex items-center gap-3 hover:scale-105 transition-all"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+            <Sparkles className="w-3.5 h-3.5 text-[var(--archive-yellow)] animate-pulse" />
             <span>ENTER THE ARCHIVE WITH SOUNDTRACK</span>
-            <Play className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+            <Play className="w-3.5 h-3.5 text-[var(--archive-coral)] fill-[var(--archive-coral)]" />
           </button>
           <button
             type="button"
             onClick={() => setIsDismissed(true)}
-            className="w-8 h-8 rounded-full bg-slate-950/95 border border-white/20 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-colors"
+            className="w-8 h-8 rounded-full bg-[var(--archive-surface)]/95 border border-[var(--archive-border)] text-[var(--archive-text-muted)] hover:text-[var(--archive-text-primary)] flex items-center justify-center text-xs transition-colors"
             title="Dismiss prompt"
           >
             ✕

@@ -159,7 +159,7 @@ export default function Scene03TheObserver() {
     <section
       ref={sectionRef}
       id="scene-observer"
-      className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-white/5 bg-[#030306]"
+      className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-[var(--archive-border)] bg-[var(--archive-bg)] transition-colors duration-400"
     >
       {/* =========================================================================
           01 — TELESCOPE: OBSERVATIONAL INSTRUMENT (18–30vw SCALE)
@@ -180,13 +180,13 @@ export default function Scene03TheObserver() {
           style={{ opacity: sightlineOpacity }}
           className="hidden sm:flex items-center gap-2 mb-1 pr-14"
         >
-          <div className="w-28 xl:w-44 2xl:w-60 border-t border-dashed border-amber-400/50 relative">
-            <span className="absolute -top-3.5 right-0 text-[8px] font-mono text-amber-300 tracking-widest uppercase">
+          <div className="w-28 xl:w-44 2xl:w-60 border-t border-dashed border-[var(--archive-coral)]/50 relative">
+            <span className="absolute -top-3.5 right-0 text-[8px] font-mono text-[var(--archive-apricot)] tracking-widest uppercase">
               OPTICAL SIGHTLINE // AIM TARGET
             </span>
-            <span className="w-2 h-2 rounded-full bg-amber-400 absolute -top-[4px] left-0 animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-[var(--archive-coral)] absolute -top-[4px] left-0 animate-ping" />
           </div>
-          <div className="px-2 py-0.5 rounded bg-black/85 border border-amber-400/40 text-[7px] font-mono text-amber-300 uppercase whitespace-nowrap">
+          <div className="px-2 py-0.5 rounded bg-[var(--archive-surface)]/90 border border-[var(--archive-border-warm)] text-[7px] font-mono text-[var(--archive-apricot)] uppercase whitespace-nowrap">
             FOCUS TARGET LOCKED
           </div>
         </motion.div>
@@ -202,33 +202,33 @@ export default function Scene03TheObserver() {
           />
         </div>
 
-        <div className="mt-1 mr-2 sm:mr-4 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-[#080911]/85 border border-amber-400/20 text-[7px] sm:text-[8px] font-mono tracking-widest text-amber-300/80 uppercase backdrop-blur-sm">
+        <div className="mt-1 mr-2 sm:mr-4 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-[var(--archive-surface)]/85 border border-[var(--archive-border-violet)] text-[7px] sm:text-[8px] font-mono tracking-widest text-[var(--archive-apricot)]/80 uppercase backdrop-blur-sm">
           EQUATORIAL REFRACTOR // SIGHTLINE COLLIMATION
         </div>
       </motion.div>
 
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
         {/* Scene Identification Header */}
-        <div className="w-full flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-amber-400/80 mb-8 border-b border-white/10 pb-3">
+        <div className="w-full flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-[var(--archive-coral)] mb-8 border-b border-white/10 pb-3">
           <div className="flex items-center gap-2">
-            <Camera className="w-3.5 h-3.5 text-amber-400" />
+            <Camera className="w-3.5 h-3.5 text-[var(--archive-coral)]" />
             <span>SCENE 03 // THE OBSERVER · PHOTOGRAPHY + ENGINEERING</span>
           </div>
-          <div className="text-slate-400">
+          <div className="text-[var(--archive-text-muted)]">
             LENS: 85mm · f/1.4 · 1/250s · MEDIUM FORMAT 6×7
           </div>
         </div>
 
         {/* Narrative Title */}
         <div className="max-w-3xl text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono uppercase mb-4">
-            <Aperture className="w-3.5 h-3.5 text-amber-400" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[var(--archive-violet)]/25 border border-[var(--archive-border-warm)] text-[var(--archive-apricot)] text-xs font-mono uppercase mb-4">
+            <Aperture className="w-3.5 h-3.5 text-[var(--archive-coral)]" />
             <span>Observation & Photographic Precision</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[#f4f1ea] tracking-wide mb-4">
+          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[var(--archive-text-primary)] tracking-wide mb-4">
             The Lens of The Observer
           </h2>
-          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-serif">
+          <p className="text-sm sm:text-base text-[var(--archive-text-secondary)] leading-relaxed font-serif">
             Observation connects photography and engineering. In photography, it is calibrating the focus ring
             to isolate form in shadows. In systems engineering, it is diagnosing distributed race conditions,
             packet latency, and container bottlenecks before they reach production.
@@ -248,7 +248,7 @@ export default function Scene03TheObserver() {
                 y: cameraY,
                 scale: cameraScale,
               }}
-              className="flex items-center gap-3 mb-2 px-4 py-2.5 rounded-2xl bg-[#090a14] border border-amber-400/30 shadow-lg relative"
+              className="flex items-center gap-3 mb-2 px-4 py-2.5 rounded-2xl bg-[var(--archive-surface)] border border-[var(--archive-border-violet)] shadow-lg relative"
             >
               <div className="relative w-14 h-14 shrink-0">
                 <Image
@@ -260,14 +260,14 @@ export default function Scene03TheObserver() {
                 />
               </div>
               <div className="text-left font-mono">
-                <div className="text-[9px] text-amber-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <div className="text-[9px] text-[#ffd0ad] font-bold uppercase tracking-wider flex items-center gap-1.5">
                   <span
                     className={`w-1.5 h-1.5 rounded-full ${
                       focusState === 'locked'
-                        ? 'bg-emerald-400 animate-ping'
+                        ? 'bg-[#8ed9c1] animate-ping'
                         : focusState === 'focusing'
-                        ? 'bg-cyan-400 animate-pulse'
-                        : 'bg-amber-400'
+                        ? 'bg-[#ffd66b] animate-pulse'
+                        : 'bg-[#f27b9b]'
                     }`}
                   />
                   <span>
@@ -278,22 +278,22 @@ export default function Scene03TheObserver() {
                       : 'RANGEFINDER: APERTURE WIDE OPEN · SOFT APERTURE'}
                   </span>
                 </div>
-                <div className="hidden sm:block text-[8px] text-slate-500 mt-0.5">
+                <div className="hidden sm:block text-[8px] text-[#a8a2c8] mt-0.5">
                   INSTRUMENT: 85MM MEDIUM FORMAT · COUPLED TO PHOTOGRAPHIC HERO
                 </div>
               </div>
             </motion.div>
 
-            {/* Photographic Viewfinder (The Hero Subject) */}
-            <div className="w-full p-4 sm:p-6 rounded-3xl bg-[#080912] border border-amber-400/35 shadow-[0_25px_60px_rgba(0,0,0,0.95)] relative viewfinder-bracket">
+            {/* Photographic Viewfinder (The Hero Subject - Dynamic Frame with Viewfinder Brackets) */}
+            <div className="w-full p-4 sm:p-6 rounded-3xl bg-[var(--archive-surface)] border border-[var(--archive-border-violet)] shadow-[0_25px_60px_rgba(0,0,0,0.95)] relative viewfinder-bracket">
               {/* Film Sprocket Edge Markings (Atmospheric on desktop, hidden on mobile) */}
-              <div className="hidden sm:flex items-center justify-between text-[9px] font-mono text-amber-400/40 mb-3 px-2 border-b border-white/10 pb-2">
+              <div className="hidden sm:flex items-center justify-between text-[9px] font-mono text-[var(--archive-text-muted)]/60 mb-3 px-2 border-b border-white/10 pb-2">
                 <span>{currentFrame.stock}</span>
-                <span className="font-bold text-amber-300/80">{currentFrame.frameNumber}</span>
+                <span className="font-bold text-[var(--archive-apricot)]">{currentFrame.frameNumber}</span>
                 <span>{currentFrame.lens} · {currentFrame.aperture} · {currentFrame.shutter}</span>
               </div>
 
-              {/* Viewfinder Window with Interactive Focus */}
+              {/* Viewfinder Window with Interactive Focus - Photographs Kept Authentic & Untinted */}
               <div className="relative w-full h-[360px] sm:h-[430px] rounded-2xl overflow-hidden bg-black border border-white/10 flex items-center justify-center">
                 <Image
                   src={currentFrame.src}
@@ -314,50 +314,50 @@ export default function Scene03TheObserver() {
                   <div
                     className={`w-14 h-14 rounded-full border transition-all duration-500 flex items-center justify-center ${
                       focusState === 'locked'
-                        ? 'border-amber-400 scale-100 shadow-[0_0_20px_rgba(212,175,55,0.6)]'
+                        ? 'border-[var(--archive-mint)] scale-100 shadow-[0_0_20px_rgba(142,217,193,0.6)]'
                         : focusState === 'focusing'
-                        ? 'border-cyan-400/80 scale-110 border-dashed animate-spin'
-                        : 'border-red-400/50 scale-125 border-dotted'
+                        ? 'border-[var(--archive-yellow)]/80 scale-110 border-dashed animate-spin'
+                        : 'border-[var(--archive-coral)]/60 scale-125 border-dotted'
                     }`}
                   >
                     <div
                       className={`w-2 h-2 rounded-full ${
                         focusState === 'locked'
-                          ? 'bg-amber-400 animate-ping'
+                          ? 'bg-[var(--archive-mint)] animate-ping'
                           : focusState === 'focusing'
-                          ? 'bg-cyan-400'
-                          : 'bg-red-400/60'
+                          ? 'bg-[var(--archive-yellow)]'
+                          : 'bg-[var(--archive-coral)]/70'
                       }`}
                     />
                   </div>
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-0.5 bg-amber-400/40 pointer-events-none" />
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-24 w-0.5 bg-amber-400/40 pointer-events-none" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-0.5 bg-[var(--archive-coral)]/35 pointer-events-none" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-24 w-0.5 bg-[var(--archive-coral)]/35 pointer-events-none" />
                 </div>
 
                 {/* Status Badge */}
-                <div className="absolute bottom-3 left-4 px-3 py-1.5 rounded-full bg-black/85 border border-white/20 text-[10px] font-mono flex items-center gap-2 backdrop-blur-md">
+                <div className="absolute bottom-3 left-4 px-3 py-1.5 rounded-full bg-[var(--archive-bg)]/90 border border-white/20 text-[10px] font-mono flex items-center gap-2 backdrop-blur-md">
                   {focusState === 'locked' ? (
                     <>
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                      <span className="text-emerald-300 font-bold">FOCUS → LOCKED</span>
-                      <span className="text-slate-400">· PIN-SHARP ACCURACY</span>
+                      <span className="w-2 h-2 rounded-full bg-[var(--archive-mint)] animate-ping" />
+                      <span className="text-[var(--archive-mint)] font-bold">FOCUS → LOCKED</span>
+                      <span className="text-[var(--archive-text-muted)]">· PIN-SHARP ACCURACY</span>
                     </>
                   ) : focusState === 'focusing' ? (
                     <>
-                      <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                      <span className="text-cyan-300 font-bold">FOCUSING...</span>
-                      <span className="text-slate-400">· CALIBRATING HELICOID</span>
+                      <span className="w-2 h-2 rounded-full bg-[var(--archive-yellow)] animate-pulse" />
+                      <span className="text-[var(--archive-yellow)] font-bold">FOCUSING...</span>
+                      <span className="text-[var(--archive-text-muted)]">· CALIBRATING HELICOID</span>
                     </>
                   ) : (
                     <>
-                      <span className="w-2 h-2 rounded-full bg-amber-400" />
-                      <span className="text-amber-300 font-bold">IMAGE IS SOFT</span>
-                      <span className="text-slate-400">· APERTURE WIDE OPEN</span>
+                      <span className="w-2 h-2 rounded-full bg-[var(--archive-coral)]" />
+                      <span className="text-[var(--archive-coral)] font-bold">IMAGE IS SOFT</span>
+                      <span className="text-[var(--archive-text-muted)]">· APERTURE WIDE OPEN</span>
                     </>
                   )}
                 </div>
 
-                <div className="hidden sm:block absolute top-3 right-4 px-2.5 py-1 rounded bg-black/80 border border-white/10 text-[9px] font-mono text-amber-300/80">
+                <div className="hidden sm:block absolute top-3 right-4 px-2.5 py-1 rounded bg-[var(--archive-bg)]/80 border border-white/10 text-[9px] font-mono text-[var(--archive-apricot)]">
                   {currentFrame.iso} · {currentFrame.lens}
                 </div>
               </div>
@@ -367,10 +367,10 @@ export default function Scene03TheObserver() {
                 <button
                   type="button"
                   onClick={cycleFocus}
-                  className="px-3.5 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/30 hover:border-amber-400/60 text-amber-200 text-xs font-mono uppercase tracking-wider transition-all flex items-center gap-2 group"
+                  className="px-3.5 py-1.5 rounded-full bg-[var(--archive-violet)]/25 hover:bg-[var(--archive-violet)]/40 border border-[var(--archive-border-warm)] text-[var(--archive-apricot)] text-xs font-mono uppercase tracking-wider transition-all flex items-center gap-2 group"
                   aria-label="Calibrate optical focus"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 text-amber-400 transition-transform ${focusState === 'focusing' ? 'animate-spin' : 'group-hover:rotate-180'}`} />
+                  <RefreshCw className={`w-3.5 h-3.5 text-[var(--archive-coral)] transition-transform ${focusState === 'focusing' ? 'animate-spin' : 'group-hover:rotate-180'}`} />
                   <span>
                     {focusState === 'locked'
                       ? 'Optics: 1:1 Sharp Focus'
@@ -380,7 +380,7 @@ export default function Scene03TheObserver() {
                   </span>
                 </button>
 
-                <div className="text-[10px] text-slate-400">
+                <div className="text-[10px] text-[var(--archive-text-muted)]">
                   {currentFrame.title}
                 </div>
               </div>
@@ -390,55 +390,55 @@ export default function Scene03TheObserver() {
           {/* Right Column: Personal Narrative, Education & Philosophy */}
           <div className="lg:col-span-5 flex flex-col gap-6">
             {/* Dossier Card 01: Curator Note & Origin */}
-            <div className="p-6 sm:p-7 rounded-3xl bg-[#080911]/90 border border-white/10 backdrop-blur-xl">
-              <span className="text-[10px] font-mono uppercase text-amber-400 tracking-widest block mb-2">
+            <div className="p-6 sm:p-7 rounded-3xl bg-[var(--archive-surface)]/90 border border-white/10 backdrop-blur-xl">
+              <span className="text-[10px] font-mono uppercase text-[var(--archive-coral)] tracking-widest block mb-2">
                 CHRONICLE 01 // ORIGIN & BEDROCK
               </span>
-              <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#f4f1ea] mb-3">
+              <h3 className="text-xl sm:text-2xl font-serif font-bold text-[var(--archive-text-primary)] mb-3">
                 From Raw Code to Production Machinery
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-serif mb-3">
+              <p className="text-xs sm:text-sm text-[var(--archive-text-secondary)] leading-relaxed font-serif mb-3">
                 {about.story}
               </p>
-              <p className="text-xs text-slate-400 leading-relaxed font-serif">
+              <p className="text-xs text-[var(--archive-text-muted)] leading-relaxed font-serif">
                 {about.curatorNote}
               </p>
             </div>
 
             {/* Philosophy Card */}
-            <div className="p-5 sm:p-6 rounded-3xl bg-[#0c0d18]/90 border border-amber-500/30 backdrop-blur-xl relative">
-              <Quote className="w-7 h-7 text-amber-400/20 absolute top-5 right-5 pointer-events-none" />
-              <span className="text-[10px] font-mono uppercase text-amber-400 tracking-widest block mb-1.5">
+            <div className="p-5 sm:p-6 rounded-3xl bg-[var(--archive-surface-elevated)]/90 border border-[var(--archive-border-violet)] backdrop-blur-xl relative">
+              <Quote className="w-7 h-7 text-[var(--archive-coral)]/20 absolute top-5 right-5 pointer-events-none" />
+              <span className="text-[10px] font-mono uppercase text-[var(--archive-coral)] tracking-widest block mb-1.5">
                 PHILOSOPHY // FIRST PRINCIPLES
               </span>
-              <p className="text-sm font-serif italic text-amber-200 leading-relaxed mb-3">
+              <p className="text-sm font-serif italic text-[var(--archive-apricot)] leading-relaxed mb-3">
                 &ldquo;{about.philosophy}&rdquo;
               </p>
-              <div className="text-[10px] font-mono text-slate-400 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+              <div className="text-[10px] font-mono text-[var(--archive-text-muted)] flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--archive-coral)]" />
                 <span>ROOT-CAUSE ANALYSIS · RESILIENCE · DETERMINISM</span>
               </div>
             </div>
 
             {/* Academic Foundation (Government College of Engineering, Yavatmal) */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-[#080911]/90 border border-white/10 flex items-center justify-between gap-4">
+            <div className="p-4 sm:p-5 rounded-2xl bg-[var(--archive-surface)]/90 border border-white/10 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-300">
+                <div className="w-10 h-10 rounded-xl bg-[var(--archive-violet)]/25 border border-[var(--archive-border-warm)] flex items-center justify-center text-[var(--archive-coral)]">
                   <GraduationCap className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-[9px] font-mono uppercase text-amber-400/80 block">
+                  <span className="text-[9px] font-mono uppercase text-[var(--archive-coral)] block">
                     ACADEMIC FOUNDATION
                   </span>
-                  <h4 className="text-sm font-serif font-bold text-[#f4f1ea]">
+                  <h4 className="text-sm font-serif font-bold text-[var(--archive-text-primary)]">
                     {about.education.institution}
                   </h4>
-                  <p className="text-[11px] text-slate-400 mt-0.5 font-sans">
+                  <p className="text-[11px] text-[var(--archive-text-muted)] mt-0.5 font-sans">
                     {about.education.degree} · {about.education.status}
                   </p>
                 </div>
               </div>
-              <span className="px-2.5 py-1 rounded-full bg-white/5 text-[9px] font-mono text-amber-300 border border-white/10">
+              <span className="px-2.5 py-1 rounded-full bg-[var(--archive-surface-elevated)] text-[9px] font-mono text-[var(--archive-apricot)] border border-[var(--archive-border-violet)]">
                 B.TECH
               </span>
             </div>

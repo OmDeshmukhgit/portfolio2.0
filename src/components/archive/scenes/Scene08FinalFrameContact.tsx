@@ -44,16 +44,16 @@ export default function Scene08FinalFrameContact() {
   return (
     <section
       id="scene-contact"
-      className="relative w-full min-h-screen flex flex-col justify-between items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-white/5 bg-[#020204]"
+      className="relative w-full min-h-screen flex flex-col justify-between items-center px-4 sm:px-8 py-24 overflow-hidden border-t border-[var(--archive-border)] bg-[var(--archive-bg)] transition-colors duration-300"
     >
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
         {/* Scene Identification Header */}
-        <div className="w-full flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-amber-400/80 mb-8 border-b border-white/10 pb-3">
+        <div className="w-full flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-[var(--archive-coral)] mb-8 border-b border-[var(--archive-border)] pb-3">
           <div className="flex items-center gap-2">
-            <Send className="w-3.5 h-3.5 text-amber-400" />
+            <Send className="w-3.5 h-3.5 text-[var(--archive-coral)]" />
             <span>SCENE 08 // FINAL FRAME · DISPATCH TRANSMISSION</span>
           </div>
-          <div className="hidden sm:block text-slate-500 font-mono text-[10px] sm:text-[11px]">
+          <div className="hidden sm:block text-[var(--archive-text-muted)] font-mono text-[10px] sm:text-[11px]">
             LENS: 24mm · f/1.4 · 1/125s · THE CYCLE PERSISTS
           </div>
         </div>
@@ -65,31 +65,31 @@ export default function Scene08FinalFrameContact() {
            ========================================================================= */}
         <div className="max-w-3xl text-center mb-14">
           {/* Quiet Sequence Breadcrumb */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] font-mono text-amber-400/70 uppercase tracking-wider sm:tracking-widest mb-6">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] font-mono text-[var(--archive-apricot)]/80 uppercase tracking-wider sm:tracking-widest mb-6">
             <span className="hidden sm:inline">ARCHIVE</span>
-            <span className="hidden sm:inline text-slate-600">↓</span>
+            <span className="hidden sm:inline text-[var(--archive-text-muted)]/40">↓</span>
             <span className="hidden sm:inline">SYSTEMS</span>
-            <span className="hidden sm:inline text-slate-600">↓</span>
+            <span className="hidden sm:inline text-[var(--archive-text-muted)]/40">↓</span>
             <span className="hidden sm:inline">TRANSMISSION</span>
-            <span className="hidden sm:inline text-slate-600">↓</span>
-            <span className="text-amber-300 font-bold">THE ARCHIVE REMAINS OPEN</span>
+            <span className="hidden sm:inline text-[var(--archive-text-muted)]/40">↓</span>
+            <span className="text-[var(--archive-coral)] font-bold">THE ARCHIVE REMAINS OPEN</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[#f4f1ea] tracking-wide mb-4">
+          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[var(--archive-text-primary)] tracking-wide mb-4">
             Looking For The Next System To Build
           </h2>
 
-          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-serif max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-[var(--archive-text-secondary)]/80 leading-relaxed font-serif max-w-2xl mx-auto">
             The journal entries pause here, but the infrastructure continues running.
             Whether you are designing a high-throughput microservices mesh, provisioning multi-region cloud topology,
             or structuring automated deployment pipelines — the terminal is receptive. Let us build together.
           </p>
 
           {/* Quiet Archival Colophon Seal */}
-          <div className="mt-6 inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#080912] border border-amber-400/30 text-[10px] font-mono text-amber-300">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+          <div className="mt-6 inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[var(--archive-surface)] border border-[var(--archive-border-warm)] text-[10px] font-mono text-[var(--archive-apricot)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--archive-mint)] animate-ping" />
             <span>CHANNEL STATUS: STANDBY & RECEPTIVE</span>
-            <span className="text-slate-500">·</span>
+            <span className="text-[var(--archive-text-muted)]/60">·</span>
             <span>DISPATCH FREQUENCY: 20.70° N, 77.00° E</span>
           </div>
         </div>
@@ -97,27 +97,27 @@ export default function Scene08FinalFrameContact() {
         {/* Two-Column Transmission Console */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full mb-16">
           {/* Left Column: Direct Transmission Form */}
-          <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-[#080912]/95 border border-amber-400/30 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-2xl">
-            <h3 className="text-lg font-serif font-bold text-amber-200 uppercase tracking-widest mb-6 flex items-center gap-2">
-              <Send className="w-4 h-4 text-amber-400" />
+          <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-[var(--archive-surface)]/95 border border-[var(--archive-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-2xl transition-colors duration-300">
+            <h3 className="text-lg font-serif font-bold text-[var(--archive-apricot)] uppercase tracking-widest mb-6 flex items-center gap-2">
+              <Send className="w-4 h-4 text-[var(--archive-coral)]" />
               <span>Dispatch a Direct Transmission</span>
             </h3>
 
             {isTransmitted ? (
-              <div className="p-8 rounded-2xl bg-emerald-950/60 border border-emerald-500/50 text-center animate-in fade-in duration-300">
-                <Check className="w-8 h-8 text-emerald-400 mx-auto mb-3" />
-                <h4 className="text-base font-bold text-emerald-200 font-serif">
+              <div className="p-8 rounded-2xl bg-[var(--archive-mint)]/10 border border-[var(--archive-mint)]/40 text-center animate-in fade-in duration-300">
+                <Check className="w-8 h-8 text-[var(--archive-mint)] mx-auto mb-3" />
+                <h4 className="text-base font-bold text-[var(--archive-mint)] font-serif">
                   Gmail Transmission Window Opened
                 </h4>
-                <p className="text-xs text-emerald-300/80 mt-1 font-mono">
-                  Your dispatch has been routed to Gmail to reach <span className="text-emerald-200 font-semibold">{curator.email}</span>.
+                <p className="text-xs text-[var(--archive-text-muted)] mt-1 font-mono">
+                  Your dispatch has been routed to Gmail to reach <span className="text-[var(--archive-mint)] font-semibold">{curator.email}</span>.
                 </p>
                 <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
                   <a
                     href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(curator.email)}&su=${encodeURIComponent(`Transmission from ${form.name || 'Archive Traveler'}`)}&body=${encodeURIComponent(`From: ${form.name || 'Anonymous'}\nSender Email: ${form.email}\n\nDispatch Message:\n${form.message}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-lg bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/40 text-[11px] font-mono transition-colors"
+                    className="px-4 py-2 rounded-lg bg-[var(--archive-coral)]/20 hover:bg-[var(--archive-coral)]/30 text-[var(--archive-apricot)] border border-[var(--archive-border-warm)] text-[11px] font-mono transition-colors"
                   >
                     Open in Gmail Again
                   </a>
@@ -127,7 +127,7 @@ export default function Scene08FinalFrameContact() {
                       setIsTransmitted(false);
                       setForm({ name: '', email: '', message: '' });
                     }}
-                    className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-slate-300 text-[11px] font-mono transition-colors"
+                    className="px-4 py-2 rounded-lg bg-[var(--archive-surface-alt)] hover:bg-[var(--archive-border)] text-[var(--archive-text-secondary)] text-[11px] font-mono transition-colors"
                   >
                     Send Another Dispatch
                   </button>
@@ -136,7 +136,7 @@ export default function Scene08FinalFrameContact() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4 font-mono text-xs">
                 <div>
-                  <label className="block text-slate-400 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[var(--archive-text-muted)] uppercase tracking-wider mb-1.5">
                     Identifier // Name or Organization
                   </label>
                   <input
@@ -145,12 +145,12 @@ export default function Scene08FinalFrameContact() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="Observer / Engineering Lead"
-                    className="w-full px-4 py-3 rounded-xl bg-black/60 border border-slate-800 focus:border-amber-400 text-slate-100 placeholder-slate-600 outline-none transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[var(--archive-surface-deep)]/80 border border-[var(--archive-border)] focus:border-[var(--archive-coral)] text-[var(--archive-text-primary)] placeholder-[var(--archive-text-muted)]/40 outline-none transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[var(--archive-text-muted)] uppercase tracking-wider mb-1.5">
                     Return Signal // Contact Email
                   </label>
                   <input
@@ -159,12 +159,12 @@ export default function Scene08FinalFrameContact() {
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                     placeholder="contact@organization.org"
-                    className="w-full px-4 py-3 rounded-xl bg-black/60 border border-slate-800 focus:border-amber-400 text-slate-100 placeholder-slate-600 outline-none transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[var(--archive-surface-deep)]/80 border border-[var(--archive-border)] focus:border-[var(--archive-coral)] text-[var(--archive-text-primary)] placeholder-[var(--archive-text-muted)]/40 outline-none transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[var(--archive-text-muted)] uppercase tracking-wider mb-1.5">
                     Message // Architecture or Collaboration Scope
                   </label>
                   <textarea
@@ -173,13 +173,13 @@ export default function Scene08FinalFrameContact() {
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     placeholder="Greetings Om, let us discuss cloud infrastructure provisioning, container deployments, or systems architecture..."
-                    className="w-full px-4 py-3 rounded-xl bg-black/60 border border-slate-800 focus:border-amber-400 text-slate-100 placeholder-slate-600 outline-none transition-colors resize-none font-sans"
+                    className="w-full px-4 py-3 rounded-xl bg-[var(--archive-surface-deep)]/80 border border-[var(--archive-border)] focus:border-[var(--archive-coral)] text-[var(--archive-text-primary)] placeholder-[var(--archive-text-muted)]/40 outline-none transition-colors resize-none font-sans"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-black font-bold uppercase tracking-widest rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 hover:scale-[1.02]"
+                  className="w-full py-3.5 bg-gradient-to-r from-[var(--archive-coral)] to-[var(--archive-apricot)] hover:opacity-95 text-[var(--archive-bg)] font-bold uppercase tracking-widest rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 hover:scale-[1.02]"
                 >
                   <Send className="w-4 h-4" />
                   <span>Transmit Dispatch</span>
@@ -189,26 +189,26 @@ export default function Scene08FinalFrameContact() {
           </div>
 
           {/* Right Column: Direct Telemetry Channels & Social Links */}
-          <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-[#080912]/95 border border-white/10 backdrop-blur-2xl">
+          <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-[var(--archive-surface)]/95 border border-[var(--archive-border)] backdrop-blur-2xl transition-colors duration-300">
             <div>
-              <h3 className="text-lg font-serif font-bold text-amber-200 uppercase tracking-widest mb-6">
+              <h3 className="text-lg font-serif font-bold text-[var(--archive-apricot)] uppercase tracking-widest mb-6">
                 Ground Coordinates
               </h3>
 
               <div className="space-y-4 font-mono text-xs">
                 {/* Direct Mail */}
-                <div className="p-3.5 rounded-2xl bg-black/60 border border-slate-800 flex items-center justify-between">
+                <div className="p-3.5 rounded-2xl bg-[var(--archive-surface-deep)]/70 border border-[var(--archive-border)] flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-300">
+                    <div className="w-8 h-8 rounded-lg bg-[var(--archive-surface-alt)] border border-[var(--archive-border)] flex items-center justify-center text-[var(--archive-apricot)]">
                       <Mail className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-500 uppercase block">Direct Signal</span>
+                      <span className="text-[10px] text-[var(--archive-text-muted)] uppercase block">Direct Signal</span>
                       <a
                         href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(curator.email)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-amber-200 hover:underline font-semibold"
+                        className="text-[var(--archive-apricot)] hover:text-[var(--archive-coral)] hover:underline font-semibold"
                         title="Compose via Gmail"
                       >
                         {curator.email}
@@ -218,33 +218,33 @@ export default function Scene08FinalFrameContact() {
                   <button
                     type="button"
                     onClick={handleCopyEmail}
-                    className="px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-amber-300 border border-white/10 transition-colors"
+                    className="px-2.5 py-1 rounded bg-[var(--archive-surface-alt)] hover:bg-[var(--archive-surface)] text-[var(--archive-apricot)] border border-[var(--archive-border)] transition-colors"
                   >
                     {copiedEmail ? 'Copied' : 'Copy'}
                   </button>
                 </div>
 
                 {/* Phone */}
-                <div className="p-3.5 rounded-2xl bg-black/60 border border-slate-800 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-300">
+                <div className="p-3.5 rounded-2xl bg-[var(--archive-surface-deep)]/70 border border-[var(--archive-border)] flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[var(--archive-surface-alt)] border border-[var(--archive-border)] flex items-center justify-center text-[var(--archive-apricot)]">
                     <Phone className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-500 uppercase block">Voice Line</span>
-                    <a href={`tel:${curator.phone}`} className="text-amber-200 hover:underline font-semibold">
+                    <span className="text-[10px] text-[var(--archive-text-muted)] uppercase block">Voice Line</span>
+                    <a href={`tel:${curator.phone}`} className="text-[var(--archive-apricot)] hover:text-[var(--archive-coral)] hover:underline font-semibold">
                       {curator.phone}
                     </a>
                   </div>
                 </div>
 
                 {/* Base Location */}
-                <div className="p-3.5 rounded-2xl bg-black/60 border border-slate-800 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-300">
+                <div className="p-3.5 rounded-2xl bg-[var(--archive-surface-deep)]/70 border border-[var(--archive-border)] flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[var(--archive-surface-alt)] border border-[var(--archive-border)] flex items-center justify-center text-[var(--archive-apricot)]">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-500 uppercase block">Physical Terminal</span>
-                    <span className="text-slate-200 font-semibold">
+                    <span className="text-[10px] text-[var(--archive-text-muted)] uppercase block">Physical Terminal</span>
+                    <span className="text-[var(--archive-text-primary)] font-semibold">
                       {curator.baseLocation} ({curator.coordinates})
                     </span>
                   </div>
@@ -253,9 +253,9 @@ export default function Scene08FinalFrameContact() {
             </div>
 
             {/* Social Channels & Resume */}
-            <div className="mt-8 pt-6 border-t border-white/10">
+            <div className="mt-8 pt-6 border-t border-[var(--archive-border)]">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                {/* Social Channels with Sequential Orange Interspace Signal Cycle */}
+                {/* Social Channels with Sequential Interspace Signal Cycle */}
                 <div className="flex items-center gap-3">
                   {[
                     {
@@ -290,50 +290,47 @@ export default function Scene08FinalFrameContact() {
                         whileTap={{ scale: 0.95 }}
                         animate={{
                           borderColor: isActive
-                            ? 'rgba(251, 191, 36, 0.9)'
-                            : 'rgba(255, 255, 255, 0.12)',
+                            ? 'var(--archive-coral)'
+                            : 'var(--archive-border)',
                           boxShadow: isActive
-                            ? '0 0 20px rgba(245, 158, 11, 0.65), inset 0 0 10px rgba(245, 158, 11, 0.25)'
-                            : '0 0 0px rgba(245, 158, 11, 0)',
+                            ? '0 0 20px rgba(242, 123, 155, 0.4), inset 0 0 10px rgba(112, 65, 166, 0.2)'
+                            : '0 0 0px rgba(0, 0, 0, 0)',
                           backgroundColor: isActive
-                            ? 'rgba(245, 158, 11, 0.16)'
-                            : 'rgba(6, 7, 14, 0.85)',
+                            ? 'rgba(112, 65, 166, 0.25)'
+                            : 'var(--archive-surface-deep)',
                           scale: isActive ? 1.05 : 1,
                         }}
                         transition={{ duration: 0.28, ease: 'easeInOut' }}
                         className="group relative p-3 rounded-xl border backdrop-blur-md cursor-pointer overflow-visible flex items-center justify-center transition-colors"
                       >
-                        {/* Expanding Orange Interspace Wavefront Ring on Active Blink */}
+                        {/* Expanding Interspace Wavefront Ring on Active Blink */}
                         {isActive && (
                           <motion.span
                             key={`wave-${activeSignalIndex}`}
                             initial={{ scale: 1, opacity: 0.85 }}
                             animate={{ scale: 1.6, opacity: 0 }}
                             transition={{ duration: 0.55, ease: 'easeOut' }}
-                            className="absolute -inset-1 rounded-xl border border-amber-400/80 shadow-[0_0_12px_rgba(245,158,11,0.5)] pointer-events-none"
+                            className="absolute -inset-1 rounded-xl border border-[var(--archive-coral)]/80 shadow-[0_0_12px_rgba(242,123,155,0.5)] pointer-events-none"
                           />
                         )}
 
-                        {/* Corner Orange Interspace Signal Telemetry Beacon Dot */}
+                        {/* Corner Warm Lantern Yellow Interspace Signal Telemetry Beacon Dot */}
                         <span
                           className={`absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full transition-all duration-300 pointer-events-none ${
                             isActive
-                              ? 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,1),0_0_16px_rgba(245,158,11,0.8)] scale-125 opacity-100'
-                              : 'bg-amber-400/35 scale-90 opacity-40 group-hover:opacity-80 group-hover:bg-amber-400'
+                              ? 'bg-[var(--archive-yellow)] shadow-[0_0_10px_rgba(255,214,107,1)] scale-125 opacity-100'
+                              : 'bg-[var(--archive-yellow)]/35 scale-90 opacity-40 group-hover:opacity-80 group-hover:bg-[var(--archive-yellow)]'
                           }`}
                         />
 
-                        {/* Icon with Matching Amber/Orange Telemetry Starlight Flash */}
+                        {/* Icon with Matching Flash */}
                         <motion.div
                           animate={{
                             scale: isActive ? 1.15 : 1,
-                            color: isActive ? '#fffbeb' : '#fcd34d',
-                            filter: isActive
-                              ? 'drop-shadow(0 0 8px rgba(245,158,11,0.9))'
-                              : 'none',
+                            color: isActive ? 'var(--archive-text-primary)' : 'var(--archive-apricot)',
                           }}
                           transition={{ duration: 0.28 }}
-                          className="relative z-10 flex items-center justify-center group-hover:text-amber-200"
+                          className="relative z-10 flex items-center justify-center group-hover:text-[var(--archive-apricot)]"
                         >
                           <Icon className="w-4 h-4" />
                         </motion.div>
@@ -346,9 +343,9 @@ export default function Scene08FinalFrameContact() {
                   href={curator.resume}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-black font-bold text-xs uppercase tracking-wider font-mono flex items-center gap-2 shadow-lg transition-all"
+                  className="px-5 py-3 rounded-xl bg-gradient-to-r from-[var(--archive-mint)] to-[var(--archive-apricot)] hover:opacity-95 text-[var(--archive-bg)] font-bold text-xs uppercase tracking-wider font-mono flex items-center gap-2 shadow-lg transition-all"
                 >
-                  <FileDown className="w-4 h-4" />
+                  <FileDown className="w-4 h-4 text-[var(--archive-bg)]" />
                   <span>Download Dossier</span>
                 </a>
               </div>
@@ -357,14 +354,14 @@ export default function Scene08FinalFrameContact() {
         </div>
 
         {/* Cinematic Film Credits Colophon */}
-        <div className="w-full pt-8 border-t border-white/5 text-center text-xs font-mono text-slate-500 space-y-1">
-          <p className="text-amber-400/80 font-bold tracking-widest uppercase">
+        <div className="w-full pt-8 border-t border-[var(--archive-border)] text-center text-xs font-mono text-[var(--archive-text-muted)] space-y-1">
+          <p className="text-[var(--archive-coral)] font-bold tracking-widest uppercase">
             THE OM ARCHIVE // CURATED & ARCHITECTED BY OM DESHMUKH
           </p>
-          <p className="text-slate-500 text-[10px]">
+          <p className="text-[var(--archive-text-muted)] text-[10px]">
             &copy; {new Date().getFullYear()} ALL RIGHTS RESERVED · TRANSMISSION RECORDED ACROSS TIME & SPACE
           </p>
-          <p className="text-slate-600 text-[9px]">
+          <p className="text-[var(--archive-text-muted)]/60 text-[9px]">
             ENGINEERED WITH NEXT.JS APP ROUTER · TYPESCRIPT · TAILWIND CSS · LENIS · MOTION
           </p>
         </div>

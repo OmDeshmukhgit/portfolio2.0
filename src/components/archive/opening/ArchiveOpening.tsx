@@ -243,7 +243,7 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
         opacity: 0,
         transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
       }}
-      className="fixed inset-0 z-[100] overflow-hidden bg-[#03040a] text-[#f4f1ea] select-none flex flex-col justify-between items-center will-change-transform"
+      className="fixed inset-0 z-[100] overflow-hidden bg-[#0c0b1a] text-[#fff0e5] select-none flex flex-col justify-between items-center will-change-transform"
       style={{
         pointerEvents: phase === 'revealed' ? 'none' : 'auto',
       }}
@@ -297,13 +297,13 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
                 : 0.04,
           }}
           transition={{ duration: 1.0, ease: 'easeInOut' }}
-          className="absolute inset-0 bg-cyan-400/20 mix-blend-screen pointer-events-none"
+          className="absolute inset-0 bg-[#3d49b8]/20 mix-blend-screen pointer-events-none"
         />
 
-        {/* Soft edge vignette: seamlessly transitions into #030305 & cleanly hides bottom watermark */}
-        <div className="absolute inset-0 bg-radial-[circle_at_50%_48%,transparent_35%,rgba(3,4,10,0.6)_70%,#030305_96%]" />
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#030305] via-[#030305]/80 to-transparent" />
-        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#030305] via-[#030305]/80 to-transparent" />
+        {/* Soft edge vignette: seamlessly transitions into palette background */}
+        <div className="absolute inset-0 bg-radial-[circle_at_50%_48%,transparent_35%,rgba(0,0,0,0.5)_70%,var(--archive-bg)_96%]" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--archive-bg)] via-[var(--archive-bg)]/80 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[var(--archive-bg)] via-[var(--archive-bg)]/80 to-transparent" />
       </motion.div>
 
       {/* =========================================================================
@@ -681,18 +681,18 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
           y: phase === 'idle' ? 0 : -14,
         }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
-        className="relative z-20 w-full max-w-7xl mx-auto px-6 pt-8 flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-cyan-200/80 border-b border-white/5 pb-4 pointer-events-none"
+        className="relative z-20 w-full max-w-7xl mx-auto px-6 pt-8 flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-[var(--archive-coral)]/90 border-b border-[var(--archive-border)] pb-4 pointer-events-none"
       >
         <div className="flex items-center gap-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--archive-coral)] animate-ping" />
           <span className="tracking-widest">SECTOR 00 // DEEP SPACE OBSERVATION</span>
         </div>
-        <div className="hidden sm:flex items-center gap-4 text-slate-300 tracking-wider">
+        <div className="hidden sm:flex items-center gap-4 text-[var(--archive-text-muted)] tracking-wider">
           <span>COSMIC RECEPTOR</span>
           <span>·</span>
           <span>STELLAR TRANSMISSION</span>
         </div>
-        <div className="text-cyan-300 font-bold tracking-wider">
+        <div className="text-[var(--archive-apricot)] font-bold tracking-wider">
           [ STANDBY · LISTENING ]
         </div>
       </motion.header>
@@ -714,23 +714,23 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
             type="button"
             onClick={handleTrigger}
             onKeyDown={handleKeyDown}
-            className="group relative px-7 sm:px-8 py-2.5 rounded-full bg-[#030614]/80 hover:bg-[#071028]/90 border border-cyan-400/35 hover:border-cyan-400/80 text-cyan-100 hover:text-white font-mono text-[11px] sm:text-xs tracking-[0.3em] uppercase transition-all duration-300 backdrop-blur-md cursor-pointer flex items-center gap-3 shadow-[0_6px_25px_rgba(0,0,0,0.85)] hover:shadow-[0_0_30px_rgba(34,211,238,0.25)]"
+            className="group relative px-7 sm:px-8 py-2.5 rounded-full bg-[var(--archive-surface)]/90 hover:bg-[var(--archive-surface-alt)]/95 border border-[var(--archive-border-warm)] hover:border-[var(--archive-coral)] text-[var(--archive-apricot)] hover:text-[var(--archive-text-primary)] font-mono text-[11px] sm:text-xs tracking-[0.3em] uppercase transition-all duration-300 backdrop-blur-md cursor-pointer flex items-center gap-3 shadow-[0_6px_25px_rgba(0,0,0,0.6)] hover:shadow-[0_0_30px_rgba(242,123,155,0.25)]"
             aria-label="Enter the Archive"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 group-hover:bg-cyan-200 transition-colors animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--archive-coral)] group-hover:bg-[var(--archive-apricot)] transition-colors animate-pulse" />
             <span>ENTER THE ARCHIVE</span>
-            <span className="text-cyan-400/80 group-hover:translate-y-0.5 transition-transform">↓</span>
+            <span className="text-[var(--archive-coral)] group-hover:translate-y-0.5 transition-transform">↓</span>
           </button>
 
           <div className="flex items-center gap-3">
-            <span className="text-[8px] sm:text-[9px] font-mono tracking-widest text-slate-400 uppercase">
+            <span className="text-[8px] sm:text-[9px] font-mono tracking-widest text-[var(--archive-text-muted)] uppercase">
               TRANSMISSION STANDBY · AWAITING INPUT
             </span>
-            <span className="text-slate-600 text-[9px]">·</span>
+            <span className="text-white/20 text-[9px]">·</span>
             <button
               type="button"
               onClick={handleFastEnter}
-              className="text-[8px] sm:text-[9px] font-mono tracking-widest text-amber-300/80 hover:text-amber-200 uppercase underline decoration-amber-400/40 hover:decoration-amber-300 transition-colors"
+              className="text-[8px] sm:text-[9px] font-mono tracking-widest text-[var(--archive-apricot)]/80 hover:text-[var(--archive-text-primary)] uppercase underline decoration-[var(--archive-border-warm)] hover:decoration-[var(--archive-coral)] transition-colors"
             >
               SKIP INTRO [ESC] →
             </button>
@@ -747,14 +747,14 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
           y: phase === 'idle' ? 0 : 14,
         }}
         transition={{ duration: 0.22, ease: 'easeOut' }}
-        className="relative z-20 w-full max-w-7xl mx-auto px-6 pb-8 flex items-center justify-between text-[9px] sm:text-[10px] font-mono text-slate-400 border-t border-white/5 pt-4 pointer-events-none"
+        className="relative z-20 w-full max-w-7xl mx-auto px-6 pb-8 flex items-center justify-between text-[9px] sm:text-[10px] font-mono text-[var(--archive-text-muted)] border-t border-[var(--archive-border)] pt-4 pointer-events-none"
       >
         <div className="flex items-center gap-2">
           <span>CURATOR: OM DESHMUKH</span>
           <span>·</span>
           <span>SYSTEMS & VISUAL ARCHIVE</span>
         </div>
-        <div className="flex items-center gap-2 text-cyan-300/70">
+        <div className="flex items-center gap-2 text-[var(--archive-apricot)]/80">
           <span>COSMIC FIELD SURVEY</span>
           <span>·</span>
           <span>THE ARCHIVE</span>
@@ -762,7 +762,7 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
       </motion.footer>
 
       {/* =========================================================================
-          DEEP SPACE VELVET BLUE-BLACK VOID OVERLAY (#030305)
+          DEEP SPACE VELVET VOID OVERLAY
           Holds the screen in darkness immediately prior to Archive reveal.
          ========================================================================= */}
       <motion.div
@@ -770,9 +770,9 @@ export default function ArchiveOpening({ onTrigger, onEnter }: ArchiveOpeningPro
           opacity: isDarkVoid ? 1 : 0,
         }}
         transition={{ duration: 0.45, ease: 'easeInOut' }}
-        className="absolute inset-0 pointer-events-none z-[25] bg-[#030305]"
+        className="absolute inset-0 pointer-events-none z-[25] bg-[var(--archive-bg)]"
       >
-        <div className="absolute inset-0 bg-radial-[circle_at_50%_50%,rgba(10,20,38,0.35)_0%,rgba(3,4,8,0.85)_50%,#030305_85%]" />
+        <div className="absolute inset-0 bg-radial-[circle_at_50%_50%,rgba(41,47,143,0.25)_0%,rgba(0,0,0,0.6)_50%,var(--archive-bg)_85%]" />
       </motion.div>
     </motion.div>
   );

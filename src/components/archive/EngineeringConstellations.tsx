@@ -177,16 +177,19 @@ export const ENGINEERING_CONSTELLATIONS: Constellation[] = [
   },
 ];
 
+import { usePalette } from '@/components/providers/PaletteProvider';
+
 /**
  * Draws an astronomical radiant star icon (✦) with cardinal diamond spikes,
- * secondary diagonal flares, luminous golden aura, and an astrolabe precision core.
+ * secondary diagonal flares, luminous golden/coral aura, and an astrolabe precision core.
  */
 function drawCelestialStarIcon(
   ctx: CanvasRenderingContext2D,
   cx: number,
   cy: number,
   baseRadius: number,
-  pulse: number
+  pulse: number,
+  isTwilight: boolean = true
 ) {
   const outerR = Math.max(7, (baseRadius + 4.5) * (0.88 + 0.22 * pulse));
   const innerR = outerR * 0.28;
@@ -194,19 +197,26 @@ function drawCelestialStarIcon(
 
   ctx.save();
 
-  // 1. Soft radial stellar halo
-  const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, outerR * 1.8);
-  halo.addColorStop(0, 'rgba(212, 175, 55, 0.4)');
-  halo.addColorStop(0.5, 'rgba(212, 175, 55, 0.12)');
-  halo.addColorStop(1, 'rgba(212, 175, 55, 0)');
+  // 1. Soft radial stellar halo with atmospheric depth
+  const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, outerR * 2.2);
+  if (isTwilight) {
+    halo.addColorStop(0, 'rgba(255, 214, 107, 0.55)');
+    halo.addColorStop(0.35, 'rgba(242, 123, 155, 0.35)');
+    halo.addColorStop(0.7, 'rgba(112, 65, 166, 0.18)');
+    halo.addColorStop(1, 'rgba(41, 47, 143, 0)');
+  } else {
+    halo.addColorStop(0, 'rgba(251, 191, 36, 0.55)');
+    halo.addColorStop(0.45, 'rgba(245, 158, 11, 0.25)');
+    halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  }
   ctx.fillStyle = halo;
   ctx.beginPath();
-  ctx.arc(cx, cy, outerR * 1.8, 0, Math.PI * 2);
+  ctx.arc(cx, cy, outerR * 2.2, 0, Math.PI * 2);
   ctx.fill();
 
-  // 2. Secondary diagonal micro-flares (8-point celestial star icon)
+  // 2. Secondary diagonal micro-flares (Lantern Yellow or Classic Amber)
   ctx.save();
-  ctx.fillStyle = 'rgba(245, 215, 110, 0.65)';
+  ctx.fillStyle = isTwilight ? 'rgba(255, 214, 107, 0.95)' : 'rgba(252, 211, 77, 0.95)';
   ctx.beginPath();
   for (let i = 0; i < 4; i++) {
     const angle = (Math.PI / 4) + (i * Math.PI / 2);
@@ -229,11 +239,11 @@ function drawCelestialStarIcon(
 
   // 3. Primary 4-Point Radiant Diamond Star Icon
   ctx.save();
-  ctx.fillStyle = '#fffdf5';
-  ctx.strokeStyle = 'rgba(212, 175, 55, 0.95)';
-  ctx.lineWidth = 1;
-  ctx.shadowColor = 'rgba(212, 175, 55, 0.95)';
-  ctx.shadowBlur = 9;
+  ctx.fillStyle = isTwilight ? '#fff0e5' : '#fef3c7';
+  ctx.strokeStyle = isTwilight ? 'rgba(242, 123, 155, 0.95)' : 'rgba(251, 191, 36, 0.95)';
+  ctx.lineWidth = 1.1;
+  ctx.shadowColor = isTwilight ? 'rgba(242, 123, 155, 0.95)' : 'rgba(251, 191, 36, 0.95)';
+  ctx.shadowBlur = isTwilight ? 10 : 8;
 
   ctx.beginPath();
   for (let i = 0; i < 4; i++) {
@@ -255,7 +265,7 @@ function drawCelestialStarIcon(
 
   // 4. Central Astrolabe Precision Reticle & Core Point
   ctx.save();
-  ctx.strokeStyle = 'rgba(212, 175, 55, 0.8)';
+  ctx.strokeStyle = isTwilight ? 'rgba(255, 214, 107, 0.9)' : 'rgba(251, 191, 36, 0.9)';
   ctx.lineWidth = 0.8;
   ctx.beginPath();
   ctx.arc(cx, cy, 3, 0, Math.PI * 2);
@@ -277,6 +287,7 @@ interface ConstellationProps {
 export default function EngineeringConstellations({ onSelectConstellation }: ConstellationProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [activeId, setActiveId] = useState<string>('kubernetes');
+  const { isTwilight } = usePalette();
 
   const activeConstellation = useMemo(
     () => ENGINEERING_CONSTELLATIONS.find((c) => c.id === activeId) || ENGINEERING_CONSTELLATIONS[0],
@@ -351,7 +362,7 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
 
       // 1. Astrolabe / Coordinate Grid Lines
       ctx.save();
-      ctx.strokeStyle = 'rgba(212, 175, 55, 0.08)';
+      ctx.strokeStyle = isTwilight ? 'rgba(112, 65, 166, 0.32)' : 'rgba(255, 255, 255, 0.12)';
       ctx.lineWidth = 1;
       ctx.setLineDash([3, 5]);
 
@@ -384,7 +395,7 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
         const sx = (star.x / 100) * displayWidth;
         const sy = (star.y / 100) * displayHeight;
         const twinkle = Math.sin(t + idx * 0.8) * 0.2 + 0.8;
-        ctx.fillStyle = `rgba(244, 241, 234, ${star.alpha * twinkle})`;
+        ctx.fillStyle = `rgba(244, 242, 255, ${star.alpha * twinkle})`;
         ctx.beginPath();
         ctx.arc(sx, sy, star.r, 0, Math.PI * 2);
         ctx.fill();
@@ -395,10 +406,10 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
       const scaleY = displayHeight;
 
       ctx.save();
-      ctx.strokeStyle = 'rgba(212, 175, 55, 0.75)';
-      ctx.lineWidth = 1.5;
-      ctx.shadowColor = 'rgba(212, 175, 55, 0.4)';
-      ctx.shadowBlur = 6;
+      ctx.strokeStyle = isTwilight ? 'rgba(112, 65, 166, 0.95)' : 'rgba(251, 191, 36, 0.85)';
+      ctx.lineWidth = 1.6;
+      ctx.shadowColor = isTwilight ? 'rgba(242, 123, 155, 0.65)' : 'rgba(245, 158, 11, 0.6)';
+      ctx.shadowBlur = 8;
 
       activeConstellation.lines.forEach(([iA, iB]) => {
         const starA = activeConstellation.stars[iA];
@@ -424,7 +435,7 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
         const pulse = Math.sin(t * 1.5 + idx) * 0.5 + 1;
 
         // Render radiant celestial star icon with pin-sharp subpixel vectors
-        drawCelestialStarIcon(ctx, x, y, star.r, pulse);
+        drawCelestialStarIcon(ctx, x, y, star.r, pulse, isTwilight);
       });
 
       ctx.restore();
@@ -439,7 +450,7 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
     };
-  }, [activeConstellation, backgroundStars]);
+  }, [activeConstellation, backgroundStars, isTwilight]);
 
   const handleSelect = (c: Constellation) => {
     setActiveId(c.id);
@@ -452,11 +463,11 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
     <div className="w-full flex flex-col items-center">
       {/* Chart Header */}
       <div className="w-full flex flex-wrap items-center justify-between gap-3 mb-4 text-xs font-mono border-b border-white/10 pb-3">
-        <div className="flex items-center gap-2 text-amber-300">
-          <Compass className="w-4 h-4 text-amber-400" />
+        <div className="flex items-center gap-2 text-[var(--archive-apricot)]">
+          <Compass className="w-4 h-4 text-[var(--archive-coral)]" />
           <span className="font-bold tracking-wider uppercase">ENGINEER&apos;S ANNOTATED STAR CHART</span>
         </div>
-        <div className="text-[11px] text-slate-400 font-mono">
+        <div className="text-[11px] text-[var(--archive-text-muted)] font-mono">
           SELECT DISCIPLINE CLUSTER TO INSPECT TOPOLOGY
         </div>
       </div>
@@ -472,11 +483,11 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
               onClick={() => handleSelect(c)}
               className={`px-3 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all flex items-center gap-1.5 ${
                 isSelected
-                  ? 'bg-amber-400/20 border border-amber-400 text-amber-200 shadow-[0_0_15px_rgba(212,175,55,0.25)]'
-                  : 'bg-[#090a12] border border-white/10 text-slate-400 hover:text-slate-200 hover:border-amber-400/30'
+                  ? 'bg-[var(--archive-violet)]/30 border border-[var(--archive-coral)] text-[var(--archive-text-primary)] shadow-sm'
+                  : 'bg-[var(--archive-surface)] border border-white/10 text-[var(--archive-text-muted)] hover:text-[var(--archive-text-primary)] hover:border-[var(--archive-border-warm)]'
               }`}
             >
-              <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-amber-400 animate-ping' : 'bg-slate-600'}`} />
+              <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-[var(--archive-coral)] animate-ping' : 'bg-[var(--archive-surface-elevated)]'}`} />
               <span>{c.name}</span>
             </button>
           );
@@ -486,8 +497,8 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
       {/* Star Chart Canvas & Technical Engineering Dossier */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Star Chart Canvas */}
-        <div className="lg:col-span-7 relative w-full h-[320px] sm:h-[380px] rounded-3xl bg-[#040409] border border-amber-400/20 overflow-hidden shadow-[inset_0_0_60px_rgba(0,0,0,0.9)] flex items-center justify-center">
-          <div className="absolute inset-4 sm:inset-6 rounded-full border border-amber-400/10 pointer-events-none" />
+        <div className="lg:col-span-7 relative w-full h-[320px] sm:h-[380px] rounded-3xl bg-[var(--archive-bg-deep)] border border-[var(--archive-border-violet)] overflow-hidden shadow-[inset_0_0_60px_rgba(0,0,0,0.95)] flex items-center justify-center twilight-radial-glow">
+          <div className="absolute inset-4 sm:inset-6 rounded-full border border-[var(--archive-border-violet)] pointer-events-none opacity-40" />
 
           <canvas
             ref={canvasRef}
@@ -508,7 +519,7 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
                     transform: 'translate(14px, -50%)',
                   }}
                 >
-                  <span className="font-mono text-xs sm:text-[13px] font-semibold text-[#fefcf8] tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
+                  <span className="font-mono text-xs sm:text-[13px] font-semibold text-[var(--archive-text-primary)] tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] whitespace-nowrap">
                     {star.label}
                   </span>
                 </div>
@@ -516,49 +527,49 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
             })}
           </div>
 
-          <div className="absolute top-3 left-4 text-[11px] font-mono text-amber-400/80 uppercase font-semibold tracking-wide">
+          <div className="absolute top-3 left-4 text-[11px] font-mono text-[var(--archive-coral)] uppercase font-semibold tracking-wide">
             VECTOR // {activeConstellation.classification}
           </div>
 
-          <div className="absolute bottom-3 right-4 text-[11px] font-mono text-slate-400 uppercase tracking-wide">
+          <div className="absolute bottom-3 right-4 text-[11px] font-mono text-[var(--archive-text-muted)] uppercase tracking-wide">
             CANVAS CELESTIAL PROJECTION
           </div>
         </div>
 
         {/* Technical Archival Annotation Box */}
-        <div className="lg:col-span-5 flex flex-col justify-between p-6 rounded-3xl bg-[#080913]/95 border border-amber-400/20 backdrop-blur-xl shadow-xl">
+        <div className="lg:col-span-5 flex flex-col justify-between p-6 rounded-3xl bg-[var(--archive-surface)]/95 border border-[var(--archive-border-violet)] backdrop-blur-xl shadow-xl">
           <div>
-            <div className="flex items-center justify-between text-[10px] font-mono text-amber-400 uppercase tracking-widest border-b border-white/10 pb-2 mb-3">
+            <div className="flex items-center justify-between text-[10px] font-mono text-[var(--archive-coral)] uppercase tracking-widest border-b border-white/10 pb-2 mb-3">
               <span>ORBITAL CLASSIFICATION</span>
-              <span className="font-bold text-amber-300">{activeConstellation.classification}</span>
+              <span className="font-bold text-[var(--archive-apricot)]">{activeConstellation.classification}</span>
             </div>
 
-            <div className="text-[10px] font-mono tracking-widest text-amber-300/80 uppercase mb-1">
+            <div className="text-[10px] font-mono tracking-widest text-[var(--archive-text-muted)] uppercase mb-1">
               {activeConstellation.latinName}
             </div>
 
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#f4f1ea] mb-2">
+            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[var(--archive-text-primary)] mb-2">
               {activeConstellation.name}
             </h3>
 
-            <div className="text-xs text-amber-300 font-mono mb-4">
+            <div className="text-xs text-[var(--archive-apricot)] font-mono mb-4">
               {activeConstellation.role}
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-serif mb-5">
+            <p className="text-xs sm:text-sm text-[var(--archive-text-muted)] leading-relaxed font-serif mb-5">
               {activeConstellation.fieldNote}
             </p>
 
             {/* Core Primitives Checklist */}
             <div className="border-t border-white/5 pt-3">
-              <span className="text-[9px] font-mono uppercase text-slate-400 tracking-wider block mb-2">
+              <span className="text-[9px] font-mono uppercase text-[var(--archive-text-muted)] tracking-wider block mb-2">
                 CORE TECHNICAL PRIMITIVES
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {activeConstellation.primitives.map((prim) => (
                   <span
                     key={prim}
-                    className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-amber-200"
+                    className="px-2 py-0.5 rounded bg-[var(--archive-surface-elevated)] border border-[var(--archive-border-violet)] text-[10px] font-mono text-[var(--archive-apricot)]"
                   >
                     {prim}
                   </span>
@@ -567,9 +578,9 @@ export default function EngineeringConstellations({ onSelectConstellation }: Con
             </div>
           </div>
 
-          <div className="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-400">
+          <div className="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-[var(--archive-text-muted)]">
             <span>TOPOLOGY: {activeConstellation.stars.length} VERIFIED NODES</span>
-            <span className="text-emerald-400 font-bold flex items-center gap-1">
+            <span className="text-[var(--archive-mint)] font-bold flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3" />
               <span>DETERMINISTIC</span>
             </span>

@@ -68,7 +68,7 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           BACKGROUND LAYER: OBSIDIAN VOID, CANVAS STARLIGHT & VIGNETTE
          ========================================================================= */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[#030305]" />
+        <div className="absolute inset-0 bg-[var(--archive-bg)] transition-colors duration-400" />
 
         {/* Subtle Starlight Points (Pure CSS) */}
         <div className="absolute inset-0 opacity-60">
@@ -86,12 +86,13 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           ))}
         </div>
 
-        {/* Atmospheric Nebula Glow */}
-        <div className="absolute w-[500px] h-[500px] rounded-full bg-indigo-950/20 blur-[120px] top-1/4 left-1/3 pointer-events-none" />
-        <div className="absolute w-[400px] h-[400px] rounded-full bg-amber-950/15 blur-[100px] bottom-1/3 right-1/4 pointer-events-none" />
+        {/* Atmospheric Observatory Indigo & Dream Violet Nebula Glow with Enhanced Radial Depth */}
+        <div className="absolute w-[650px] h-[650px] rounded-full bg-[var(--archive-indigo)]/30 blur-[130px] top-1/4 left-1/3 pointer-events-none twilight-radial-glow" />
+        <div className="absolute w-[500px] h-[500px] rounded-full bg-[var(--archive-violet)]/25 blur-[120px] bottom-1/3 right-1/4 pointer-events-none" />
+        <div className="absolute w-[380px] h-[380px] rounded-full bg-[var(--archive-glow-warm)] blur-[100px] top-1/3 right-1/3 pointer-events-none opacity-40" />
 
         {/* Camera Aperture Radial Vignette */}
-        <div className="absolute inset-0 bg-radial-[circle_at_center,transparent_45%,rgba(3,3,5,0.85)_100%]" />
+        <div className="absolute inset-0 bg-radial-[circle_at_center,transparent_45%,rgba(0,0,0,0.85)_100%]" />
       </div>
 
       {/* =========================================================================
@@ -118,7 +119,7 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
             sizes="(max-width: 640px) 180px, (max-width: 768px) 320px, (max-width: 1200px) 420px, 480px"
           />
         </div>
-        <div className="hidden sm:block mt-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-[#080911]/80 border border-white/10 text-[7px] sm:text-[8px] font-mono tracking-widest text-amber-300/70 uppercase backdrop-blur-sm">
+        <div className="hidden sm:block mt-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-[var(--archive-surface)]/85 border border-[var(--archive-border-violet)] text-[7px] sm:text-[8px] font-mono tracking-widest text-[var(--archive-apricot)]/80 uppercase backdrop-blur-sm">
           MERIDIAN TRANSIT // LUNAR EPHEMERIS
         </div>
       </motion.div>
@@ -126,17 +127,17 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
       {/* =========================================================================
           FOREGROUND: CAMERA RETICLE & ARCHIVE METADATA
          ========================================================================= */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-amber-400/70 border-b border-white/5 pb-4">
+      <div className="relative z-10 w-full max-w-6xl mx-auto flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-[var(--archive-coral)] border-b border-white/10 pb-4">
         <div className="flex items-center gap-3">
-          <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+          <span className="w-2 h-2 rounded-full bg-[var(--archive-coral)] animate-ping" />
           <span>EXPEDITION: 01 // DIGITAL ARCHIVE & OBSERVATORY</span>
         </div>
-        <div className="hidden sm:flex items-center gap-3 text-slate-400">
+        <div className="hidden sm:flex items-center gap-3 text-[var(--archive-text-muted)]">
           <span>{curator.coordinates}</span>
           <span>·</span>
           <span>{curator.baseLocation}</span>
         </div>
-        <div className="hidden sm:block text-amber-300/60 font-mono text-xs">
+        <div className="hidden sm:block text-[var(--archive-apricot)] font-mono text-xs">
           [ 85mm · f/1.2 · ISO 100 ]
         </div>
       </div>
@@ -150,13 +151,13 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
-          className="w-12 h-12 rounded-full border border-amber-400/40 flex items-center justify-center mb-6 relative"
+          className="w-12 h-12 rounded-full border border-[var(--archive-coral)]/50 flex items-center justify-center mb-6 relative starlight-lantern-glow"
         >
-          <div className="w-2 h-2 rounded-full bg-amber-400" />
-          <div className="absolute -top-1 w-2 h-0.5 bg-amber-400/80" />
-          <div className="absolute -bottom-1 w-2 h-0.5 bg-amber-400/80" />
-          <div className="absolute -left-1 h-2 w-0.5 bg-amber-400/80" />
-          <div className="absolute -right-1 h-2 w-0.5 bg-amber-400/80" />
+          <div className="w-2 h-2 rounded-full bg-[var(--archive-coral)]" />
+          <div className="absolute -top-1 w-2 h-0.5 bg-[var(--archive-coral)]/80" />
+          <div className="absolute -bottom-1 w-2 h-0.5 bg-[var(--archive-coral)]/80" />
+          <div className="absolute -left-1 h-2 w-0.5 bg-[var(--archive-coral)]/80" />
+          <div className="absolute -right-1 h-2 w-0.5 bg-[var(--archive-coral)]/80" />
         </motion.div>
 
         {/* Master Curator Name */}
@@ -164,7 +165,7 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.5 }}
-          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-extrabold tracking-wider text-[#f4f1ea] drop-shadow-[0_10px_35px_rgba(0,0,0,0.9)]"
+          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-extrabold tracking-wider text-[var(--archive-text-primary)] drop-shadow-[0_10px_35px_rgba(0,0,0,0.95)]"
         >
           {curator.name}
         </motion.h1>
@@ -174,9 +175,9 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.7 }}
-          className="mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#0c0d14]/90 border border-amber-400/30 text-amber-300 text-xs sm:text-sm font-mono tracking-widest uppercase shadow-xl"
+          className="mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[var(--archive-surface)]/90 border border-[var(--archive-border-warm)] text-[var(--archive-apricot)] text-xs sm:text-sm font-mono tracking-widest uppercase shadow-xl"
         >
-          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+          <Sparkles className="w-3.5 h-3.5 text-[var(--archive-yellow)]" />
           <span>{curator.title}</span>
         </motion.div>
 
@@ -185,7 +186,7 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.9 }}
-          className="mt-6 text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl font-serif italic leading-relaxed"
+          className="mt-6 text-base sm:text-lg md:text-xl text-[var(--archive-text-secondary)] max-w-2xl font-serif italic leading-relaxed"
         >
           &ldquo;{curator.tagline}&rdquo;
         </motion.p>
@@ -203,20 +204,20 @@ export default function Scene01CosmicOpening({ onScrollToNext }: SceneProps) {
           BOTTOM CAMERA CONTROLS
          ========================================================================= */}
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/5">
-        <div className="text-[11px] font-mono text-slate-500">
+        <div className="text-[11px] font-mono text-[var(--archive-text-muted)]">
           FRAME 01 / 08 · THE COSMIC LENS
         </div>
 
         <button
           type="button"
           onClick={onScrollToNext}
-          className="group flex items-center gap-3 px-6 py-2.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/40 hover:border-amber-300 text-amber-200 text-xs font-mono uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_20px_rgba(212,175,55,0.2)]"
+          className="group flex items-center gap-3 px-6 py-2.5 rounded-full bg-gradient-to-r from-[var(--archive-magenta)]/25 via-[var(--archive-coral)]/30 to-[var(--archive-peach)]/25 hover:opacity-95 border border-[var(--archive-coral)]/50 hover:border-[var(--archive-peach)] text-[var(--archive-apricot)] text-xs font-mono uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_20px_var(--archive-glow-warm)]"
         >
           <span>Travel Forward Into Archive</span>
-          <ArrowDown className="w-3.5 h-3.5 text-amber-400 group-hover:translate-y-1 transition-transform" />
+          <ArrowDown className="w-3.5 h-3.5 text-[var(--archive-coral)] group-hover:translate-y-1 transition-transform" />
         </button>
 
-        <div className="hidden sm:block text-[11px] font-mono text-slate-500">
+        <div className="hidden sm:block text-[11px] font-mono text-[var(--archive-text-muted)]">
           SCROLL TO EXPLORE ARCHIVE
         </div>
       </div>
